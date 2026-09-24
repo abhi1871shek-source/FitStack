@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Today's Workout</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#f1f3ff",
+            "on-primary-fixed-variant": "#00513a",
+            "surface-dim": "#d3daef",
+            "surface-container-highest": "#dce2f7",
+            "inverse-primary": "#7bd8b1",
+            "on-primary-fixed": "#002115",
+            "inverse-on-surface": "#edf0ff",
+            "inverse-surface": "#293040",
+            "outline-variant": "#bdc9c1",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#f9f9ff",
+            "on-background": "#141b2b",
+            "tertiary-container": "#a45049",
+            "primary-container": "#047857",
+            "tertiary": "#863933",
+            "background": "#f9f9ff",
+            "primary-fixed": "#97f5cc",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-container": "#9ffdd3",
+            "on-secondary-fixed-variant": "#005236",
+            "surface": "#f9f9ff",
+            "tertiary-fixed": "#ffdad6",
+            "surface-container-high": "#e1e8fd",
+            "secondary-container": "#6cf8bb",
+            "error": "#ba1a1a",
+            "surface-container": "#e9edff",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "surface-tint": "#006c4e",
+            "surface-variant": "#dce2f7",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "secondary-fixed": "#6ffbbe",
+            "primary": "#005d42",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#3e0405",
+            "on-primary": "#ffffff",
+            "on-surface": "#141b2b",
+            "on-secondary-fixed": "#002113",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#3e4943",
+            "on-tertiary-container": "#ffe4e0",
+            "secondary": "#006c49",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "primary-fixed-dim": "#7bd8b1",
+            "outline": "#6e7a73",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#00714d"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "unit-32": "2rem",
+            "card-padding": "1rem",
+            "unit-8": "0.5rem",
+            "unit-2": "0.125rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "gutter-desktop": "1.5rem",
+            "unit-24": "1.5rem",
+            "gutter-mobile": "1rem",
+            "unit-12": "0.75rem"
+          },
+          "fontFamily": {
+            "metric-val": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-xs": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"]
+          },
+          "fontSize": {
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #f9f9ff;
+      color: #141b2b;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .micro-shadow {
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    }
+    .popup-shadow {
+      box-shadow: 0 4px 16px -2px rgba(17, 24, 39, 0.08);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex justify-center selection:bg-primary-container selection:text-white">
+<!-- Mobile Container Wrapper -->
+<div class="relative w-full max-w-md bg-surface flex flex-col min-h-screen pb-24 select-none">
+<!-- Top Status Bar (iOS Hardware Frame Mock) -->
+<header class="w-full px-gutter-mobile pt-3 pb-1 flex justify-between items-center bg-surface">
+<span class="font-label-md text-label-md text-on-surface font-semibold tracking-tight">9:41</span>
+<div class="flex items-center space-x-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[20px]">battery_full</span>
+</div>
+</header>
+<!-- Top App Bar / Header -->
+<section class="flex justify-between items-center w-full px-gutter-mobile h-14 max-w-md mx-auto bg-surface">
+<div class="flex flex-col">
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight leading-none">Today's Workout</h1>
+<p class="font-label-xs text-label-xs text-on-surface-variant mt-unit-2">Wednesday, Oct 14 • Push Day</p>
+</div>
+<button aria-label="Weekly Plan" class="flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-transform duration-150 active:scale-95 micro-shadow" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="date_range">date_range</span>
+<span class="font-label-xs text-label-xs text-on-surface font-medium">Weekly Plan</span>
+</button>
+</section>
+<!-- Main Content Container -->
+<main class="flex-1 px-gutter-mobile space-y-unit-16 mt-unit-8">
+<!-- Workout Summary Info Bar (Kinetic Metrics Telemetry) -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-card-padding micro-shadow">
+<div class="flex items-center justify-between pb-unit-12 border-b border-outline-variant">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container inline-block"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Push Focus (A)</span>
+</div>
+<span class="inline-flex items-center font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-primary font-medium">
+            100% Target Match
+          </span>
+</div>
+<div class="grid grid-cols-3 gap-unit-8 pt-unit-12 text-center">
+<div class="flex flex-col items-center">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Exercises</span>
+<span class="font-metric-val text-metric-val text-on-surface mt-unit-2">5</span>
+</div>
+<div class="flex flex-col items-center border-x border-outline-variant">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Est. Time</span>
+<div class="flex items-baseline mt-unit-2 space-x-0.5">
+<span class="font-metric-val text-metric-val text-on-surface">50</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-normal">min</span>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Est. Volume</span>
+<div class="flex items-baseline mt-unit-2 space-x-0.5">
+<span class="font-metric-val text-metric-val text-on-surface">8.4</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-normal">t</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 1: CHEST WORKOUT -->
+<section class="space-y-unit-8">
+<!-- Subtitle Divider -->
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs font-bold tracking-wider text-on-surface-variant uppercase">Chest Workout</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-xs text-label-xs text-outline font-medium">3 Exercises</span>
+</div>
+<span class="font-label-xs text-label-xs text-primary font-semibold">10 Sets Total</span>
+</div>
+<!-- Cards Stack 1 -->
+<div class="space-y-unit-8">
+<!-- Card 1: Barbell Bench Press (Showing Swipe Affordance Peek) -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest border border-outline-variant micro-shadow">
+<!-- Background Swipe Indicator Surface (Revealed underneath) -->
+<div class="absolute inset-y-0 right-0 w-24 bg-primary-container flex items-center justify-center text-on-primary">
+<div class="flex flex-col items-center justify-center space-y-0.5">
+<span class="material-symbols-outlined text-[22px]" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+<span class="font-label-xs text-label-xs text-white uppercase tracking-wider">Done</span>
+</div>
+</div>
+<!-- Foreground Card Surface (Nudged slightly to the left to show swipe cue) -->
+<div class="relative bg-surface-container-lowest p-card-padding transition-transform transform -translate-x-12">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="w-14 h-14 rounded-xl bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0 micro-shadow"><img alt="Barbell Bench Press" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHkjb7t4nf-d8ewFyUenljX0GtvX6AHY7jdGTGOVmroBtlGQojMSUwjkLNs2zIy0HX0fTHGx2Q3HTGz5TQMyROg9oBLHqYg2PU8UzGZMk_B1vgyRDv10En_s5yQVZjdLP6lEt79Uj-QMbLu5_cRX7TwekVqdtrvSOynXhhtmFJlY3g4JGQfyNmJXWjMQQwtT-SqB3rb8I5gXwBoLTI060RUPAcge5GnpsQ7yG5UHIOvPUWpPl2sUc"/></div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface leading-snug">Barbell Bench Press</h2>
+<div class="flex items-center space-x-2 mt-unit-4">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Barbell</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Primary Compound</span>
+</div>
+</div>
+</div>
+<div class="flex items-center text-outline-variant pl-2">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</div>
+</div>
+<!-- Sets & Specs Row -->
+<div class="mt-unit-12 pt-unit-12 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">4 sets</span>
+<span class="text-outline-variant text-[12px]">×</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">10 reps</span>
+<span class="text-outline-variant font-body-sm text-body-sm">•</span>
+<span class="font-label-md text-label-md font-bold text-primary">85 kg</span>
+</div>
+<div class="flex items-center space-x-1 font-label-xs text-label-xs text-outline">
+<span class="material-symbols-outlined text-[14px]">swipe_left</span>
+<span>Swipe to log</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Incline Dumbbell Press (In Active Pressed/Held State with Popup Context Menu) -->
+<div class="relative">
+<!-- Active Card Frame -->
+<div class="relative rounded-xl bg-surface-container-lowest border-2 border-primary-container p-card-padding scale-[0.98] transition-all micro-shadow z-20">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="w-14 h-14 rounded-xl bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0 micro-shadow"><img alt="Incline Dumbbell Press" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLcX166X9EIT7jdcErnF1Uq_y3gLNqg-YskkO85Q-MohMp8-hCIu7vwgDk3ccMUdH7K-sKLPh0PuQAyNUNOyb07tLDgF9kNSjZvr6MCDp4gqKmLoyhQg2xX0KdiLIgQ7jQOBq-HcbpOfJ4MQPXBxSEvyXHPg92U_uTHBEmXImxmYw2uJK5qka64q1mXkkq4HUVkZMHt4z3Sjm6QAvsL75akX4dgmQjCLy707SWbH-vykwRL4zoq-w"/></div>
+<div>
+<div class="flex items-center space-x-2">
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface leading-snug">Incline Dumbbell Press</h2>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+<div class="flex items-center space-x-2 mt-unit-4">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Dumbbells</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Upper Chest</span>
+</div>
+</div>
+</div>
+<button aria-label="More options" class="text-primary hover:bg-surface-container-high rounded p-1" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<!-- Sets & Specs Row -->
+<div class="mt-unit-12 pt-unit-12 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">3 sets</span>
+<span class="text-outline-variant text-[12px]">×</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">12 reps</span>
+<span class="text-outline-variant font-body-sm text-body-sm">•</span>
+<span class="font-label-md text-label-md font-bold text-primary">28 kg each</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Rest 90s</span>
+</div>
+</div>
+<!-- Floating Contextual Pop-up Menu (Edit / Delete) matching kinetic discipline design -->
+<div class="absolute right-4 -top-8 z-30 w-36 bg-surface-container-lowest border border-outline-variant rounded-xl popup-shadow py-1 divide-y divide-outline-variant/40">
+<button class="w-full px-3 py-2 flex items-center space-x-2 text-left hover:bg-surface-container active:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-on-surface" data-icon="edit">edit</span>
+<span class="font-label-md text-label-md text-on-surface">Edit</span>
+</button>
+<button class="w-full px-3 py-2 flex items-center space-x-2 text-left hover:bg-error-container/30 active:bg-error-container/50 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-error" data-icon="delete">delete</span>
+<span class="font-label-md text-label-md text-error">Delete</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Cable Chest Fly (Standard Flat Card) -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant p-card-padding micro-shadow">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="w-14 h-14 rounded-xl bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0 micro-shadow"><img alt="Cable Chest Fly" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-TUu04W3A3kUGqDFNbqHgn1RlGywCJPrAZ_P3EuO63VShzRktbPVcbUp9uZO2WaDJHDXl2kqJjqPTrhZBpuTEnCQ-J4wC5FTHooAyH1fZ1mtipygPTCjTgS-y9Yus6mTMOW8K6ZgHX9M0qbS_4ue7IOi08I4zQoHr5ZnLm825EFdknihU7p8JQ9ILYmtOtrU6WH0jaj16nyz6j7uOSXhq-eGnbx0tfQY4xvxeXqbAQVMMgjpj8M4"/></div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface leading-snug">Cable Chest Fly</h2>
+<div class="flex items-center space-x-2 mt-unit-4">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Cables</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Isolation</span>
+</div>
+</div>
+</div>
+<button aria-label="Exercise Options" class="text-outline hover:text-on-surface p-1" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="mt-unit-12 pt-unit-12 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">3 sets</span>
+<span class="text-outline-variant text-[12px]">×</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">15 reps</span>
+<span class="text-outline-variant font-body-sm text-body-sm">•</span>
+<span class="font-label-md text-label-md font-bold text-primary">14 kg</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Rest 60s</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: TRICEPS WORKOUT -->
+<section class="space-y-unit-8 pt-unit-8">
+<!-- Subtitle Divider -->
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs font-bold tracking-wider text-on-surface-variant uppercase">Triceps Workout</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-xs text-label-xs text-outline font-medium">2 Exercises</span>
+</div>
+<span class="font-label-xs text-label-xs text-primary font-semibold">6 Sets Total</span>
+</div>
+<!-- Cards Stack 2 -->
+<div class="space-y-unit-8">
+<!-- Card 4: Overhead Rope Extension -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant p-card-padding micro-shadow">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="w-14 h-14 rounded-xl bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0 micro-shadow"><img alt="Overhead Rope Extension" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiAWMj2xv0ZVsjUNGXaicZJLp3sHZDTHX9aMHufbpPaHvR94zZOkI5zBk73O-xDvGCt5TXTeY60AKlms4oAAdhiT-C-tRnqfx7SNLvVy96wRAVbavvSaLvc2KHhKu7NMhxLpH-Z01Hcsk0pZNMLmkL7nfZ2hypukLiBPcCxKvTSNceiXwsea6aBfUkQ4X-Rq82fhPd8IUpRG9_QsQpr27YxGjpGwFBomlyKOZcMzwtBk1zaG6oo84"/></div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface leading-snug">Overhead Rope Extension</h2>
+<div class="flex items-center space-x-2 mt-unit-4">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Rope Cable</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Long Head</span>
+</div>
+</div>
+</div>
+<button aria-label="Exercise Options" class="text-outline hover:text-on-surface p-1" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="mt-unit-12 pt-unit-12 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">3 sets</span>
+<span class="text-outline-variant text-[12px]">×</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">12 reps</span>
+<span class="text-outline-variant font-body-sm text-body-sm">•</span>
+<span class="font-label-md text-label-md font-bold text-primary">22.5 kg</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Rest 75s</span>
+</div>
+</div>
+<!-- Card 5: Dips (Weighted) -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant p-card-padding micro-shadow">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-3">
+<div class="w-14 h-14 rounded-xl bg-surface-container overflow-hidden border border-outline-variant flex-shrink-0 micro-shadow"><img alt="Dips (Weighted)" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjVuM37_gj6Xwr5-06JUHNfIozRTqgJwSGtT3OiHHy0sc-XnabLHnSjPYb3bXFiGWLpaRShOV2pvH8qC0ioB2AZ8_8bdCzsqm0uV072FTiCNU57SEJ6KIFgvthfz9VnXPCNpHHS2P-7Y-VfoNGmlM6fpiGNKJDup8-OEDk-YBFXLbQkmPwwJJdABIolC-OzspGIUaBMO2Cf9XTHrSoaYjFHhco1X9Iw0iBIGHoHj2ntqBzTOP8UTc"/></div>
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface leading-snug">Dips (Weighted)</h2>
+<div class="flex items-center space-x-2 mt-unit-4">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Parallel Bars</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Bodyweight+</span>
+</div>
+</div>
+</div>
+<button aria-label="Exercise Options" class="text-outline hover:text-on-surface p-1" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+<div class="mt-unit-12 pt-unit-12 border-t border-outline-variant flex items-center justify-between">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">3 sets</span>
+<span class="text-outline-variant text-[12px]">×</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">8 reps</span>
+<span class="text-outline-variant font-body-sm text-body-sm">•</span>
+<span class="font-label-md text-label-md font-bold text-primary">+10 kg</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Rest 90s</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB: Add Exercise -->
+<div class="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40">
+<button aria-label="Add Exercise" class="w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center popup-shadow active:scale-95 transition-transform duration-150 focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+</button>
+</div>
+<!-- Shared Component: BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 max-w-md mx-auto bg-surface border-t border-outline-variant dark:border-outline">
+<!-- Nav Item 1: Today (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-xs text-label-xs mt-unit-2">Today</span>
+</a>
+<!-- Nav Item 2: Workouts (ACTIVE DESTINATION) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="fitness_center" data-weight="fill" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="font-label-xs text-label-xs mt-unit-2">Workouts</span>
+</a>
+<!-- Nav Item 3: Habits (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="check_circle">check_circle</span>
+<span class="font-label-xs text-label-xs mt-unit-2">Habits</span>
+</a>
+<!-- Nav Item 4: Nutrition (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="restaurant">restaurant</span>
+<span class="font-label-xs text-label-xs mt-unit-2">Nutrition</span>
+</a>
+<!-- Nav Item 5: Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="person">person</span>
+<span class="font-label-xs text-label-xs mt-unit-2">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

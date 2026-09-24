@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Add Workout</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#edf0ff",
+            "on-primary-fixed": "#002115",
+            "secondary-container": "#6cf8bb",
+            "on-secondary-container": "#00714d",
+            "on-secondary-fixed": "#002113",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-primary-fixed-variant": "#00513a",
+            "primary": "#005d42",
+            "on-secondary-fixed-variant": "#005236",
+            "inverse-surface": "#293040",
+            "surface-variant": "#dce2f7",
+            "surface-container-lowest": "#ffffff",
+            "background": "#f9f9ff",
+            "tertiary": "#863933",
+            "surface-container": "#e9edff",
+            "secondary": "#006c49",
+            "surface-bright": "#f9f9ff",
+            "error-container": "#ffdad6",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-background": "#141b2b",
+            "surface-container-low": "#f1f3ff",
+            "primary-container": "#047857",
+            "error": "#ba1a1a",
+            "inverse-primary": "#7bd8b1",
+            "surface-dim": "#d3daef",
+            "tertiary-fixed": "#ffdad6",
+            "outline": "#6e7a73",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed": "#3e0405",
+            "surface-container-highest": "#dce2f7",
+            "tertiary-container": "#a45049",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#7bd8b1",
+            "on-tertiary-container": "#ffe4e0",
+            "on-primary": "#ffffff",
+            "surface": "#f9f9ff",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#9ffdd3",
+            "outline-variant": "#bdc9c1",
+            "surface-tint": "#006c4e",
+            "on-surface": "#141b2b",
+            "primary-fixed": "#97f5cc",
+            "on-surface-variant": "#3e4943",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container-high": "#e1e8fd",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "unit-16": "1rem",
+            "unit-24": "1.5rem",
+            "unit-8": "0.5rem",
+            "card-padding": "1rem",
+            "unit-2": "0.125rem",
+            "gutter-mobile": "1rem",
+            "unit-4": "0.25rem",
+            "unit-12": "0.75rem",
+            "gutter-desktop": "1.5rem",
+            "unit-32": "2rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-xs": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-slate-900 text-on-surface antialiased font-body-sm flex justify-center items-center min-h-screen p-0 sm:p-4 selection:bg-primary-container selection:text-surface-container-lowest">
+<!-- Mobile Device Shell (Modal Viewport Presentation) -->
+<div class="relative w-full max-w-md h-screen sm:h-[844px] bg-black sm:rounded-[36px] overflow-hidden flex flex-col shadow-2xl border border-slate-800">
+<!-- Dimmed Workout Backdrop Behind Sheet -->
+<div class="absolute inset-0 bg-surface flex flex-col opacity-30 select-none pointer-events-none p-gutter-mobile">
+<div class="pt-10 pb-4">
+<div class="h-6 w-36 bg-outline-variant rounded"></div>
+<div class="h-10 w-48 bg-outline rounded mt-2"></div>
+</div>
+<div class="h-44 w-full bg-surface-container-lowest border border-outline-variant rounded-xl mb-4 p-4"></div>
+<div class="h-44 w-full bg-surface-container-lowest border border-outline-variant rounded-xl mb-4 p-4"></div>
+</div>
+<!-- Scrim Overlay -->
+<div class="absolute inset-0 bg-black/40 z-10 transition-opacity"></div>
+<!-- Active Bottom Sheet Modal -->
+<div class="relative z-20 mt-auto w-full h-[92%] bg-surface-container-lowest rounded-t-[28px] border-t border-x border-outline-variant flex flex-col shadow-[0_-4px_24px_rgba(0,0,0,0.12)]">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center pt-unit-12 pb-unit-4 flex-shrink-0">
+<div class="w-9 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Header: Title & Close -->
+<div class="flex items-center justify-between px-gutter-mobile pt-unit-4 pb-unit-12 flex-shrink-0">
+<div class="flex items-center space-x-unit-8">
+<h1 class="text-headline-sm font-headline-sm text-on-surface tracking-tight font-bold">Add Workout</h1>
+<span class="text-label-xs font-label-xs text-on-surface-variant bg-surface-container-high px-unit-8 py-unit-2 rounded-full">Kinetic Log</span>
+</div>
+<button aria-label="Close modal" class="w-8 h-8 rounded-full flex items-center justify-center bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Search Field -->
+<div class="px-gutter-mobile pb-unit-12 flex-shrink-0">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-unit-12 text-outline text-[20px] pointer-events-none">search</span>
+<input class="w-full h-11 pl-10 pr-unit-12 bg-background border border-outline-variant rounded-xl text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-0 transition-colors" placeholder="Search exercises, muscles..." type="text" value=""/>
+<button class="absolute right-unit-8 text-outline hover:text-on-surface flex items-center p-unit-4" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Body-Part Filter Chips (Horizontal Scrollable) -->
+<div class="w-full overflow-x-auto custom-scrollbar px-gutter-mobile pb-unit-12 flex-shrink-0 flex space-x-unit-8 border-b border-surface-container-high">
+<!-- Chest (Active/Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-surface-container-lowest text-label-md font-label-md whitespace-nowrap flex items-center shadow-sm">
+          Chest
+        </button>
+<!-- Back -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Back
+        </button>
+<!-- Legs -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Legs
+        </button>
+<!-- Shoulders -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Shoulders
+        </button>
+<!-- Arms -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Arms
+        </button>
+<!-- Core -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Core
+        </button>
+<!-- Cardio -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant text-label-md font-label-md whitespace-nowrap flex items-center hover:bg-surface-container-high transition-colors">
+          Cardio
+        </button>
+</div>
+<!-- Exercise List -->
+<div class="flex-1 overflow-y-auto custom-scrollbar px-gutter-mobile py-unit-12 space-y-unit-8">
+<!-- Category & Metric Counter Banner -->
+<div class="flex items-center justify-between pb-unit-4">
+<span class="text-label-xs font-label-xs text-on-surface-variant tracking-wider uppercase font-semibold">Chest Routine (6 Available)</span>
+<span class="text-label-xs font-label-xs text-primary font-semibold">2 Selected</span>
+</div>
+<!-- Exercise 1: Barbell Bench Press (Selected) -->
+<div class="p-card-padding bg-surface-container-lowest border-2 border-primary-container rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Barbell Bench Press</h3>
+<span class="bg-secondary-container text-on-secondary-container text-label-xs font-label-xs px-1.5 py-0.5 rounded font-medium">Compound</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Chest, Triceps • Barbell</p>
+<div class="flex items-center space-x-1.5 pt-unit-2">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">repeat</span>
+<span class="text-label-xs font-label-xs text-primary font-semibold">3 sets planned</span>
+<span class="text-label-xs font-label-xs text-outline">• Last: 80 kg × 8</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-primary-container text-surface-container-lowest flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform shadow-sm" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+<!-- Exercise 2: Incline Dumbbell Press (Unselected) -->
+<div class="p-card-padding bg-surface-container-lowest border border-outline-variant hover:border-outline rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Incline Dumbbell Press</h3>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Upper Chest • Dumbbells</p>
+<div class="flex items-center space-x-1 pt-unit-2">
+<span class="text-label-xs font-label-xs text-outline">Target: 3-4 Sets • Hypertrophy</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant hover:border-outline text-on-surface flex items-center justify-center flex-shrink-0 active:scale-95 active:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Exercise 3: Push-ups (Unselected) -->
+<div class="p-card-padding bg-surface-container-lowest border border-outline-variant hover:border-outline rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Push-ups</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-label-xs font-label-xs px-1.5 py-0.5 rounded font-medium">Bodyweight</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Chest, Core • Calisthenics</p>
+<div class="flex items-center space-x-1 pt-unit-2">
+<span class="text-label-xs font-label-xs text-outline">Target: RPE 8 • To Failure</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant hover:border-outline text-on-surface flex items-center justify-center flex-shrink-0 active:scale-95 active:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Exercise 4: Cable Chest Fly (Selected) -->
+<div class="p-card-padding bg-surface-container-lowest border-2 border-primary-container rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Cable Chest Fly</h3>
+<span class="bg-surface-container-high text-on-surface-variant text-label-xs font-label-xs px-1.5 py-0.5 rounded font-medium">Isolation</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Sternal Chest • Dual Cable</p>
+<div class="flex items-center space-x-1.5 pt-unit-2">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">repeat</span>
+<span class="text-label-xs font-label-xs text-primary font-semibold">3 sets planned</span>
+<span class="text-label-xs font-label-xs text-outline">• Last: 14 kg × 12</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-primary-container text-surface-container-lowest flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform shadow-sm" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+<!-- Exercise 5: Dips (Chest focus) (Unselected) -->
+<div class="p-card-padding bg-surface-container-lowest border border-outline-variant hover:border-outline rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Dips (Chest focus)</h3>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Lower Chest, Triceps • Parallel Bars</p>
+<div class="flex items-center space-x-1 pt-unit-2">
+<span class="text-label-xs font-label-xs text-outline">Target: 3 Sets • Bodyweight + Belt</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant hover:border-outline text-on-surface flex items-center justify-center flex-shrink-0 active:scale-95 active:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Exercise 6: Dumbbell Pullover (Unselected) -->
+<div class="p-card-padding bg-surface-container-lowest border border-outline-variant hover:border-outline rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-between transition-all">
+<div class="space-y-unit-2 pr-unit-8">
+<div class="flex items-center space-x-unit-8">
+<h3 class="text-body-lg font-headline-sm text-on-surface font-semibold leading-tight">Dumbbell Pullover</h3>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Chest expansion, Serratus • Dumbbell</p>
+<div class="flex items-center space-x-1 pt-unit-2">
+<span class="text-label-xs font-label-xs text-outline">Target: 3 Sets • Cross-bench</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-outline-variant hover:border-outline text-on-surface flex items-center justify-center flex-shrink-0 active:scale-95 active:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Sticky Bottom Action Area -->
+<div class="p-gutter-mobile border-t border-outline-variant bg-surface-container-lowest flex-shrink-0">
+<button class="w-full h-12 bg-primary-container hover:bg-primary text-surface-container-lowest text-label-md font-label-md rounded-xl flex items-center justify-center space-x-2 shadow-sm active:scale-[0.98] transition-all" type="button">
+<span>Add Selected (2 Exercises)</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Persistent Top Status Bar Simulation -->
+<div class="absolute top-0 left-0 w-full h-10 px-6 flex justify-between items-center text-white text-xs font-semibold z-30 pointer-events-none select-none">
+<span>9:41</span>
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-[14px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+<span class="material-symbols-outlined text-[14px]">battery_full</span>
+</div>
+</div>
+</div>
+</body></html>

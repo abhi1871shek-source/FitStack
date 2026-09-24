@@ -1,0 +1,88 @@
+{
+  "user1_id": "b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+  "user2_id": "873bae4e-df83-44e7-bc70-1a35145055bc",
+  "results": {
+    "profiles": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/profiles?id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "habits": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/habits?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "habit_logs": {
+      "status_code": 404,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/habit_logs?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": {
+        "code": "PGRST205",
+        "details": null,
+        "hint": "Perhaps you meant the table 'public.habits'",
+        "message": "Could not find the table 'public.habit_logs' in the schema cache"
+      },
+      "row_count": 1,
+      "rls_enforced": false
+    },
+    "food_items": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/food_items?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "food_logs": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/food_logs?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "diet_preferences": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/diet_preferences?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "weekly_diet_plans": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/weekly_diet_plans?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "exercises": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/exercises?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "workout_logs": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/workout_logs?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "weekly_workout_plans": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/weekly_workout_plans?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    },
+    "daily_telemetry": {
+      "status_code": 200,
+      "query_url": "https://lbqtvmvfcxdkpfumyrlr.supabase.co/rest/v1/daily_telemetry?user_id=eq.b20ddf85-97d0-4ead-be7c-dee7caf6c606",
+      "response": [],
+      "row_count": 0,
+      "rls_enforced": true
+    }
+  }
+}

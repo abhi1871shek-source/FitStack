@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Weekly Plan</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#edf0ff",
+            "on-primary-fixed": "#002115",
+            "secondary-container": "#6cf8bb",
+            "on-secondary-container": "#00714d",
+            "on-secondary-fixed": "#002113",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-primary-fixed-variant": "#00513a",
+            "primary": "#005d42",
+            "on-secondary-fixed-variant": "#005236",
+            "inverse-surface": "#293040",
+            "surface-variant": "#dce2f7",
+            "surface-container-lowest": "#ffffff",
+            "background": "#f9f9ff",
+            "tertiary": "#863933",
+            "surface-container": "#e9edff",
+            "secondary": "#006c49",
+            "surface-bright": "#f9f9ff",
+            "error-container": "#ffdad6",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-background": "#141b2b",
+            "surface-container-low": "#f1f3ff",
+            "primary-container": "#047857",
+            "error": "#ba1a1a",
+            "inverse-primary": "#7bd8b1",
+            "surface-dim": "#d3daef",
+            "tertiary-fixed": "#ffdad6",
+            "outline": "#6e7a73",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed": "#3e0405",
+            "surface-container-highest": "#dce2f7",
+            "tertiary-container": "#a45049",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#7bd8b1",
+            "on-tertiary-container": "#ffe4e0",
+            "on-primary": "#ffffff",
+            "surface": "#f9f9ff",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#9ffdd3",
+            "outline-variant": "#bdc9c1",
+            "surface-tint": "#006c4e",
+            "on-surface": "#141b2b",
+            "primary-fixed": "#97f5cc",
+            "on-surface-variant": "#3e4943",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container-high": "#e1e8fd",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "unit-16": "1rem",
+            "unit-24": "1.5rem",
+            "unit-8": "0.5rem",
+            "card-padding": "1rem",
+            "unit-2": "0.125rem",
+            "gutter-mobile": "1rem",
+            "unit-4": "0.25rem",
+            "unit-12": "0.75rem",
+            "gutter-desktop": "1.5rem",
+            "unit-32": "2rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-xs": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-on-primary">
+<div class="w-full max-w-md min-h-screen flex flex-col bg-background relative shadow-sm">
+<!-- Top App Bar Navigation -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-sm border-b border-outline-variant/30 px-gutter-mobile h-14 flex items-center justify-between">
+<button aria-label="Back to Today's Workout" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_back_ios_new">arrow_back_ios_new</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-tight tracking-tight">Weekly Plan</h1>
+<p class="font-label-xs text-label-xs text-on-surface-variant">Oct 12 – Oct 18 • 4 Workouts, 2 Rest Days</p>
+</div>
+<button aria-label="Calendar settings" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="calendar_month">calendar_month</span>
+</button>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 px-gutter-mobile pt-unit-16 pb-28 space-y-unit-16">
+<!-- Weekly Summary / Adherence Stats -->
+<section class="bg-surface-container-lowest rounded-xl p-card-padding border border-outline-variant/40 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+<div class="flex items-center justify-between mb-unit-8">
+<div class="flex items-center space-x-unit-8">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-semibold">Adherence Telemetry</span>
+</div>
+<span class="font-label-md text-label-md text-primary-container font-semibold">4 / 5 Complete</span>
+</div>
+<div class="flex items-baseline justify-between mb-unit-8">
+<div>
+<span class="font-metric-val text-metric-val text-on-surface font-bold">80%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-unit-4">Weekly Adherence</span>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Target: 5 Days</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant block">Active Training</span>
+</div>
+</div>
+<!-- Adherence Progress Bar -->
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary-container rounded-full transition-all duration-500" style="width: 80%"></div>
+</div>
+</section>
+<!-- Section Title -->
+<div class="flex items-center justify-between pt-unit-4">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Cycle Progression</h2>
+<span class="font-label-xs text-label-xs text-outline">Week 42</span>
+</div>
+<!-- Vertical 7-Day Stack -->
+<div class="space-y-unit-8">
+<!-- Monday: Completed -->
+<article class="bg-surface-container-lowest rounded-xl p-unit-12 border border-outline-variant/40 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high/60 flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-on-surface-variant leading-none">Mon</span>
+<span class="font-label-md text-label-md font-bold text-on-surface mt-0.5 leading-none">12</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Chest &amp; Triceps</h3>
+<span class="inline-flex items-center px-unit-4 py-0.5 rounded bg-surface-container text-primary font-label-xs text-[10px] font-semibold">
+<span class="material-symbols-outlined text-[12px] mr-0.5 text-primary-container" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                  Completed
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">4 exercises • 50m • Volume 8,420 kg</p>
+</div>
+</div>
+<button aria-label="Edit Monday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Tuesday: Completed -->
+<article class="bg-surface-container-lowest rounded-xl p-unit-12 border border-outline-variant/40 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high/60 flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-on-surface-variant leading-none">Tue</span>
+<span class="font-label-md text-label-md font-bold text-on-surface mt-0.5 leading-none">13</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Back &amp; Biceps</h3>
+<span class="inline-flex items-center px-unit-4 py-0.5 rounded bg-surface-container text-primary font-label-xs text-[10px] font-semibold">
+<span class="material-symbols-outlined text-[12px] mr-0.5 text-primary-container" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                  Completed
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">5 exercises • 55m • Volume 9,150 kg</p>
+</div>
+</div>
+<button aria-label="Edit Tuesday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Wednesday (TODAY): Active Highlighted Card -->
+<article class="bg-surface-container-lowest rounded-xl p-unit-12 border-2 border-primary-container shadow-[0_2px_8px_rgba(4,120,87,0.12)] flex items-center justify-between relative">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex flex-col items-center justify-center text-center text-on-primary">
+<span class="font-label-xs text-[10px] uppercase font-bold leading-none text-on-primary/90">Wed</span>
+<span class="font-label-md text-label-md font-bold leading-none mt-0.5">14</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Push Day (Chest &amp; Triceps)</h3>
+<span class="px-unit-4 py-0.5 rounded bg-primary-container text-on-primary font-label-xs text-[10px] font-bold tracking-wide uppercase">
+                  TODAY
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5 font-medium">Scheduled • 5 sets target • Incline focus</p>
+</div>
+</div>
+<button aria-label="Edit Wednesday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Thursday: Rest & Recovery (Muted) -->
+<article class="bg-surface-container-high/40 rounded-xl p-unit-12 border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-outline leading-none">Thu</span>
+<span class="font-label-md text-label-md font-bold text-on-surface-variant mt-0.5 leading-none">15</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="bedtime">bedtime</span>
+<h3 class="font-label-md text-label-md font-semibold text-on-surface-variant">Rest &amp; Recovery</h3>
+</div>
+<p class="font-body-sm text-body-sm text-outline text-[13px] mt-0.5">Hydration protocol • 8h sleep goal</p>
+</div>
+</div>
+<button aria-label="Edit Thursday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Friday: Upcoming -->
+<article class="bg-surface-container-lowest rounded-xl p-unit-12 border border-outline-variant/40 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high/60 flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-on-surface-variant leading-none">Fri</span>
+<span class="font-label-md text-label-md font-bold text-on-surface mt-0.5 leading-none">16</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Legs &amp; Core</h3>
+<span class="font-label-xs text-label-xs text-outline font-medium">Scheduled</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">6 exercises • 60m • Barbell Squats</p>
+</div>
+</div>
+<button aria-label="Edit Friday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Saturday: Upcoming -->
+<article class="bg-surface-container-lowest rounded-xl p-unit-12 border border-outline-variant/40 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high/60 flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-on-surface-variant leading-none">Sat</span>
+<span class="font-label-md text-label-md font-bold text-on-surface mt-0.5 leading-none">17</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Shoulders &amp; Arms</h3>
+<span class="font-label-xs text-label-xs text-outline font-medium">Scheduled</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">5 exercises • 45m • Overhead Press</p>
+</div>
+</div>
+<button aria-label="Edit Saturday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+<!-- Sunday: Active Recovery & Mobility (Muted) -->
+<article class="bg-surface-container-high/40 rounded-xl p-unit-12 border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center space-x-unit-12">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex flex-col items-center justify-center text-center">
+<span class="font-label-xs text-[10px] uppercase font-bold text-outline leading-none">Sun</span>
+<span class="font-label-md text-label-md font-bold text-on-surface-variant mt-0.5 leading-none">18</span>
+</div>
+<div>
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="self_improvement">self_improvement</span>
+<h3 class="font-label-md text-label-md font-semibold text-on-surface-variant">Active Recovery &amp; Mobility</h3>
+</div>
+<p class="font-body-sm text-body-sm text-outline text-[13px] mt-0.5">30m dynamic stretch &amp; soft-tissue release</p>
+</div>
+</div>
+<button aria-label="Edit Sunday workout" class="w-8 h-8 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</article>
+</div>
+</main>
+<!-- Bottom Navigation Component (JSON Guided: 5 destinations, Workouts Active) -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 max-w-md mx-auto bg-surface dark:bg-surface shadow-[0_-2px_6px_rgba(0,0,0,0.03)]">
+<!-- 1: Today -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="calendar_today">calendar_today</span>
+<span class="text-label-xs font-label-xs mt-1">Today</span>
+</a>
+<!-- 2: Workouts (ACTIVE DESTINATION) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px] text-primary-container" data-icon="fitness_center" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="text-label-xs font-label-xs mt-1 text-primary-container">Workouts</span>
+</a>
+<!-- 3: Habits -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="check_circle">check_circle</span>
+<span class="text-label-xs font-label-xs mt-1">Habits</span>
+</a>
+<!-- 4: Nutrition -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="restaurant">restaurant</span>
+<span class="text-label-xs font-label-xs mt-1">Nutrition</span>
+</a>
+<!-- 5: Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="person">person</span>
+<span class="text-label-xs font-label-xs mt-1">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

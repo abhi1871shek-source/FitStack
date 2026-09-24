@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Diet Preferences</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#3e0405",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#9ffdd3",
+            "on-secondary-container": "#00714d",
+            "surface": "#f9f9ff",
+            "on-background": "#141b2b",
+            "primary": "#005d42",
+            "primary-fixed": "#97f5cc",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary": "#863933",
+            "inverse-primary": "#7bd8b1",
+            "background": "#f9f9ff",
+            "inverse-on-surface": "#edf0ff",
+            "secondary-fixed": "#6ffbbe",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary": "#006c49",
+            "outline": "#6e7a73",
+            "surface-tint": "#006c4e",
+            "primary-container": "#047857",
+            "surface-dim": "#d3daef",
+            "tertiary-container": "#a45049",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#3e4943",
+            "on-primary-fixed": "#002115",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed": "#ffdad6",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-secondary-fixed": "#002113",
+            "on-surface": "#141b2b",
+            "error": "#ba1a1a",
+            "surface-container": "#e9edff",
+            "on-secondary": "#ffffff",
+            "on-tertiary-container": "#ffe4e0",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "outline-variant": "#bdc9c1",
+            "surface-container-high": "#e1e8fd",
+            "surface-variant": "#dce2f7",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#293040",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-primary-fixed-variant": "#00513a",
+            "primary-fixed-dim": "#7bd8b1",
+            "surface-container-low": "#f1f3ff",
+            "surface-container-highest": "#dce2f7",
+            "secondary-container": "#6cf8bb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "unit-12": "0.75rem",
+            "gutter-mobile": "1rem",
+            "unit-32": "2rem",
+            "unit-8": "0.5rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "card-padding": "1rem",
+            "unit-24": "1.5rem",
+            "unit-2": "0.125rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-xs": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      background-color: #f9f9ff;
+      color: #141b2b;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .flat-shadow {
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary selection:text-on-primary">
+<div class="w-full max-w-md bg-surface min-h-screen flex flex-col relative pb-unit-32 border-x border-outline-variant/30">
+<!-- Status Bar Simulation -->
+<header class="w-full pt-3 px-gutter-mobile flex justify-between items-center text-on-surface select-none">
+<span class="font-label-md text-label-md tracking-tight">9:41</span>
+<div class="flex items-center space-x-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">battery_full</span>
+</div>
+</header>
+<!-- Top Bar Navigation (Task-focused onboarding screen) -->
+<nav class="w-full px-gutter-mobile pt-2 pb-unit-8 flex items-center justify-between">
+<button aria-label="Go back to previous step" class="w-10 h-10 -ml-2 rounded-lg flex items-center justify-center text-on-surface active:scale-95 transition-transform duration-150 ease-in-out hover:bg-surface-container" type="button">
+<span class="material-symbols-outlined text-[22px]">chevron_left</span>
+</button>
+<div class="flex items-center space-x-1.5">
+<span class="font-label-xs text-label-xs text-on-surface-variant font-semibold tracking-wider">STEP 2 OF 3</span>
+</div>
+<div class="w-10 h-10 flex items-center justify-end">
+<span class="font-label-md text-label-md text-primary font-semibold cursor-pointer">Skip</span>
+</div>
+</nav>
+<!-- Progress Indicator Bar -->
+<div class="w-full px-gutter-mobile mb-unit-16">
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-2/3 transition-all duration-300"></div>
+</div>
+</div>
+<!-- Main Scrollable Content -->
+<main class="flex-1 px-gutter-mobile space-y-unit-24">
+<!-- Header Section -->
+<section class="space-y-unit-4">
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
+          Let's plan your diet
+        </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Tell us what you like to eat — we'll build your weekly plan around it.
+        </p>
+</section>
+<!-- Section: Cuisine Preference -->
+<section class="space-y-unit-12">
+<div class="flex justify-between items-baseline">
+<h2 class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-semibold">
+            Cuisine Preference
+          </h2>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Select multiple</span>
+</div>
+<div class="flex flex-wrap gap-unit-8">
+<!-- Kerala (Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center space-x-1.5 active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>Kerala</span>
+</button>
+<!-- North Indian (Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center space-x-1.5 active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>North Indian</span>
+</button>
+<!-- South Indian (Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center space-x-1.5 active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>South Indian</span>
+</button>
+<!-- American -->
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center active:scale-95 transition-transform duration-150 hover:bg-surface-container-low" type="button">
+<span>American</span>
+</button>
+<!-- Mediterranean (Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center space-x-1.5 active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>Mediterranean</span>
+</button>
+<!-- Chinese -->
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center active:scale-95 transition-transform duration-150 hover:bg-surface-container-low" type="button">
+<span>Chinese</span>
+</button>
+<!-- Continental -->
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center active:scale-95 transition-transform duration-150 hover:bg-surface-container-low" type="button">
+<span>Continental</span>
+</button>
+</div>
+</section>
+<!-- Section: Dietary Type -->
+<section class="space-y-unit-12">
+<h2 class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-semibold">
+          Dietary Type
+        </h2>
+<div class="grid grid-cols-2 gap-unit-8">
+<!-- Vegetarian -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-95 transition-transform duration-150" type="button">
+            Vegetarian
+          </button>
+<!-- Non-Vegetarian (Selected) -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border-2 border-primary-container text-primary-container font-label-md text-label-md flex items-center justify-center space-x-1.5 active:scale-95 transition-transform duration-150 font-bold" type="button">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Non-Vegetarian</span>
+</button>
+<!-- Eggetarian -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-95 transition-transform duration-150" type="button">
+            Eggetarian
+          </button>
+<!-- Vegan -->
+<button class="h-11 rounded-xl bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center active:scale-95 transition-transform duration-150" type="button">
+            Vegan
+          </button>
+</div>
+</section>
+<!-- Section: Daily Calorie Target -->
+<section class="space-y-unit-12">
+<h2 class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-semibold">
+          Daily Calorie Target
+        </h2>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-unit-16 flat-shadow space-y-unit-8">
+<div class="flex items-center justify-between border-b border-outline-variant/40 pb-unit-12">
+<div class="flex items-baseline space-x-unit-4">
+<span class="font-display-lg-mobile text-display-lg-mobile font-bold text-on-surface tracking-tight">1,850</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">kcal / day</span>
+</div>
+<button aria-label="Edit calorie target manually" class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="flex items-center justify-between pt-unit-2">
+<div class="flex items-center space-x-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-primary">flag</span>
+<span class="font-body-sm text-body-sm">Based on your goal: <strong class="font-semibold text-on-surface">Weight Loss</strong></span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]">info</span>
+</div>
+</div>
+</section>
+<!-- Section: Meals per Day -->
+<section class="space-y-unit-12">
+<h2 class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-semibold">
+          Meals per Day
+        </h2>
+<div class="grid grid-cols-3 gap-unit-8 p-1 bg-surface-container-low rounded-xl border border-outline-variant/60">
+<!-- 3 meals -->
+<button class="h-10 rounded-lg text-on-surface-variant font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            3 meals
+          </button>
+<!-- 4 meals (Selected) -->
+<button class="h-10 rounded-lg bg-surface-container-lowest border border-outline-variant/80 text-primary-container font-label-md text-label-md font-bold flex items-center justify-center flat-shadow" type="button">
+            4 meals
+          </button>
+<!-- 5 meals -->
+<button class="h-10 rounded-lg text-on-surface-variant font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            5 meals
+          </button>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant px-1">
+          Breakfast, Lunch, Evening Snack &amp; Dinner scheduled around workouts.
+        </p>
+</section>
+</main>
+<!-- Bottom Action Bar (Fixed / Sticky with Safe Area) -->
+<div class="sticky bottom-0 left-0 right-0 w-full bg-surface/95 backdrop-blur-sm px-gutter-mobile pt-unit-12 pb-6 mt-unit-24">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-md text-label-md font-semibold flex items-center justify-center space-x-2 active:scale-95 transition-transform duration-150 ease-in-out shadow-sm" type="button">
+<span>Generate My Plan</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<div class="w-32 h-1 bg-on-surface-variant/20 rounded-full mx-auto mt-4"></div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Food Database - FitStack</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#f1f3ff",
+            "surface-bright": "#f9f9ff",
+            "secondary-container": "#6cf8bb",
+            "secondary": "#006c49",
+            "on-tertiary-fixed": "#3e0405",
+            "surface": "#f9f9ff",
+            "inverse-primary": "#7bd8b1",
+            "tertiary-fixed": "#ffdad6",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-container-highest": "#dce2f7",
+            "on-error": "#ffffff",
+            "primary-fixed": "#97f5cc",
+            "outline-variant": "#bdc9c1",
+            "on-tertiary-container": "#ffe4e0",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "background": "#f9f9ff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-fixed": "#002115",
+            "surface-container-high": "#e1e8fd",
+            "primary-fixed-dim": "#7bd8b1",
+            "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#00513a",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "surface-variant": "#dce2f7",
+            "on-primary-container": "#9ffdd3",
+            "on-secondary-fixed": "#002113",
+            "on-primary": "#ffffff",
+            "inverse-surface": "#293040",
+            "primary": "#005d42",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "inverse-on-surface": "#edf0ff",
+            "surface-tint": "#006c4e",
+            "surface-container": "#e9edff",
+            "secondary-fixed": "#6ffbbe",
+            "on-background": "#141b2b",
+            "on-surface": "#141b2b",
+            "primary-container": "#047857",
+            "on-surface-variant": "#3e4943",
+            "surface-dim": "#d3daef",
+            "outline": "#6e7a73",
+            "tertiary-container": "#a45049",
+            "tertiary": "#863933"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "unit-12": "0.75rem",
+            "unit-24": "1.5rem",
+            "gutter-mobile": "1rem",
+            "unit-2": "0.125rem",
+            "unit-32": "2rem",
+            "unit-8": "0.5rem",
+            "unit-4": "0.25rem",
+            "card-padding": "1rem",
+            "unit-16": "1rem",
+            "gutter-desktop": "1.5rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "metric-val": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "label-xs": ["Inter"],
+            "display-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+            "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "metric-val": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "display-lg-mobile": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700"}],
+            "label-xs": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+            "display-lg": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+            "headline-sm": ["20px", {"lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased font-body-sm min-h-screen flex justify-center selection:bg-primary selection:text-on-primary">
+<!-- Mobile Canvas Device Shell -->
+<div class="w-full max-w-md bg-surface min-h-screen flex flex-col relative pb-36">
+<!-- Top App Navigation Anchor (Header) -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md px-gutter-mobile pt-3 pb-2 flex flex-col gap-unit-8 border-b border-outline-variant/30">
+<div class="flex items-center justify-between h-11">
+<button aria-label="Go back" class="w-10 h-10 -ml-2 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm text-on-surface font-bold tracking-tight">Food Database</h1>
+<div class="flex items-center gap-unit-4">
+<button aria-label="Barcode Scanner" class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[24px]">barcode_scanner</span>
+</button>
+</div>
+</div>
+<!-- Target Meal Selector Row -->
+<div class="flex items-center justify-between bg-surface-container-low px-unit-12 py-unit-8 rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-unit-8">
+<span class="text-label-xs font-label-xs text-on-surface-variant">Adding to:</span>
+<div class="flex items-center gap-unit-4">
+<span class="text-label-md font-label-md text-on-surface">Lunch</span>
+<span class="text-label-xs font-label-xs text-outline font-normal">• Oct 14</span>
+</div>
+</div>
+<button class="flex items-center gap-unit-2 text-primary font-label-md text-label-md hover:underline active:scale-95 transition-transform" type="button">
+<span>Switch</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content Stream -->
+<main class="flex-1 px-gutter-mobile pt-unit-16 flex flex-col gap-unit-16">
+<!-- Search Input Section -->
+<section class="flex flex-col gap-unit-12">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-unit-12 text-outline text-[20px] pointer-events-none">search</span>
+<input class="w-full h-11 pl-10 pr-20 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Search foods, brands, recipes..." type="text" value="Grilled Chicken Breast"/>
+<div class="absolute right-unit-8 flex items-center gap-unit-4">
+<button aria-label="Clear search" class="w-7 h-7 rounded flex items-center justify-center text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+<div class="h-4 w-[1px] bg-outline-variant/40"></div>
+<button aria-label="Scan in input" class="w-7 h-7 rounded flex items-center justify-center text-primary hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+</button>
+</div>
+</div>
+<!-- Filter Chips (Horizontally Scrollable) -->
+<div class="flex items-center gap-unit-8 overflow-x-auto no-scrollbar -mx-gutter-mobile px-gutter-mobile pb-1">
+<!-- Active Chip -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-container text-on-primary text-label-md font-label-md shrink-0 flex items-center gap-unit-4 shadow-sm" type="button">
+<span>Recent</span>
+<span class="bg-primary px-1.5 py-0.5 rounded-full text-label-xs font-label-xs text-on-primary">12</span>
+</button>
+<!-- Inactive Filter Chips -->
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-label-md font-label-md shrink-0 hover:bg-surface-container active:scale-95 transition-all" type="button">
+            Favorites (8)
+          </button>
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-label-md font-label-md shrink-0 hover:bg-surface-container active:scale-95 transition-all" type="button">
+            High Protein
+          </button>
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-label-md font-label-md shrink-0 hover:bg-surface-container active:scale-95 transition-all" type="button">
+            Whole Foods
+          </button>
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-label-md font-label-md shrink-0 hover:bg-surface-container active:scale-95 transition-all" type="button">
+            Saved Meals
+          </button>
+<button class="h-8 px-unit-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant text-label-md font-label-md shrink-0 hover:bg-surface-container active:scale-95 transition-all" type="button">
+            Custom
+          </button>
+</div>
+</section>
+<!-- Food List Section Header -->
+<section class="flex flex-col gap-unit-12">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">Matching items (6)</span>
+<button class="flex items-center gap-unit-2 text-label-xs font-label-xs text-primary font-medium hover:underline" type="button">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Sort: Relevance</span>
+</button>
+</div>
+<!-- Food List Cards Collection -->
+<div class="flex flex-col gap-unit-8">
+<!-- Card 1: Selected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border-2 border-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-unit-8">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Grilled Chicken Breast</h2>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container/30 text-primary text-label-xs font-label-xs shrink-0">Selected</span>
+</div>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">Kirkland Signature • 100g cooked</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Item selected" class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Nutrient Telemetry Grid -->
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">165 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">31g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">0g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">3.6g</strong></span>
+</div>
+</div>
+</article>
+<!-- Card 2: Selected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border-2 border-primary shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-unit-8">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Brown Rice (Cooked)</h2>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container/30 text-primary text-label-xs font-label-xs shrink-0">Selected</span>
+</div>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">Organic • 150g portion</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Item selected" class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Nutrient Telemetry Grid -->
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">250 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">5g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">53g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">1.8g</strong></span>
+</div>
+</div>
+</article>
+<!-- Card 3: Unselected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 hover:border-outline-variant transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Rolled Oats</h2>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">Quaker • 40g (1/2 cup)</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Add item" class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-lowest text-outline hover:border-primary hover:text-primary flex items-center justify-center active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">150 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">5g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">27g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">3g</strong></span>
+</div>
+</div>
+</article>
+<!-- Card 4: Unselected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 hover:border-outline-variant transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Greek Yogurt (0% Fat)</h2>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">Fage Total • 170g container</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Add item" class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-lowest text-outline hover:border-primary hover:text-primary flex items-center justify-center active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">100 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">18g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">6g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">0g</strong></span>
+</div>
+</div>
+</article>
+<!-- Card 5: Unselected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 hover:border-outline-variant transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Avocado (Fresh)</h2>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">USDA Standard • 1 medium (150g)</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Add item" class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-lowest text-outline hover:border-primary hover:text-primary flex items-center justify-center active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">240 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">3g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">12g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">22g</strong></span>
+</div>
+</div>
+</article>
+<!-- Card 6: Unselected State -->
+<article class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] flex flex-col gap-unit-8 hover:border-outline-variant transition-all">
+<div class="flex items-start justify-between gap-unit-8">
+<div class="flex-1 min-w-0">
+<h2 class="text-body-sm font-body-sm font-semibold text-on-surface truncate">Whole Eggs (Large)</h2>
+<p class="text-label-xs font-label-xs text-outline truncate mt-0.5">Farm Fresh • 2 eggs (100g)</p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-unit-8 shrink-0">
+<button aria-label="Add item" class="w-8 h-8 rounded-full border border-outline-variant bg-surface-container-lowest text-outline hover:border-primary hover:text-primary flex items-center justify-center active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button aria-label="View nutrient breakdown" class="text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-unit-4 border-t border-outline-variant/30">
+<div class="flex items-center gap-unit-4 bg-surface-container-low px-unit-8 py-0.5 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">local_fire_department</span>
+<span class="text-label-xs font-label-xs text-on-surface font-semibold">143 kcal</span>
+</div>
+<div class="flex items-center gap-unit-8 text-label-xs font-label-xs text-on-surface-variant font-medium">
+<span>P: <strong class="text-on-surface">12.6g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>C: <strong class="text-on-surface">0.8g</strong></span>
+<span class="text-outline-variant">•</span>
+<span>F: <strong class="text-on-surface">9.5g</strong></span>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- Quick Add / Custom Food Link -->
+<div class="p-unit-12 rounded-xl bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-unit-8">
+<span class="material-symbols-outlined text-primary text-[20px]">add_circle</span>
+<span class="text-label-md font-label-md text-on-surface">Can't find your food?</span>
+</div>
+<button class="text-primary text-label-md font-label-md font-semibold hover:underline" type="button">
+          Create Custom
+        </button>
+</div>
+</main>
+<!-- Sticky Floating Multi-Selection Add Summary Bar (Docked above BottomNavBar) -->
+<div class="fixed bottom-16 left-0 right-0 z-40 max-w-md mx-auto px-gutter-mobile pb-unit-8">
+<div class="bg-inverse-surface text-inverse-on-surface p-unit-12 rounded-xl shadow-[0_4px_16px_-2px_rgba(17,24,39,0.18)] flex items-center justify-between border border-inverse-surface">
+<div class="flex flex-col">
+<div class="flex items-center gap-unit-4">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="text-label-md font-label-md text-inverse-on-surface font-semibold">2 items selected</span>
+</div>
+<span class="text-label-xs font-label-xs text-inverse-on-surface/70 mt-0.5">Total: 415 kcal (P: 36g)</span>
+</div>
+<button class="h-10 px-unit-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-label-md font-label-md font-semibold flex items-center gap-unit-4 shadow-sm active:scale-95 transition-all" type="button">
+<span>Add to Log (2)</span>
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar Anchor Component (Source of Truth JSON Executed) -->
+<!-- Active Destination determined as 'Nutrition' per screen semantic category -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 max-w-md mx-auto bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline shadow-[0_-1px_3px_0_rgba(0,0,0,0.03)]">
+<!-- Tab 1: Today -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out w-14" href="#">
+<span class="material-symbols-outlined text-[22px]">calendar_today</span>
+<span class="text-label-xs font-label-xs mt-0.5">Today</span>
+</a>
+<!-- Tab 2: Workouts -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out w-14" href="#">
+<span class="material-symbols-outlined text-[22px]">fitness_center</span>
+<span class="text-label-xs font-label-xs mt-0.5">Workouts</span>
+</a>
+<!-- Tab 3: Habits -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out w-14" href="#">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<span class="text-label-xs font-label-xs mt-0.5">Habits</span>
+</a>
+<!-- Tab 4: Nutrition (ACTIVE STATE DETERMINED) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out w-14" href="#">
+<span class="material-symbols-outlined text-[22px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="text-label-xs font-label-xs mt-0.5">Nutrition</span>
+</a>
+<!-- Tab 5: Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant py-unit-4 hover:text-primary active:scale-95 transition-transform duration-150 ease-in-out w-14" href="#">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="text-label-xs font-label-xs mt-0.5">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

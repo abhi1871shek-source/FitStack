@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Daily Tasks</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#97f5cc",
+            "surface-container": "#e9edff",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffe4e0",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "tertiary": "#863933",
+            "tertiary-container": "#a45049",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-tertiary": "#ffffff",
+            "background": "#f9f9ff",
+            "on-secondary-fixed": "#002113",
+            "primary-container": "#047857",
+            "on-tertiary-fixed": "#3e0405",
+            "on-primary-fixed-variant": "#00513a",
+            "on-background": "#141b2b",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary-container": "#6cf8bb",
+            "outline": "#6e7a73",
+            "on-primary-container": "#9ffdd3",
+            "inverse-on-surface": "#edf0ff",
+            "primary-fixed-dim": "#7bd8b1",
+            "secondary": "#006c49",
+            "outline-variant": "#bdc9c1",
+            "surface-variant": "#dce2f7",
+            "inverse-surface": "#293040",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed": "#6ffbbe",
+            "on-secondary-fixed-variant": "#005236",
+            "on-primary-fixed": "#002115",
+            "surface-container-low": "#f1f3ff",
+            "surface-dim": "#d3daef",
+            "surface-container-highest": "#dce2f7",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#ffdad6",
+            "error": "#ba1a1a",
+            "surface-container-high": "#e1e8fd",
+            "primary": "#005d42",
+            "inverse-primary": "#7bd8b1",
+            "on-secondary-container": "#00714d",
+            "on-surface-variant": "#3e4943",
+            "surface": "#f9f9ff",
+            "surface-tint": "#006c4e",
+            "on-surface": "#141b2b",
+            "surface-bright": "#f9f9ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "sans": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed flex justify-center min-h-screen">
+<!-- Mobile App Frame Container -->
+<div class="relative w-full max-w-md bg-background min-h-screen flex flex-col border-x border-outline-variant/30 shadow-2xl overflow-x-hidden">
+<!-- 1. System Status Bar -->
+<div class="flex justify-between items-center px-6 pt-3 pb-2 text-xs font-semibold tracking-tight text-on-surface z-20">
+<span>9:41</span>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- 2. Header & Metrics -->
+<header class="px-5 pt-2 pb-3 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-2xl font-bold text-on-surface tracking-tight">To Do</h1>
+<p class="text-sm font-medium text-primary-container">Today, Oct 14 • 4 of 7 completed</p>
+</div>
+<button aria-label="Calendar view" class="w-10 h-10 rounded-full border border-outline-variant/50 bg-surface-container-lowest flex items-center justify-center text-on-surface hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+</button>
+</div>
+<!-- Compact 7-Day Habit Strip (FitStack Style) -->
+<div class="grid grid-cols-7 gap-1.5 pt-2 pb-1">
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">S</span>
+<span class="text-xs font-bold text-on-surface">11</span>
+<div class="w-1.5 h-1.5 rounded-full bg-primary-container mt-1"></div>
+</div>
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">M</span>
+<span class="text-xs font-bold text-on-surface">12</span>
+<div class="w-1.5 h-1.5 rounded-full bg-primary-container mt-1"></div>
+</div>
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">T</span>
+<span class="text-xs font-bold text-on-surface">13</span>
+<div class="w-1.5 h-1.5 rounded-full bg-primary-container mt-1"></div>
+</div>
+<!-- Active Selected Day -->
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-primary-container text-on-primary shadow-sm ring-2 ring-primary-container/20">
+<span class="text-[10px] font-medium opacity-90">W</span>
+<span class="text-xs font-bold">14</span>
+<div class="w-1.5 h-1.5 rounded-full bg-on-primary mt-1"></div>
+</div>
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">T</span>
+<span class="text-xs font-bold text-on-surface">15</span>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-1"></div>
+</div>
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">F</span>
+<span class="text-xs font-bold text-on-surface">16</span>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-1"></div>
+</div>
+<div class="flex flex-col items-center py-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40">
+<span class="text-[10px] font-medium text-on-surface-variant">S</span>
+<span class="text-xs font-bold text-on-surface">17</span>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant mt-1"></div>
+</div>
+</div>
+<!-- Horizontal Filter Pills -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-semibold">
+<button class="px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary shadow-sm">All Tasks</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/50 hover:bg-surface-container-low transition-colors">Workout</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/50 hover:bg-surface-container-low transition-colors">Nutrition</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/50 hover:bg-surface-container-low transition-colors">Habits</button>
+</div>
+</header>
+<!-- Main Content Area: Tasks Stack -->
+<main class="flex-1 px-4 pb-28 pt-1 flex flex-col gap-3">
+<!-- Section: Active Tasks -->
+<div class="flex items-center justify-between px-1 pt-1">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Pending (3)</span>
+<span class="text-xs font-medium text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">swipe</span>
+          Swipe right to complete
+        </span>
+</div>
+<!-- Active Task 1: With Swipe Affordance Preview Hint -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm">
+<!-- Swipe Underlays / Affordance Hints -->
+<div class="absolute inset-y-0 left-0 w-12 bg-primary-container/10 flex items-center justify-center text-primary-container border-r border-primary-container/20">
+<span class="material-symbols-outlined text-xl">check</span>
+</div>
+<div class="absolute inset-y-0 right-0 w-12 bg-error/10 flex items-center justify-center text-error border-l border-error/20">
+<span class="material-symbols-outlined text-xl">close</span>
+</div>
+<!-- Foreground Interactive Card Body (slightly nudged right to exhibit swipe hint) -->
+<div class="relative z-10 bg-surface-container-lowest p-3.5 translate-x-2 flex items-center justify-between rounded-xl border-l-4 border-l-primary-container transition-transform">
+<div class="flex items-start gap-3">
+<button aria-label="Mark task done" class="w-5 h-5 mt-0.5 rounded border-2 border-outline-variant flex items-center justify-center hover:border-primary-container transition-colors"></button>
+<div>
+<h3 class="text-sm font-semibold text-on-surface leading-tight">Afternoon 20m Walk</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+<span class="flex items-center gap-0.5 font-medium text-primary-container">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 2:30 PM
+                </span>
+<span>•</span>
+<span class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">footprint</span> 3,000 steps
+                </span>
+<span>•</span>
+<span class="bg-surface-container-low px-1.5 py-0.5 rounded text-[11px]">Routine</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]">drag_indicator</span>
+</div>
+</div>
+<!-- Active Task 2: LONG-PRESS ACTIVE STATE with Native Context Menu Dropdown -->
+<div class="relative z-30">
+<!-- Pressed/Held Card State with subtle elevated ring & border highlight -->
+<div class="relative rounded-xl bg-surface-container-lowest border-2 border-primary-container shadow-md p-3.5 flex items-center justify-between ring-4 ring-primary-container/15">
+<div class="flex items-start gap-3">
+<button aria-label="Mark task done" class="w-5 h-5 mt-0.5 rounded border-2 border-outline-variant flex items-center justify-center"></button>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-sm font-semibold text-on-surface leading-tight">Gym — Push Workout</h3>
+<span class="text-[10px] font-semibold uppercase bg-primary-fixed/60 text-on-primary-fixed-variant px-1.5 py-0.2 rounded">In Progress</span>
+</div>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+<span class="flex items-center gap-0.5 font-medium text-primary-container">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 5:30 PM
+                </span>
+<span>•</span>
+<span class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">fitness_center</span> 55 mins
+                </span>
+<span>•</span>
+<span class="bg-surface-container-low px-1.5 py-0.5 rounded text-[11px]">Strength</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-medium text-primary-container animate-pulse">Held</span>
+<span class="material-symbols-outlined text-primary-container text-[20px]">more_vert</span>
+</div>
+</div>
+<!-- Attached Native Context Menu (Long-press interaction result) -->
+<div class="absolute right-2 top-full mt-1.5 w-48 rounded-xl bg-surface-container-lowest border border-outline-variant/60 shadow-xl py-1 z-40 animate-in fade-in zoom-in-95 duration-150">
+<div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-outline border-b border-outline-variant/30">
+            Task Actions
+          </div>
+<button class="w-full px-3.5 py-2 text-left text-xs font-semibold text-on-surface flex items-center gap-2.5 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">edit</span>
+<span>Edit Task</span>
+</button>
+<button class="w-full px-3.5 py-2 text-left text-xs font-semibold text-on-surface flex items-center gap-2.5 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">schedule</span>
+<span>Reschedule</span>
+</button>
+<div class="my-1 border-t border-outline-variant/30"></div>
+<button class="w-full px-3.5 py-2 text-left text-xs font-semibold text-error flex items-center gap-2.5 hover:bg-error-container/40 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-error">delete</span>
+<span>Delete</span>
+</button>
+</div>
+</div>
+<!-- Active Task 3: Drink Water (Clean Standard State) -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm p-3.5 flex items-center justify-between">
+<div class="flex items-start gap-3">
+<button aria-label="Mark task done" class="w-5 h-5 mt-0.5 rounded border-2 border-outline-variant flex items-center justify-center hover:border-primary-container transition-colors"></button>
+<div>
+<h3 class="text-sm font-semibold text-on-surface leading-tight">Drink 1L Water (Afternoon)</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+<span class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]">water_drop</span> Hydro Target
+              </span>
+<span>•</span>
+<span class="bg-surface-container-low px-1.5 py-0.5 rounded text-[11px]">Daily 3.5L</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]">drag_indicator</span>
+</div>
+<!-- 3. Completed Tasks Section (Collapsible Header & Dimmed/Strikethrough Cards) -->
+<div class="mt-4 pt-2">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/30 px-1 cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Completed (4)</span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+<button class="text-xs font-semibold text-outline hover:text-on-surface flex items-center gap-0.5">
+            Hide
+            <span class="material-symbols-outlined text-[16px]">expand_less</span>
+</button>
+</div>
+<div class="mt-3 flex flex-col gap-2.5">
+<!-- Completed Task 1 -->
+<div class="rounded-xl bg-surface-container-low/70 border border-outline-variant/30 p-3 flex items-center justify-between opacity-80">
+<div class="flex items-start gap-3">
+<div class="w-5 h-5 mt-0.5 rounded bg-primary-container text-on-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h4 class="text-sm font-medium text-on-surface/70 line-through leading-tight">Wake up at 5:00 AM</h4>
+<div class="flex items-center gap-2 mt-0.5 text-xs text-on-surface-variant/70">
+<span>5:00 AM</span>
+<span>•</span>
+<span>Routine Streak: 12d</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px]">done_all</span>
+</div>
+<!-- Completed Task 2 -->
+<div class="rounded-xl bg-surface-container-low/70 border border-outline-variant/30 p-3 flex items-center justify-between opacity-80">
+<div class="flex items-start gap-3">
+<div class="w-5 h-5 mt-0.5 rounded bg-primary-container text-on-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h4 class="text-sm font-medium text-on-surface/70 line-through leading-tight">Morning Hydration (1L)</h4>
+<div class="flex items-center gap-2 mt-0.5 text-xs text-on-surface-variant/70">
+<span>6:15 AM</span>
+<span>•</span>
+<span>Electrolytes added</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px]">done_all</span>
+</div>
+<!-- Completed Task 3 -->
+<div class="rounded-xl bg-surface-container-low/70 border border-outline-variant/30 p-3 flex items-center justify-between opacity-80">
+<div class="flex items-start gap-3">
+<div class="w-5 h-5 mt-0.5 rounded bg-primary-container text-on-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h4 class="text-sm font-medium text-on-surface/70 line-through leading-tight">Take Creatine &amp; Multivitamins</h4>
+<div class="flex items-center gap-2 mt-0.5 text-xs text-on-surface-variant/70">
+<span>7:30 AM</span>
+<span>•</span>
+<span>5g monohydrate</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px]">done_all</span>
+</div>
+<!-- Completed Task 4 -->
+<div class="rounded-xl bg-surface-container-low/70 border border-outline-variant/30 p-3 flex items-center justify-between opacity-80">
+<div class="flex items-start gap-3">
+<div class="w-5 h-5 mt-0.5 rounded bg-primary-container text-on-primary flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<div>
+<h4 class="text-sm font-medium text-on-surface/70 line-through leading-tight">Review Daily Goals</h4>
+<div class="flex items-center gap-2 mt-0.5 text-xs text-on-surface-variant/70">
+<span>8:00 AM</span>
+<span>•</span>
+<span>Mindset</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px]">done_all</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) positioned above the bottom navbar -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40">
+<button aria-label="Add new daily task" class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg hover:bg-primary transition-transform active:scale-95 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<!-- Bottom Persistent Navigation Bar (Matching FitStack Shell) -->
+<nav class="sticky bottom-0 left-0 right-0 z-30 border-t border-outline-variant/30 bg-surface-container-lowest px-4 py-2 flex items-center justify-between">
+<a class="flex flex-1 flex-col items-center gap-1 text-outline hover:text-primary-container transition-colors" href="#">
+<div class="flex h-7 items-center justify-center" data-icon="House">
+<span class="material-symbols-outlined text-[22px]">home</span>
+</div>
+<span class="text-[11px] font-medium tracking-tight">Dashboard</span>
+</a>
+<!-- Active: Habits / To-Do -->
+<a class="flex flex-1 flex-col items-center gap-1 text-primary-container font-semibold" href="#">
+<div class="flex h-7 items-center justify-center" data-icon="CheckSquare">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">check_box</span>
+</div>
+<span class="text-[11px] tracking-tight">Habits</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-outline hover:text-primary-container transition-colors" href="#">
+<div class="flex h-7 items-center justify-center" data-icon="Barbell">
+<span class="material-symbols-outlined text-[22px]">fitness_center</span>
+</div>
+<span class="text-[11px] font-medium tracking-tight">Workouts</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-outline hover:text-primary-container transition-colors" href="#">
+<div class="flex h-7 items-center justify-center" data-icon="User">
+<span class="material-symbols-outlined text-[22px]">person</span>
+</div>
+<span class="text-[11px] font-medium tracking-tight">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

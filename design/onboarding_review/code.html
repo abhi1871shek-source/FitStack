@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FitStack - Review Your Details</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6cf8bb",
+            "on-primary-fixed": "#002115",
+            "outline": "#6e7a73",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#3e4943",
+            "primary": "#005d42",
+            "surface-container-highest": "#dce2f7",
+            "on-primary-fixed-variant": "#00513a",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "secondary-fixed": "#6ffbbe",
+            "primary-fixed": "#97f5cc",
+            "surface-tint": "#006c4e",
+            "on-tertiary-fixed": "#3e0405",
+            "inverse-on-surface": "#edf0ff",
+            "on-tertiary-container": "#ffe4e0",
+            "secondary": "#006c49",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-background": "#141b2b",
+            "error-container": "#ffdad6",
+            "tertiary": "#863933",
+            "surface-container": "#e9edff",
+            "surface-container-high": "#e1e8fd",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-secondary-fixed": "#002113",
+            "surface-bright": "#f9f9ff",
+            "surface": "#f9f9ff",
+            "primary-container": "#047857",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-dim": "#d3daef",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "on-primary-container": "#9ffdd3",
+            "surface-variant": "#dce2f7",
+            "primary-fixed-dim": "#7bd8b1",
+            "inverse-primary": "#7bd8b1",
+            "outline-variant": "#bdc9c1",
+            "error": "#ba1a1a",
+            "on-surface": "#141b2b",
+            "tertiary-container": "#a45049"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "card-padding": "1rem",
+            "unit-24": "1.5rem",
+            "unit-8": "0.5rem",
+            "unit-32": "2rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "gutter-mobile": "1rem",
+            "gutter-desktop": "1.5rem",
+            "unit-2": "0.125rem",
+            "unit-12": "0.75rem"
+          },
+          "fontFamily": {
+            "label-xs": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex justify-center selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Mobile Device Shell Container (Semantic Task/Linear Flow: BottomNav suppressed per Dest. Rule) -->
+<main class="w-full max-w-md bg-surface flex flex-col min-h-screen relative shadow-sm border-x border-outline-variant/30">
+<!-- Mobile Native Status Bar Simulation -->
+<header class="w-full pt-3 px-6 flex justify-between items-center text-on-surface select-none z-20">
+<span class="font-label-md text-label-md tracking-tight font-bold">9:41</span>
+<div class="flex items-center space-x-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="wifi">wifi</span>
+<span class="material-symbols-outlined text-[18px] leading-none" data-icon="battery_full">battery_full</span>
+</div>
+</header>
+<!-- Top Flow Bar (Back, Step Indicator, Cancel) -->
+<nav aria-label="Onboarding Progress" class="w-full px-4 h-14 flex items-center justify-between z-10">
+<!-- Back Action -->
+<button aria-label="Go back" class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back_ios_new">arrow_back_ios_new</span>
+</button>
+<!-- Step Badge & Progress Telemetry -->
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-low rounded-full border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-semibold uppercase tracking-wider">Step 2 of 3</span>
+<span class="text-outline text-label-xs">•</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">66%</span>
+</div>
+<!-- Close / Dismiss Action -->
+<button aria-label="Close onboarding" class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</nav>
+<!-- Progress Line Graphic -->
+<div class="w-full px-4 mb-2">
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-300" style="width: 66%;"></div>
+</div>
+</div>
+<!-- Scrollable Content Canvas -->
+<section class="flex-1 px-4 pt-4 pb-28 flex flex-col">
+<!-- Headline & Editorial Intro -->
+<header class="mb-6">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold tracking-tight">
+          Review Your Details
+        </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">
+          Make sure everything looks right before we set up your personalized performance plan.
+        </p>
+</header>
+<!-- Central High-Craft Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/50 shadow-[0_1px_3px_0_rgba(0,0,0,0.04)] overflow-hidden">
+<!-- Row 1: Weight -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Weight</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-0.5">70 <span class="font-label-md text-label-md text-on-surface-variant font-normal">kg</span></span>
+</div>
+<button aria-label="Edit Weight" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-high mx-4"></div>
+<!-- Row 2: Height -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Height</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-0.5">175 <span class="font-label-md text-label-md text-on-surface-variant font-normal">cm</span></span>
+</div>
+<button aria-label="Edit Height" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-high mx-4"></div>
+<!-- Row 3: Experience Level -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Experience Level</span>
+<div class="mt-1 flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-primary-fixed/40 text-on-primary-fixed-variant font-label-md text-label-md font-semibold">
+                Beginner
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">&lt; 1 yr training</span>
+</div>
+</div>
+<button aria-label="Edit Experience Level" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-high mx-4"></div>
+<!-- Row 4: Primary Goal -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Primary Goal</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold mt-0.5">Weight Loss</span>
+</div>
+<button aria-label="Edit Primary Goal" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-high mx-4"></div>
+<!-- Row 5: Health Concerns -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Health Concerns</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="info">info</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Back Pain</span>
+</div>
+</div>
+<button aria-label="Edit Health Concerns" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="h-[1px] bg-surface-container-high mx-4"></div>
+<!-- Row 6: Body Type -->
+<div class="flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low/40 transition-colors"><div class="flex items-center gap-3">
+  <div class="w-11 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center overflow-hidden p-0.5 flex-shrink-0">
+    <img src="https://lh3.googleusercontent.com/aida/AEtjO1VVPg1PN6m_JdP-xcU4F0l5xo_bah5O9N4Vi2AHGVStNmlyouMNWvurldBG8MimpYE8NPa56V_tlWG_7q8jLzNlj-zhVz_mnDBDS6YpilgKatDcyKleiVZYddhD2bpqTKtIKws8nrMFgnism1tTCDObP0HE0Fs1VbVrXGgyxscTaRAxfWE5Uk--1baDCEfgd-Dp5OSRU_ht68phxSz6eGxxyBiFN12YqNrhI0ji16Yyh90PCSmwGqibHw" alt="Average Body Type Silhouette" class="w-full h-full object-contain mix-blend-multiply">
+  </div>
+  <div class="flex flex-col">
+    <span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Body Type</span>
+    <span class="font-body-lg text-body-lg text-on-surface font-semibold mt-0.5">Average</span>
+  </div>
+</div>
+<button aria-label="Edit Body Type" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high active:scale-95 transition-all" type="button">
+  <span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button></div>
+</div>
+<!-- Tactical Micro-Callout -->
+<aside class="mt-4 flex items-start gap-2.5 px-3 py-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface-variant">
+<span class="material-symbols-outlined text-outline text-[18px] mt-0.5 flex-shrink-0" data-icon="lock_clock">lock_clock</span>
+<p class="font-label-xs text-label-xs leading-relaxed text-on-surface-variant">
+          You can adjust your profile details anytime in <strong class="font-semibold text-on-surface">Settings &amp; Profile</strong> as your body composition evolves.
+        </p>
+</aside>
+<!-- Routine Calibrated Badge / Trust Metadata -->
+<div class="mt-6 flex items-center justify-center gap-2 text-outline">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="verified_user">verified_user</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-medium">Kinetic Protocol Ready</span>
+</div>
+</section>
+<!-- Sticky Bottom Action Dock -->
+<div class="fixed bottom-0 max-w-md w-full p-4 bg-surface/95 backdrop-blur-md border-t border-outline-variant/20 z-30 flex flex-col gap-2">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-md text-label-md font-semibold tracking-wide flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-[0.98] shadow-sm" type="button">
+<span class="">Confirm &amp; Continue</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Safe Area Inset Spacer for iOS -->
+<div class="h-2 w-full"></div>
+</div>
+</main>
+<script>
+    // Lightweight tactile click response
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Haptic feel trigger visual feedback
+        btn.classList.add('opacity-90');
+        setTimeout(() => btn.classList.remove('opacity-90'), 150);
+      });
+    });
+  </script>
+
+
+</body></html>

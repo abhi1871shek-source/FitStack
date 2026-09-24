@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Athletic Telemetry &amp; Habit Log</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6cf8bb",
+            "on-primary-fixed": "#002115",
+            "outline": "#6e7a73",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#3e4943",
+            "primary": "#005d42",
+            "surface-container-highest": "#dce2f7",
+            "on-primary-fixed-variant": "#00513a",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "secondary-fixed": "#6ffbbe",
+            "primary-fixed": "#97f5cc",
+            "surface-tint": "#006c4e",
+            "on-tertiary-fixed": "#3e0405",
+            "inverse-on-surface": "#edf0ff",
+            "on-tertiary-container": "#ffe4e0",
+            "secondary": "#006c49",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-background": "#141b2b",
+            "error-container": "#ffdad6",
+            "tertiary": "#863933",
+            "surface-container": "#e9edff",
+            "surface-container-high": "#e1e8fd",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-secondary-fixed": "#002113",
+            "surface-bright": "#f9f9ff",
+            "surface": "#f9f9ff",
+            "primary-container": "#047857",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-dim": "#d3daef",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "on-primary-container": "#9ffdd3",
+            "surface-variant": "#dce2f7",
+            "primary-fixed-dim": "#7bd8b1",
+            "inverse-primary": "#7bd8b1",
+            "outline-variant": "#bdc9c1",
+            "error": "#ba1a1a",
+            "on-surface": "#141b2b",
+            "tertiary-container": "#a45049"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "card-padding": "1rem",
+            "unit-24": "1.5rem",
+            "unit-8": "0.5rem",
+            "unit-32": "2rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "gutter-mobile": "1rem",
+            "gutter-desktop": "1.5rem",
+            "unit-2": "0.125rem",
+            "unit-12": "0.75rem"
+          },
+          "fontFamily": {
+            "label-xs": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col items-center justify-start p-0 selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Mobile Viewport Container: 390px-428px pinned architectural column -->
+<main class="w-full max-w-md min-h-screen bg-surface-container-lowest flex flex-col justify-between shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] border-x border-outline-variant/30">
+<!-- Top System Bar (iOS Status Frame) -->
+<header class="w-full pt-3 px-6 pb-2 flex justify-between items-center select-none text-on-surface">
+<span class="font-label-xs text-label-xs text-on-surface font-semibold tracking-tight">9:41</span>
+<div class="flex items-center space-x-2 text-on-surface">
+<span class="material-symbols-outlined text-[16px]" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="wifi">wifi</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="battery_full">battery_full</span>
+</div>
+</header>
+<!-- Main Authentication Flow Container -->
+<div class="px-gutter-mobile flex-1 flex flex-col justify-center py-unit-24">
+<!-- Brand Anchor Header -->
+<section class="flex flex-col items-center text-center mb-unit-32">
+<!-- Logo Stack / Icon -->
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary mb-unit-12 shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
+<span class="material-symbols-outlined text-[26px]" data-icon="fitness_center">fitness_center</span>
+</div>
+<!-- Brand Name -->
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight">
+          FitStack
+        </h1>
+<!-- Kinetic Philosophy Tagline -->
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-unit-4 max-w-[260px]">
+          Build habits. Track progress. Stay consistent.
+        </p>
+</section>
+<!-- Authentication Form -->
+<form class="space-y-unit-16 w-full" onsubmit="event.preventDefault();">
+<!-- Email Input Component -->
+<div class="space-y-unit-4">
+<label class="block font-label-md text-label-md text-on-surface" for="email-field">
+            Email
+          </label>
+<div class="relative">
+<input autocomplete="email" class="w-full h-11 px-unit-12 bg-surface text-on-surface font-body-sm text-body-sm placeholder:text-outline-variant rounded-xl border border-outline-variant focus:border-primary-container focus:ring-0 focus:outline-none transition-colors duration-150" id="email-field" name="email" placeholder="alex@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input Component with Toggle -->
+<div class="space-y-unit-4">
+<label class="block font-label-md text-label-md text-on-surface" for="password-field">
+            Password
+          </label>
+<div class="relative">
+<input autocomplete="current-password" class="w-full h-11 pl-unit-12 pr-11 bg-surface text-on-surface font-body-sm text-body-sm placeholder:text-outline-variant rounded-xl border border-outline-variant focus:border-primary-container focus:ring-0 focus:outline-none tracking-widest transition-colors duration-150" id="password-field" name="password" placeholder="••••••••" required="" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-colors cursor-pointer" id="toggle-password-btn" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility" id="password-eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Primary CTA: Solid Emerald Button -->
+<div class="pt-unit-4">
+<button class="w-full h-12 bg-primary-container text-on-primary font-label-md text-label-md rounded-xl active:scale-[0.98] hover:bg-primary transition-all duration-150 ease-in-out flex items-center justify-center font-semibold cursor-pointer shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]" type="submit">
+            Log In
+          </button>
+</div>
+<!-- Forgot Password Link -->
+<div class="text-center pt-unit-2">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors duration-150 underline-offset-4 hover:underline" href="#">
+            Forgot password?
+          </a>
+</div>
+<!-- Divider with subtle 'or' -->
+<div class="relative flex items-center py-unit-8">
+<div class="flex-grow border-t border-outline-variant/50"></div>
+<span class="flex-shrink mx-4 font-label-xs text-label-xs text-on-surface-variant">or</span>
+<div class="flex-grow border-t border-outline-variant/50"></div>
+</div>
+<!-- Secondary Social Action: Google Sign-in -->
+<button class="w-full h-12 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-xl border border-outline-variant active:bg-surface-container-low hover:bg-surface-container-low/70 transition-colors duration-150 flex items-center justify-center space-x-3 cursor-pointer shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]" type="button">
+<!-- Official Google 'G' Mark (Exact SVG Spec) -->
+<svg aria-hidden="true" class="w-4 h-4" viewbox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.27 21.37 7.33 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.99 0 12s.46 3.84 1.26 5.42l4.02-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.27 2.63 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
+</svg>
+<span class="font-semibold text-on-surface">Continue with Google</span>
+</button>
+</form>
+</div>
+<!-- Sub-footer: Sign-up Context Row -->
+<footer class="w-full py-unit-24 px-gutter-mobile text-center border-t border-outline-variant/30">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Don't have an account? 
+        <a class="font-label-md text-label-md text-primary-container hover:text-primary font-semibold transition-colors duration-150 underline-offset-4 hover:underline ml-1" href="#">
+          Sign Up
+        </a>
+</p>
+</footer>
+</main>
+<!-- Interactive script for password visibility toggle -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-password-btn');
+      const passwordInput = document.getElementById('password-field');
+      const eyeIcon = document.getElementById('password-eye-icon');
+
+      if (toggleBtn && passwordInput && eyeIcon) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          if (isPassword) {
+            passwordInput.setAttribute('type', 'text');
+            passwordInput.classList.remove('tracking-widest');
+            eyeIcon.textContent = 'visibility_off';
+            eyeIcon.setAttribute('data-icon', 'visibility_off');
+          } else {
+            passwordInput.setAttribute('type', 'password');
+            passwordInput.classList.add('tracking-widest');
+            eyeIcon.textContent = 'visibility';
+            eyeIcon.setAttribute('data-icon', 'visibility');
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

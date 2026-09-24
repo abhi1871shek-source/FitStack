@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FitStack - Today's Progress</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-primary-container": "#9ffdd3",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#6e7a73",
+            "on-primary-fixed-variant": "#00513a",
+            "tertiary": "#863933",
+            "on-tertiary-container": "#ffe4e0",
+            "surface": "#f9f9ff",
+            "on-secondary-container": "#00714d",
+            "surface-container-low": "#f1f3ff",
+            "background": "#f9f9ff",
+            "surface-container-high": "#e1e8fd",
+            "on-primary-fixed": "#002115",
+            "on-tertiary-fixed": "#3e0405",
+            "primary": "#005d42",
+            "primary-fixed-dim": "#7bd8b1",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "surface-container": "#e9edff",
+            "secondary-container": "#6cf8bb",
+            "surface-tint": "#006c4e",
+            "surface-container-highest": "#dce2f7",
+            "surface-variant": "#dce2f7",
+            "on-error-container": "#93000a",
+            "surface-bright": "#f9f9ff",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary-fixed": "#6ffbbe",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#7bd8b1",
+            "tertiary-fixed": "#ffdad6",
+            "on-surface-variant": "#3e4943",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#a45049",
+            "outline-variant": "#bdc9c1",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#edf0ff",
+            "primary-fixed": "#97f5cc",
+            "primary-container": "#047857",
+            "on-background": "#141b2b",
+            "on-secondary-fixed": "#002113",
+            "secondary": "#006c49",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-surface": "#141b2b",
+            "inverse-surface": "#293040",
+            "surface-dim": "#d3daef"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "unit-2": "0.125rem",
+            "unit-12": "0.75rem",
+            "unit-8": "0.5rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "card-padding": "1rem",
+            "gutter-mobile": "1rem",
+            "unit-24": "1.5rem",
+            "unit-32": "2rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-xs": ["Inter"],
+            "body-sm": ["Inter"],
+            "metric-val": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col items-center">
+<!-- Mobile Frame Container -->
+<div class="w-full max-w-md bg-surface min-h-screen flex flex-col relative pb-20 shadow-sm border-x border-outline-variant">
+<!-- 1. Status Bar -->
+<header class="w-full px-gutter-mobile pt-3 pb-1 flex justify-between items-center bg-surface select-none">
+<span class="text-label-md font-label-md text-on-surface">9:41</span>
+<div class="flex items-center space-x-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[16px]">battery_full</span>
+</div>
+</header>
+<!-- Top App Bar (FitStack Standard) -->
+<nav class="flex justify-between items-center w-full px-gutter-mobile h-14 bg-surface select-none">
+<div class="flex items-center space-x-unit-8">
+<button aria-label="Go back" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-container active:scale-95 transition-transform text-on-surface">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div>
+<h1 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Today's Progress</h1>
+<p class="text-label-xs font-label-xs text-outline">Wednesday, Oct 14 • On Track</p>
+</div>
+</div>
+<div class="flex items-center space-x-unit-4">
+<button aria-label="Calendar view" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-container active:scale-95 transition-transform text-on-surface">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+</button>
+<button aria-label="Share metrics" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-container active:scale-95 transition-transform text-on-surface">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-gutter-mobile pt-unit-8 space-y-unit-16 overflow-y-auto">
+<!-- 2. Hero Activity Ring Section -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-unit-16 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+<div class="relative w-48 h-48 flex items-center justify-center my-unit-8">
+<!-- Circular Progress SVG -->
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
+<!-- Background Track -->
+<circle class="stroke-surface-container-highest" cx="80" cy="80" fill="transparent" r="68" stroke-width="12"></circle>
+<!-- Progress Arc (62.4% filled: stroke-dasharray = 2 * PI * 68 ≈ 427.25; offset = 427.25 * (1 - 0.624) ≈ 160.6) -->
+<circle class="transition-all duration-700 ease-out" cx="80" cy="80" fill="transparent" r="68" stroke="#047857" stroke-dasharray="427.25" stroke-dashoffset="160.6" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<!-- Inner Metric Telemetry -->
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-primary-container text-[22px] mb-unit-2" style="font-variation-settings: 'FILL' 1;">directions_walk</span>
+<span class="text-display-lg-mobile font-display-lg-mobile text-on-surface tracking-tight leading-none">6,240</span>
+<span class="text-label-xs font-label-xs text-outline uppercase tracking-wider mt-1">steps today</span>
+</div>
+</div>
+<!-- Goal Status Subtitle Pill -->
+<div class="mt-unit-4 inline-flex items-center space-x-unit-8 bg-surface-container-low px-unit-12 py-unit-4 rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="text-label-md font-label-md text-on-surface">Goal: 10,000 steps</span>
+<span class="text-label-xs font-label-xs bg-surface-container-lowest text-primary-container font-semibold px-unit-4 py-0.5 rounded border border-outline-variant">62%</span>
+</div>
+</section><section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-unit-16 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]"><div class="flex items-center justify-between mb-unit-12"><div class="flex items-center space-x-unit-8"><div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary-container border border-outline-variant"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span></div><div><h3 class="text-label-md font-label-md text-on-surface font-semibold leading-tight">Today's Total Calories</h3><p class="text-label-xs font-label-xs text-outline">1,640 consumed / 2,350 kcal target</p></div></div><div class="text-right"><span class="text-label-xs font-label-xs bg-surface-container-low text-primary-container font-semibold px-unit-8 py-0.5 rounded border border-outline-variant">710 kcal left</span></div></div><div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mb-unit-8"><div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 70%;"></div></div><div class="flex justify-between items-center text-label-xs font-label-xs text-outline pt-0.5"><span class="">Consumed: <strong class="text-on-surface font-semibold">1,640 kcal</strong></span><span class="">Active Burn: <strong class="text-primary-container font-semibold">480 kcal</strong></span><span class="">Goal: <strong class="text-on-surface font-semibold">2,350 kcal</strong></span></div></section>
+<!-- 3. Horizontal Streak Bar Section -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-unit-16 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+<div class="flex justify-between items-center mb-unit-12">
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-primary-container text-[18px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-label-md font-label-md text-on-surface">18 Day Streak</span>
+</div>
+<span class="text-label-xs font-label-xs text-primary-container font-semibold">Unbroken</span>
+</div>
+<!-- 7-Day Matrix -->
+<div class="grid grid-cols-7 gap-unit-4 items-center">
+<!-- Day 1 (Thu Oct 8) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Th</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">8</span>
+</div>
+<!-- Day 2 (Fri Oct 9) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Fr</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">9</span>
+</div>
+<!-- Day 3 (Sat Oct 10) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Sa</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">10</span>
+</div>
+<!-- Day 4 (Sun Oct 11) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Su</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">11</span>
+</div>
+<!-- Day 5 (Mon Oct 12) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Mo</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">12</span>
+</div>
+<!-- Day 6 (Tue Oct 13) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-outline">Tu</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+<span class="text-label-xs font-label-xs text-outline">13</span>
+</div>
+<!-- Day 7 (Wed Oct 14 - Today Active) -->
+<div class="flex flex-col items-center space-y-unit-4">
+<span class="text-label-xs font-label-xs text-primary-container font-bold">We</span>
+<div class="w-8 h-8 rounded-full border-2 border-primary-container bg-surface-container-lowest flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary-container"></div>
+</div>
+<span class="text-label-xs font-label-xs text-primary-container font-bold">14</span>
+</div>
+</div>
+</section>
+<!-- 4. Today's Breakdown Card Section -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-unit-16 shadow-[0_1px_2px_0_rgba(0,0,0,0.04)]">
+<div class="flex justify-between items-baseline mb-unit-16 pb-unit-8 border-b border-outline-variant">
+<div>
+<h2 class="text-label-md font-label-md text-on-surface uppercase tracking-wider font-semibold">Today's Breakdown</h2>
+<p class="text-body-sm font-body-sm text-outline">Overall 68% Daily Adherence</p>
+</div>
+<span class="text-label-xs font-label-xs bg-surface-container-low text-primary-container px-unit-8 py-0.5 rounded border border-outline-variant font-semibold">In Progress</span>
+</div>
+<div class="space-y-unit-16">
+<!-- Item 1: Habits -->
+<div class="space-y-unit-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-outline text-[18px]">check_circle</span>
+<span class="text-body-sm font-body-sm text-on-surface font-medium">Habits</span>
+<span class="text-label-xs font-label-xs text-outline">(3 of 5 completed)</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface font-semibold tabular-nums">60%</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 60%;"></div>
+</div>
+</div>
+<!-- Item 2: Gym -->
+<div class="space-y-unit-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-primary-container text-[18px]">fitness_center</span>
+<span class="text-body-sm font-body-sm text-on-surface font-medium">Gym</span>
+<span class="text-label-xs font-label-xs text-outline">Push Day completed (55m)</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-primary-container text-[16px]">verified</span>
+<span class="text-label-md font-label-md text-primary-container font-semibold tabular-nums">100%</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Item 3: Diet -->
+<div class="space-y-unit-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-unit-8">
+<span class="material-symbols-outlined text-outline text-[18px]">restaurant</span>
+<span class="text-body-sm font-body-sm text-on-surface font-medium">Diet</span>
+<span class="text-label-xs font-label-xs text-outline">1,640 / 2,350 kcal</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface font-semibold tabular-nums">40%</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 40%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. History Navigation Row -->
+<a class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-unit-16 flex items-center justify-between shadow-[0_1px_2px_0_rgba(0,0,0,0.04)] hover:bg-surface-container-low active:scale-[0.99] transition-all group mb-unit-8" href="#analytics">
+<div class="flex items-center space-x-unit-12">
+<div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center text-primary-container border border-outline-variant">
+<span class="material-symbols-outlined text-[20px]">insights</span>
+</div>
+<div>
+<div class="text-label-md font-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">View Weekly &amp; Monthly Progress</div>
+<div class="text-label-xs font-label-xs text-outline">Aggregated adherence, volume &amp; trends</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface group-hover:translate-x-0.5 transition-all text-[20px]">chevron_right</span>
+</a>
+</main>
+<!-- 6. Bottom Navigation Bar (Docked Standard Shell Component) -->
+<!-- Applying Shared Component Blueprint & Active State Rule (Today is Active) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 max-w-md mx-auto bg-surface border-t border-outline-variant">
+<!-- Tab 1: Today (ACTIVE) -->
+<button class="flex flex-col items-center justify-center text-primary font-semibold py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="text-label-xs font-label-xs mt-0.5">Today</span>
+</button>
+<!-- Tab 2: Workouts -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out">
+<span class="material-symbols-outlined text-[22px]">fitness_center</span>
+<span class="text-label-xs font-label-xs mt-0.5">Workouts</span>
+</button>
+<!-- Tab 3: Habits -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<span class="text-label-xs font-label-xs mt-0.5">Habits</span>
+</button>
+<!-- Tab 4: Nutrition -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out">
+<span class="material-symbols-outlined text-[22px]">restaurant</span>
+<span class="text-label-xs font-label-xs mt-0.5">Nutrition</span>
+</button>
+<!-- Tab 5: Profile -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary py-unit-4 active:scale-95 transition-transform duration-150 ease-in-out">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="text-label-xs font-label-xs mt-0.5">Profile</span>
+</button>
+</nav>
+</div>
+
+
+</body></html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FitStack - Tell us about yourself</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#6cf8bb",
+            "on-primary-fixed": "#002115",
+            "outline": "#6e7a73",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#3e4943",
+            "primary": "#005d42",
+            "surface-container-highest": "#dce2f7",
+            "on-primary-fixed-variant": "#00513a",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "secondary-fixed": "#6ffbbe",
+            "primary-fixed": "#97f5cc",
+            "surface-tint": "#006c4e",
+            "on-tertiary-fixed": "#3e0405",
+            "inverse-on-surface": "#edf0ff",
+            "on-tertiary-container": "#ffe4e0",
+            "secondary": "#006c49",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-background": "#141b2b",
+            "error-container": "#ffdad6",
+            "tertiary": "#863933",
+            "surface-container": "#e9edff",
+            "surface-container-high": "#e1e8fd",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-secondary-fixed": "#002113",
+            "surface-bright": "#f9f9ff",
+            "surface": "#f9f9ff",
+            "primary-container": "#047857",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-dim": "#d3daef",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "on-primary-container": "#9ffdd3",
+            "surface-variant": "#dce2f7",
+            "primary-fixed-dim": "#7bd8b1",
+            "inverse-primary": "#7bd8b1",
+            "outline-variant": "#bdc9c1",
+            "error": "#ba1a1a",
+            "on-surface": "#141b2b",
+            "tertiary-container": "#a45049"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "card-padding": "1rem",
+            "unit-24": "1.5rem",
+            "unit-8": "0.5rem",
+            "unit-32": "2rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "gutter-mobile": "1rem",
+            "gutter-desktop": "1.5rem",
+            "unit-2": "0.125rem",
+            "unit-12": "0.75rem"
+          },
+          "fontFamily": {
+            "label-xs": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-on-primary">
+<!-- Mobile Frame Container (Max 428px) -->
+<main class="w-full max-w-md bg-surface-container-lowest min-h-screen flex flex-col relative shadow-sm">
+<!-- Status Bar (iOS Minimal Frame) -->
+<header class="w-full px-gutter-mobile pt-unit-12 pb-unit-4 flex justify-between items-center bg-surface-container-lowest select-none">
+<span class="font-label-md text-label-md text-on-surface font-semibold tracking-tight">9:41</span>
+<div class="flex items-center space-x-unit-4 text-on-surface">
+<span class="material-symbols-outlined text-body-sm leading-none" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-body-sm leading-none" data-icon="wifi">wifi</span>
+<span class="material-symbols-outlined text-body-sm leading-none" data-icon="battery_full">battery_full</span>
+</div>
+</header>
+<!-- Onboarding Navigation & Progress Indicator Header -->
+<nav aria-label="Onboarding Progress" class="px-gutter-mobile pt-unit-4 pb-unit-8 bg-surface-container-lowest">
+<div class="flex items-center justify-between h-12">
+<button aria-label="Go back to previous step" class="w-10 h-10 -ml-unit-4 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined text-headline-sm" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-unit-8">
+<span class="font-label-xs text-label-xs text-primary-container font-semibold uppercase tracking-wider bg-primary-fixed/20 px-unit-8 py-unit-2 rounded">Step 1 of 3</span>
+</div>
+</div>
+<!-- 33% Progress Bar -->
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="33" class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden mt-unit-4" role="progressbar">
+<div class="bg-primary-container h-full w-1/3 rounded-full transition-all duration-300"></div>
+</div>
+</nav>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 overflow-y-auto px-gutter-mobile pt-unit-16 pb-unit-32 space-y-unit-24">
+<!-- Section: Headline & Context -->
+<section class="space-y-unit-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Tell us about yourself</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">This helps us personalize your plan.</p>
+</section>
+<!-- Section 1: Metrics (Weight & Height 2-column Grid) -->
+<section class="space-y-unit-8">
+<div class="grid grid-cols-2 gap-unit-12">
+<!-- Weight Input Card -->
+<div class="bg-surface p-unit-12 rounded-xl border border-outline-variant hover:border-outline focus-within:border-primary-container transition-colors duration-150">
+<label class="block font-label-xs text-label-xs text-on-surface-variant mb-unit-4" for="weight-input">Weight (kg)</label>
+<div class="flex items-baseline justify-between">
+<input class="w-full bg-transparent p-0 border-0 focus:ring-0 font-metric-val text-metric-val text-on-surface font-bold text-left tracking-tight" id="weight-input" type="number" value="70">
+<span class="font-label-md text-label-md text-outline font-semibold pl-unit-4 select-none">kg</span>
+</div>
+</div>
+<!-- Height Input Card -->
+<div class="bg-surface p-unit-12 rounded-xl border border-outline-variant hover:border-outline focus-within:border-primary-container transition-colors duration-150">
+<label class="block font-label-xs text-label-xs text-on-surface-variant mb-unit-4" for="height-input">Height (cm)</label>
+<div class="flex items-baseline justify-between">
+<input class="w-full bg-transparent p-0 border-0 focus:ring-0 font-metric-val text-metric-val text-on-surface font-bold text-left tracking-tight" id="height-input" type="number" value="175">
+<span class="font-label-md text-label-md text-outline font-semibold pl-unit-4 select-none">cm</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Experience Level Segmented Selector -->
+<section class="space-y-unit-8">
+<label class="block font-label-md text-label-md text-on-surface font-semibold">Experience Level</label>
+<div aria-label="Experience Level" class="grid grid-cols-3 gap-unit-8" role="radiogroup">
+<!-- Beginner (Selected) -->
+<button aria-checked="true" class="h-11 flex items-center justify-center rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold transition-transform duration-150 active:scale-95" role="radio" type="button">
+            Beginner
+          </button>
+<!-- Intermediate -->
+<button aria-checked="false" class="h-11 flex items-center justify-center rounded-xl bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md font-semibold hover:border-outline hover:bg-surface-container-low transition-colors duration-150 active:scale-95" role="radio" type="button">
+            Intermediate
+          </button>
+<!-- Expert -->
+<button aria-checked="false" class="h-11 flex items-center justify-center rounded-xl bg-surface border border-outline-variant text-on-surface-variant font-label-md text-label-md font-semibold hover:border-outline hover:bg-surface-container-low transition-colors duration-150 active:scale-95" role="radio" type="button">
+            Expert
+          </button>
+</div>
+</section>
+<!-- Section 3: Your Goal (Selectable Grid Cards) -->
+<section class="space-y-unit-8">
+<label class="block font-label-md text-label-md text-on-surface font-semibold">Your Goal</label>
+<div aria-label="Primary Goal" class="grid grid-cols-2 gap-unit-8" role="radiogroup">
+<!-- Weight Loss (Active Selected) -->
+<button aria-checked="true" class="p-unit-12 rounded-xl bg-primary-fixed/20 border-2 border-primary-container text-left flex flex-col justify-between h-20 transition-all duration-150 relative" role="radio" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="material-symbols-outlined text-primary-container" data-icon="trending_down">trending_down</span>
+<span class="w-4 h-4 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[10px]" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</span>
+</div>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Weight Loss</span>
+</button>
+<!-- Weight Gain -->
+<button aria-checked="false" class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant text-left flex flex-col justify-between h-20 hover:border-outline transition-all duration-150" role="radio" type="button">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Weight Gain</span>
+</button>
+<!-- Maintain -->
+<button aria-checked="false" class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant text-left flex flex-col justify-between h-20 hover:border-outline transition-all duration-150" role="radio" type="button">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="drag_handle">drag_handle</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Maintain</span>
+</button>
+<!-- Build Muscle -->
+<button aria-checked="false" class="p-unit-12 rounded-xl bg-surface-container-lowest border border-outline-variant text-left flex flex-col justify-between h-20 hover:border-outline transition-all duration-150" role="radio" type="button">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="fitness_center">fitness_center</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Build Muscle</span>
+</button>
+</div>
+</section>
+<!-- Section 4: Any Health Concerns? (Tag Chips & Optional Input) -->
+<section class="space-y-unit-8">
+<label class="block font-label-md text-label-md text-on-surface font-semibold">Any Health Concerns?</label>
+<div class="flex flex-wrap gap-unit-8">
+<!-- Back Pain (Selected) -->
+<button class="h-8 px-unit-12 rounded-lg bg-primary-fixed/20 border border-primary-container text-primary-container font-label-md text-label-md flex items-center space-x-unit-4" type="button">
+<span class="material-symbols-outlined text-body-sm font-bold" data-icon="check">check</span>
+<span class="">Back Pain</span>
+</button>
+<!-- Knee Pain -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:border-outline transition-colors duration-150" type="button">
+            Knee Pain
+          </button>
+<!-- Joint Issues -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:border-outline transition-colors duration-150" type="button">
+            Joint Issues
+          </button>
+<!-- None -->
+<button class="h-8 px-unit-12 rounded-lg bg-transparent border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:border-outline transition-colors duration-150" type="button">
+            None
+          </button>
+</div>
+<!-- Optional Other Input -->
+<div class="relative pt-unit-4">
+<input class="w-full h-11 px-unit-12 rounded-xl bg-surface border border-outline-variant text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:border-primary-container focus:ring-0 transition-colors duration-150" placeholder="Other (optional)" type="text">
+</div>
+</section>
+<!-- Section 5: Current Body Type Minimalist Silhouette Wireframes -->
+<section class="space-y-unit-8 pb-unit-16">
+<div class="flex justify-between items-center">
+<label class="block font-label-md text-label-md text-on-surface font-semibold">Current Body Type</label>
+<span class="font-label-xs text-label-xs text-outline">Select closest silhouette</span>
+</div>
+<div aria-label="Body Type" class="grid grid-cols-4 gap-unit-8" role="radiogroup">
+<!-- Silhouette: Lean -->
+<button aria-checked="false" class="flex flex-col items-center py-unit-8 px-unit-4 rounded-xl bg-surface-container-lowest border border-outline-variant hover:border-outline transition-all duration-150 active:scale-95 group" role="radio" type="button">
+<div class="w-12 h-20 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWf40qInIbZsqMIguP9PsdxayQe9xcNwQOo4Z9p0qRud9ZZbnovPnjR-gA7PwVTNvGv3lz5BKrpXx3Ywb0gigK23s1DOkfHC20A38B1bJDJSBt3xLz_ONZGbaPl0DJ91rCd5DDAeosVaRILoz71LXxGeoTOZO2xuIBtEp_bJcnZGOF975YzwiGPlkFNH_z54kWO__ldQsPvBk6aVAppkIi9kf7Tl-7XW8twxeQHHCjADBfxz6KZsE" alt="Lean body type" class="w-full h-full object-contain mix-blend-multiply"></div>
+<span class="mt-unit-4 font-label-xs text-label-xs text-on-surface-variant">Lean</span>
+</button>
+<!-- Silhouette: Average (Selected) -->
+<button aria-checked="true" class="flex flex-col items-center py-unit-8 px-unit-4 rounded-xl bg-primary-fixed/20 border-2 border-primary-container transition-all duration-150 active:scale-95 relative" role="radio" type="button">
+<div class="w-12 h-20 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbiZKhXWKi29mUEGTZ9Uai2Vk99hl4jZu6pKKLOdCzDv3PMwG9ZSTwbJ2z06qPgtACDxibGrofJakCK19EnYrA65IVJAAxJIQQe_bkyAUsnmat05s6Eww-a9_jqfyaBBRORvlTgFSOBp8N259iyR5RAvmWPUcEseD48REiSpGRms8EgXwMvQTfiltoLhO2F-EJs_F-BbGob3Liu4hamdUXcXMypHu3Mrf1bW1QgoFHuXFHTnBOLuY" alt="Average body type" class="w-full h-full object-contain mix-blend-multiply"></div>
+<span class="mt-unit-4 font-label-xs text-label-xs text-primary-container font-semibold">Average</span>
+</button>
+<!-- Silhouette: Chubby -->
+<button aria-checked="false" class="flex flex-col items-center py-unit-8 px-unit-4 rounded-xl bg-surface-container-lowest border border-outline-variant hover:border-outline transition-all duration-150 active:scale-95 group" role="radio" type="button">
+<div class="w-12 h-20 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4KEtr_YwzY76wPPljQdbM7H3ffMPvOHqoVpgF39wIwPV3PEdNdFtrvTuapMHV2tQdcVXnpFKzVVKJ4UftMZpyuTrCv1sOabLeVURYj3pR7VQQm4zn3EXmjgJuN5yVW_WTOrBR65Cj_HA_NbJRDDWV4wWw7dA_kFxB9-xSSgti9MR_P64REvn5PUyLLVCtlnpPVyW0nVMTWQoUAWgk8gwiJEAYiqsH1rxli9QSXoZySVPGi2xUu0E" alt="Chubby body type" class="w-full h-full object-contain mix-blend-multiply"></div>
+<span class="mt-unit-4 font-label-xs text-label-xs text-on-surface-variant">Chubby</span>
+</button>
+<!-- Silhouette: Heavy -->
+<button aria-checked="false" class="flex flex-col items-center py-unit-8 px-unit-4 rounded-xl bg-surface-container-lowest border border-outline-variant hover:border-outline transition-all duration-150 active:scale-95 group" role="radio" type="button">
+<div class="w-12 h-20 flex items-center justify-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuASz4BNKOF_32MH2JUGrpz5forrdnE5bK2ayYubwGjGuMHvOk98tVUyDyfYxd6jprpwamKE5vVIpRTnDmRNfhrPbVczT73mCD1Lii8CecvkQmtBzEgNR1Sq8hRodGUGdwxVSwnpAa6PLK5F_oI7osMunN3rT9QJs-mKzJ_9BZnEbEBGBIpjk8p6SQ_sDjiCp9jYcAZQC7VqR1sKn5doB6ZouRtok-qSym8p7yHbBQLzVe5GaypQ6Yw" alt="Heavy body type" class="w-full h-full object-contain mix-blend-multiply"></div>
+<span class="mt-unit-4 font-label-xs text-label-xs text-on-surface-variant">Heavy</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Navigation CTA Dock -->
+<div class="sticky bottom-0 left-0 right-0 p-gutter-mobile bg-surface-container-lowest/95 backdrop-blur-sm border-t border-outline-variant/40 shadow-sm z-30">
+<button class="w-full h-12 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold tracking-wide flex items-center justify-center space-x-unit-8 transition-transform duration-150 active:scale-[0.98]" type="button">
+<span class="">Continue</span>
+<span class="material-symbols-outlined text-body-lg" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</main>
+
+
+</body></html>

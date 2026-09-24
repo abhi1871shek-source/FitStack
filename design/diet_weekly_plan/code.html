@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitStack - Weekly Diet Plan</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#3e0405",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#9ffdd3",
+            "on-secondary-container": "#00714d",
+            "surface": "#f9f9ff",
+            "on-background": "#141b2b",
+            "primary": "#005d42",
+            "primary-fixed": "#97f5cc",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary": "#863933",
+            "inverse-primary": "#7bd8b1",
+            "background": "#f9f9ff",
+            "inverse-on-surface": "#edf0ff",
+            "secondary-fixed": "#6ffbbe",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary": "#006c49",
+            "outline": "#6e7a73",
+            "surface-tint": "#006c4e",
+            "primary-container": "#047857",
+            "surface-dim": "#d3daef",
+            "tertiary-container": "#a45049",
+            "error-container": "#ffdad6",
+            "on-surface-variant": "#3e4943",
+            "on-primary-fixed": "#002115",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed": "#ffdad6",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#792f2a",
+            "on-secondary-fixed": "#002113",
+            "on-surface": "#141b2b",
+            "error": "#ba1a1a",
+            "surface-container": "#e9edff",
+            "on-secondary": "#ffffff",
+            "on-tertiary-container": "#ffe4e0",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "outline-variant": "#bdc9c1",
+            "surface-container-high": "#e1e8fd",
+            "surface-variant": "#dce2f7",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#293040",
+            "tertiary-fixed-dim": "#ffb4ac",
+            "on-primary-fixed-variant": "#00513a",
+            "primary-fixed-dim": "#7bd8b1",
+            "surface-container-low": "#f1f3ff",
+            "surface-container-highest": "#dce2f7",
+            "secondary-container": "#6cf8bb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-desktop": "1.5rem",
+            "unit-12": "0.75rem",
+            "gutter-mobile": "1rem",
+            "unit-32": "2rem",
+            "unit-8": "0.5rem",
+            "unit-16": "1rem",
+            "unit-4": "0.25rem",
+            "card-padding": "1rem",
+            "unit-24": "1.5rem",
+            "unit-2": "0.125rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "metric-val": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-xs": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "display-lg": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "metric-val": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-xs": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Hide scrollbars cleanly for horizontal day bar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased selection:bg-primary selection:text-on-primary">
+<!-- Mobile App Canvas pinned to 414px standard frame -->
+<div class="min-h-screen max-w-md mx-auto bg-surface flex flex-col relative pb-24 shadow-sm border-x border-outline-variant/30">
+<!-- 1. Top Bar: iOS Status Bar Simulation -->
+<div class="w-full flex justify-between items-center px-6 pt-3 pb-2 select-none text-on-surface">
+<span class="text-[14px] font-semibold tracking-tight">9:41</span>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[16px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- Navigation Header -->
+<header class="w-full px-gutter-mobile h-14 flex items-center justify-between">
+<button aria-label="Go back" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]">chevron_left</span>
+</button>
+<div class="flex items-center space-x-1">
+<button aria-label="Calendar view" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+</button>
+<button aria-label="Diet options" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</header>
+<!-- 2. Header Section -->
+<section class="px-gutter-mobile pt-1 pb-4">
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">
+        Your Weekly Diet Plan
+      </h1>
+<div class="flex items-center gap-2 mt-1.5">
+<span class="font-label-md text-label-md text-on-surface-variant">1,850 kcal/day</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-label-xs font-semibold bg-surface-container text-primary">
+          Weight Loss
+        </span>
+</div>
+</section>
+<!-- 3. Day Selector Row (Mon - Sun, Horizontal Scroll) -->
+<nav aria-label="Select Day" class="w-full pb-3 border-b border-outline-variant/30">
+<div class="flex space-x-2 px-gutter-mobile overflow-x-auto no-scrollbar scroll-smooth">
+<!-- Mon 12 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Mon</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">12</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+</div>
+</button>
+<!-- Tue 13 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Tue</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">13</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+</div>
+</button>
+<!-- Wed 14 (Selected Day) -->
+<button aria-current="date" class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-primary-container text-on-primary shadow-sm active:scale-95 transition-transform duration-150">
+<span class="font-label-xs text-label-xs text-on-primary/80 font-medium">Wed</span>
+<span class="font-label-md text-label-md font-bold text-on-primary">14</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-on-primary"></span>
+<span class="w-1 h-1 rounded-full bg-on-primary"></span>
+<span class="w-1 h-1 rounded-full bg-on-primary"></span>
+</div>
+</button>
+<!-- Thu 15 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Thu</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">15</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+</div>
+</button>
+<!-- Fri 16 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Fri</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">16</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+</div>
+</button>
+<!-- Sat 17 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Sat</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">17</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+</div>
+</button>
+<!-- Sun 18 -->
+<button class="flex-shrink-0 flex flex-col items-center justify-between w-[52px] h-[68px] py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-on-surface-variant hover:border-outline transition-colors active:scale-95 duration-150">
+<span class="font-label-xs text-label-xs text-outline">Sun</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">18</span>
+<div class="flex space-x-0.5">
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+</div>
+</button>
+</div>
+</nav>
+<!-- 4. Daily Meal List for Selected Day (Wed, Oct 14) -->
+<main class="flex-1 px-gutter-mobile pt-4 space-y-3">
+<!-- Meal 1: Breakfast -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-card-padding shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] hover:border-outline-variant transition-colors">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">Breakfast</span>
+<span class="text-on-surface-variant text-[11px]">• 8:30 AM</span>
+</div>
+<button aria-label="Edit Breakfast" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="pt-2.5 flex items-start justify-between">
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Idli &amp; Sambar</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">3 steamed idlis, vegetable sambar, mint dip</p>
+</div>
+<div class="text-right flex-shrink-0 pl-3">
+<span class="font-label-md text-label-md font-bold text-on-surface">320</span>
+<span class="font-label-xs text-label-xs text-outline block">kcal</span>
+</div>
+</div>
+<!-- Tabular Macro Badges -->
+<div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-outline-variant/20 font-label-xs text-label-xs text-on-surface-variant">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">P: 12g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">C: 54g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">F: 4g</span>
+</div>
+</article>
+<!-- Meal 2: Lunch -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-card-padding shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] hover:border-outline-variant transition-colors">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">Lunch</span>
+<span class="text-on-surface-variant text-[11px]">• 1:15 PM</span>
+</div>
+<button aria-label="Edit Lunch" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="pt-2.5 flex items-start justify-between">
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Brown Rice with Kerala Fish Curry &amp; Veg</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">150g rice, kingfish curry, steamed green beans</p>
+</div>
+<div class="text-right flex-shrink-0 pl-3">
+<span class="font-label-md text-label-md font-bold text-on-surface">620</span>
+<span class="font-label-xs text-label-xs text-outline block">kcal</span>
+</div>
+</div>
+<!-- Tabular Macro Badges -->
+<div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-outline-variant/20 font-label-xs text-label-xs text-on-surface-variant">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">P: 42g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">C: 68g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">F: 16g</span>
+</div>
+</article>
+<!-- Meal 3: Snack -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-card-padding shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] hover:border-outline-variant transition-colors">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">Snack</span>
+<span class="text-on-surface-variant text-[11px]">• 5:00 PM</span>
+</div>
+<button aria-label="Edit Snack" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="pt-2.5 flex items-start justify-between">
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Spiced Roasted Chickpeas &amp; Green Tea</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">Dry roasted with cumin, pepper, 250ml brew</p>
+</div>
+<div class="text-right flex-shrink-0 pl-3">
+<span class="font-label-md text-label-md font-bold text-on-surface">240</span>
+<span class="font-label-xs text-label-xs text-outline block">kcal</span>
+</div>
+</div>
+<!-- Tabular Macro Badges -->
+<div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-outline-variant/20 font-label-xs text-label-xs text-on-surface-variant">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">P: 9g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">C: 32g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">F: 6g</span>
+</div>
+</article>
+<!-- Meal 4: Dinner -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-card-padding shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] hover:border-outline-variant transition-colors">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center space-x-2">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">Dinner</span>
+<span class="text-on-surface-variant text-[11px]">• 8:00 PM</span>
+</div>
+<button aria-label="Edit Dinner" class="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="pt-2.5 flex items-start justify-between">
+<div>
+<h2 class="font-body-lg text-body-lg font-semibold text-on-surface">Whole Wheat Chapati with Paneer Bhurji &amp; Dal</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[13px] mt-0.5">2 rotis, 100g low-fat paneer, yellow moong dal</p>
+</div>
+<div class="text-right flex-shrink-0 pl-3">
+<span class="font-label-md text-label-md font-bold text-on-surface">660</span>
+<span class="font-label-xs text-label-xs text-outline block">kcal</span>
+</div>
+</div>
+<!-- Tabular Macro Badges -->
+<div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-outline-variant/20 font-label-xs text-label-xs text-on-surface-variant">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">P: 36g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">C: 72g</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-medium">F: 22g</span>
+</div>
+</article>
+<!-- 5. Day Summary & Add Action -->
+<div class="pt-1 pb-4 space-y-3">
+<!-- Daily Total Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-card-padding shadow-[0_1px_2px_0_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-baseline mb-2">
+<div class="flex items-center space-x-2">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Total</span>
+<span class="text-xs text-on-surface-variant font-medium">99.4% on track</span>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md font-bold text-on-surface">1,840</span>
+<span class="font-label-xs text-label-xs text-outline">/ 1,850 kcal</span>
+</div>
+</div>
+<!-- Progress Bar (track #F3F4F6, fill #047857) -->
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 99.4%;"></div>
+</div>
+<!-- Total Macros breakdown -->
+<div class="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-outline-variant/20 text-center">
+<div>
+<span class="block font-label-xs text-label-xs text-outline">Protein</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">99g</span>
+</div>
+<div>
+<span class="block font-label-xs text-label-xs text-outline">Carbs</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">226g</span>
+</div>
+<div>
+<span class="block font-label-xs text-label-xs text-outline">Fat</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">48g</span>
+</div>
+</div>
+</div>
+<!-- Add Meal Button -->
+<button class="w-full h-12 rounded-xl border border-dashed border-primary/40 bg-surface-container-lowest hover:bg-surface-container-low text-primary flex items-center justify-center font-label-md text-label-md font-semibold space-x-1.5 transition-colors active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add Meal</span>
+</button>
+</div>
+</main>
+<!-- 6. Bottom Navigation Bar (Mandated Shared Component) -->
+<!-- Active Destination: Nutrition (Index 3) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile pb-safe h-16 max-w-md mx-auto bg-surface shadow-[0_-1px_3px_0_rgba(0,0,0,0.04)]">
+<!-- Destination: Today -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 py-unit-4 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">calendar_today</span>
+<span class="font-label-xs text-label-xs mt-1">Today</span>
+</a>
+<!-- Destination: Workouts -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 py-unit-4 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">fitness_center</span>
+<span class="font-label-xs text-label-xs mt-1">Workouts</span>
+</a>
+<!-- Destination: Habits -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 py-unit-4 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+<span class="font-label-xs text-label-xs mt-1">Habits</span>
+</a>
+<!-- Destination: Nutrition (ACTIVE ITEM) -->
+<a class="flex flex-col items-center justify-center text-primary font-semibold active:scale-95 transition-transform duration-150 py-unit-4 flex-1 relative" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<span class="font-label-xs text-label-xs mt-1">Nutrition</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</a>
+<!-- Destination: Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 py-unit-4 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="font-label-xs text-label-xs mt-1">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>
