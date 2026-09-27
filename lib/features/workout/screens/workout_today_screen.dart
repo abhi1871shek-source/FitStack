@@ -514,22 +514,11 @@ class _WorkoutTodayScreenState extends ConsumerState<WorkoutTodayScreen> {
                   Row(
                     children: [
                       Text(
-                        '${log.sets} sets × ${log.reps} reps',
+                        log.repsAndWeightSummary,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('•', style: TextStyle(fontSize: 10, color: AppColors.ofTextMuted(context))),
-                      const SizedBox(width: 8),
-                      Text(
-                        log.weightKg > 0 ? '${log.weightKg.toStringAsFixed(0)} kg' : 'Bodyweight',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: log.isCompleted ? AppColors.ofTextMuted(context) : AppColors.ofTextSecondary(context),
                         ),
                       ),
                     ],

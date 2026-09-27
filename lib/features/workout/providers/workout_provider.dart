@@ -194,9 +194,7 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
   /// Edit sets, reps, and weight on workout_logs row in Supabase
   Future<void> editExercise(
     String id, {
-    required int sets,
-    required int reps,
-    required double weightKg,
+    required List<ExerciseSet> setDetails,
   }) async {
     final userId = _currentUserId;
     if (userId == null) return;
@@ -205,10 +203,15 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
     if (index == -1) return;
 
     final currentItem = state.logs[index];
+    final updatedSets = setDetails.length;
+    final updatedReps = setDetails.isNotEmpty ? setDetails.first.reps : currentItem.reps;
+    final updatedWeight = setDetails.isNotEmpty ? setDetails.first.weightKg : currentItem.weightKg;
+
     final updatedItem = currentItem.copyWith(
-      sets: sets,
-      reps: reps,
-      weightKg: weightKg,
+      sets: updatedSets,
+      reps: updatedReps,
+      weightKg: updatedWeight,
+      setDetails: setDetails,
     );
 
     final updatedList = List<WorkoutLogItem>.from(state.logs);
@@ -217,9 +220,10 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
 
     try {
       await _client.from('workout_logs').update({
-        'sets': sets,
-        'reps': reps,
-        'weight_kg': weightKg,
+        'sets': updatedSets,
+        'reps': updatedReps,
+        'weight_kg': updatedWeight,
+        'set_details': setDetails.map((s) => s.toMap()).toList(),
       }).eq('id', id);
     } catch (e) {
       debugPrint('[WorkoutNotifier] Error editing exercise: $e');

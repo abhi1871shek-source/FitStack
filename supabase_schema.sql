@@ -279,6 +279,7 @@ CREATE TABLE IF NOT EXISTS public.workout_logs (
     sets INT NOT NULL DEFAULT 3,
     reps INT NOT NULL DEFAULT 10,
     weight_kg NUMERIC(6,2) NOT NULL DEFAULT 0.0,
+    set_details JSONB,
     is_completed BOOLEAN NOT NULL DEFAULT FALSE,
     image_url TEXT,
     workout_date DATE NOT NULL DEFAULT CURRENT_DATE,

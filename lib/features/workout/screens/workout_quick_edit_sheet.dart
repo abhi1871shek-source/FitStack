@@ -17,46 +17,307 @@ class WorkoutQuickEditSheet extends ConsumerStatefulWidget {
 }
 
 class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
-  late int _sets;
-  late int _reps;
-  late double _weightKg;
-
-  late TextEditingController _setsController;
-  late TextEditingController _repsController;
-  late TextEditingController _weightController;
+  late List<ExerciseSet> _setsList;
+  late List<TextEditingController> _repsControllers;
+  late List<TextEditingController> _weightControllers;
 
   @override
   void initState() {
     super.initState();
-    _sets = widget.item.sets;
-    _reps = widget.item.reps;
-    _weightKg = widget.item.weightKg;
+    if (widget.item.setDetails.isNotEmpty) {
+      _setsList = widget.item.setDetails.map((s) => s.copyWith()).toList();
+    } else {
+      _setsList = List.generate(
+        widget.item.sets > 0 ? widget.item.sets : 3,
+        (i) => ExerciseSet(
+          setNumber: i + 1,
+          reps: widget.item.reps,
+          weightKg: widget.item.weightKg,
+        ),
+      );
+    }
 
-    _setsController = TextEditingController(text: _sets.toString());
-    _repsController = TextEditingController(text: _reps.toString());
-    _weightController = TextEditingController(text: _weightKg.toStringAsFixed(1));
+    _repsControllers = _setsList
+        .map((s) => TextEditingController(text: s.reps.toString()))
+        .toList();
+    _weightControllers = _setsList
+        .map((s) => TextEditingController(
+            text: s.weightKg == s.weightKg.roundToDouble()
+                ? s.weightKg.round().toString()
+                : s.weightKg.toStringAsFixed(1)))
+        .toList();
   }
 
   @override
   void dispose() {
-    _setsController.dispose();
-    _repsController.dispose();
-    _weightController.dispose();
+    for (var c in _repsControllers) {
+      c.dispose();
+    }
+    for (var c in _weightControllers) {
+      c.dispose();
+    }
     super.dispose();
+  }
+
+  void _addSet() {
+    setState(() {
+      final lastSet = _setsList.isNotEmpty
+          ? _setsList.last
+          : ExerciseSet(setNumber: 1, reps: widget.item.reps, weightKg: widget.item.weightKg);
+      final newSetNumber = _setsList.length + 1;
+      final newSet = ExerciseSet(
+        setNumber: newSetNumber,
+        reps: lastSet.reps,
+        weightKg: lastSet.weightKg,
+      );
+      _setsList.add(newSet);
+      _repsControllers.add(TextEditingController(text: newSet.reps.toString()));
+      _weightControllers.add(TextEditingController(
+          text: newSet.weightKg == newSet.weightKg.roundToDouble()
+              ? newSet.weightKg.round().toString()
+              : newSet.weightKg.toStringAsFixed(1)));
+    });
+  }
+
+  void _removeSet(int index) {
+    if (_setsList.length <= 1) return;
+    setState(() {
+      _repsControllers[index].dispose();
+      _weightControllers[index].dispose();
+      _setsList.removeAt(index);
+      _repsControllers.removeAt(index);
+      _weightControllers.removeAt(index);
+
+      for (int i = 0; i < _setsList.length; i++) {
+        _setsList[i] = _setsList[i].copyWith(setNumber: i + 1);
+      }
+    });
+  }
+
+  void _onSave() {
+    final List<ExerciseSet> updatedDetails = [];
+    for (int i = 0; i < _setsList.length; i++) {
+      final reps = int.tryParse(_repsControllers[i].text) ?? _setsList[i].reps;
+      final weight = double.tryParse(_weightControllers[i].text) ?? _setsList[i].weightKg;
+      updatedDetails.add(ExerciseSet(
+        setNumber: i + 1,
+        reps: reps > 0 ? reps : 1,
+        weightKg: weight >= 0 ? weight : 0.0,
+      ));
+    }
+
+    ref.read(workoutProvider.notifier).editExercise(
+          widget.item.id,
+          setDetails: updatedDetails,
+        );
+
+    Navigator.pop(context);
+  }
+
+  Widget _buildSetCard(int index) {
+    final setNum = index + 1;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.darkBackground : AppColors.background,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.ofBorderSubdued(context)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  'SET $setNum',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              if (_setsList.length > 1)
+                InkWell(
+                  onTap: () => _removeSet(index),
+                  borderRadius: BorderRadius.circular(6),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.delete_outline,
+                      size: 18,
+                      color: AppColors.ofTextMuted(context),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStepperBox(
+                  label: 'REPS',
+                  controller: _repsControllers[index],
+                  onDecrement: () {
+                    final current = int.tryParse(_repsControllers[index].text) ?? 10;
+                    if (current > 1) {
+                      setState(() {
+                        _repsControllers[index].text = (current - 1).toString();
+                      });
+                    }
+                  },
+                  onIncrement: () {
+                    final current = int.tryParse(_repsControllers[index].text) ?? 10;
+                    setState(() {
+                      _repsControllers[index].text = (current + 1).toString();
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildStepperBox(
+                  label: 'WEIGHT (kg)',
+                  controller: _weightControllers[index],
+                  onDecrement: () {
+                    final current = double.tryParse(_weightControllers[index].text) ?? 0.0;
+                    if (current >= 2.5) {
+                      final newVal = current - 2.5;
+                      setState(() {
+                        _weightControllers[index].text = newVal == newVal.roundToDouble()
+                            ? newVal.round().toString()
+                            : newVal.toStringAsFixed(1);
+                      });
+                    } else if (current > 0) {
+                      setState(() {
+                        _weightControllers[index].text = '0';
+                      });
+                    }
+                  },
+                  onIncrement: () {
+                    final current = double.tryParse(_weightControllers[index].text) ?? 0.0;
+                    final newVal = current + 2.5;
+                    setState(() {
+                      _weightControllers[index].text = newVal == newVal.roundToDouble()
+                          ? newVal.round().toString()
+                          : newVal.toStringAsFixed(1);
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepperBox({
+    required String label,
+    required TextEditingController controller,
+    required VoidCallback onDecrement,
+    required VoidCallback onIncrement,
+  }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppColors.darkSurface : AppColors.cardSurface,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.ofBorderSubdued(context)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.ofTextMuted(context),
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          TextField(
+            controller: controller,
+            textAlign: TextAlign.center,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.ofTextPrimary(context),
+            ),
+            decoration: const InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+              border: InputBorder.none,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                onTap: onDecrement,
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? AppColors.darkBackground : AppColors.background,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: AppColors.ofBorderSubdued(context)),
+                  ),
+                  child: Icon(Icons.remove, size: 14, color: AppColors.ofTextSecondary(context)),
+                ),
+              ),
+              InkWell(
+                onTap: onIncrement,
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? AppColors.darkBackground : AppColors.background,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: AppColors.ofBorderSubdued(context)),
+                  ),
+                  child: Icon(Icons.add, size: 14, color: AppColors.ofTextSecondary(context)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxSheetHeight = MediaQuery.of(context).size.height * 0.8;
+
     return Container(
+      constraints: BoxConstraints(maxHeight: maxSheetHeight),
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
         top: 20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: AppColors.ofCardSurface(context),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -71,95 +332,69 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
                 children: [
                   Text(
                     widget.item.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: AppColors.ofTextPrimary(context),
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${widget.item.muscleGroup} Exercise',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                    '${widget.item.muscleGroup} Exercise • ${_setsList.length} ${_setsList.length == 1 ? 'Set' : 'Sets'}',
+                    style: TextStyle(fontSize: 12, color: AppColors.ofTextMuted(context)),
                   ),
                 ],
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 20),
+                icon: Icon(Icons.close, size: 20, color: AppColors.ofTextMuted(context)),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
-          // Steppers Grid for Sets, Reps, Weight
-          Row(
-            children: [
-              Expanded(
-                child: _buildStepperBox(
-                  label: 'SETS',
-                  controller: _setsController,
-                  onDecrement: () {
-                    if (_sets > 1) {
-                      setState(() {
-                        _sets--;
-                        _setsController.text = _sets.toString();
-                      });
-                    }
-                  },
-                  onIncrement: () {
-                    setState(() {
-                      _sets++;
-                      _setsController.text = _sets.toString();
-                    });
-                  },
-                ),
+          // Scrollable Sets List
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...List.generate(_setsList.length, (i) => _buildSetCard(i)),
+                  const SizedBox(height: 4),
+
+                  // Add Set Button
+                  InkWell(
+                    onTap: _addSet,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.ofAccentSubtle(context),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, size: 16, color: AppColors.primary),
+                          SizedBox(width: 6),
+                          Text(
+                            'Add Set',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStepperBox(
-                  label: 'REPS',
-                  controller: _repsController,
-                  onDecrement: () {
-                    if (_reps > 1) {
-                      setState(() {
-                        _reps--;
-                        _repsController.text = _reps.toString();
-                      });
-                    }
-                  },
-                  onIncrement: () {
-                    setState(() {
-                      _reps++;
-                      _repsController.text = _reps.toString();
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStepperBox(
-                  label: 'WEIGHT (kg)',
-                  controller: _weightController,
-                  onDecrement: () {
-                    if (_weightKg >= 2.5) {
-                      setState(() {
-                        _weightKg -= 2.5;
-                        _weightController.text = _weightKg.toStringAsFixed(1);
-                      });
-                    }
-                  },
-                  onIncrement: () {
-                    setState(() {
-                      _weightKg += 2.5;
-                      _weightController.text = _weightKg.toStringAsFixed(1);
-                    });
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 24),
 
           // Save Changes Button
           SizedBox(
@@ -171,102 +406,12 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () {
-                final parsedSets = int.tryParse(_setsController.text) ?? _sets;
-                final parsedReps = int.tryParse(_repsController.text) ?? _reps;
-                final parsedWeight = double.tryParse(_weightController.text) ?? _weightKg;
-
-                ref.read(workoutProvider.notifier).editExercise(
-                      widget.item.id,
-                      sets: parsedSets,
-                      reps: parsedReps,
-                      weightKg: parsedWeight,
-                    );
-
-                Navigator.pop(context);
-              },
+              onPressed: _onSave,
               child: const Text(
                 'Save Changes',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepperBox({
-    required String label,
-    required TextEditingController controller,
-    required VoidCallback onDecrement,
-    required VoidCallback onIncrement,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderSubdued),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textMuted,
-              letterSpacing: 0.5,
-            ),
-          ),
-          const SizedBox(height: 6),
-          TextField(
-            controller: controller,
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-            decoration: const InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              border: InputBorder.none,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: onDecrement,
-                borderRadius: BorderRadius.circular(6),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardSurface,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: AppColors.borderSubdued),
-                  ),
-                  child: const Icon(Icons.remove, size: 14, color: AppColors.textSecondary),
-                ),
-              ),
-              InkWell(
-                onTap: onIncrement,
-                borderRadius: BorderRadius.circular(6),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardSurface,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: AppColors.borderSubdued),
-                  ),
-                  child: const Icon(Icons.add, size: 14, color: AppColors.textSecondary),
-                ),
-              ),
-            ],
           ),
         ],
       ),
