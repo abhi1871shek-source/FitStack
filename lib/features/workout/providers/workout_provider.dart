@@ -88,67 +88,7 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
       final List rows = response as List;
 
       if (rows.isEmpty) {
-        final defaultSeedItems = [
-          const WorkoutLogItem(
-            id: '',
-            exerciseId: 'ex_1',
-            name: 'Barbell Bench Press',
-            muscleGroup: 'Chest',
-            sets: 4,
-            reps: 10,
-            weightKg: 70.0,
-            isCompleted: false,
-            imageUrl: 'assets/images/exercises/ex_1.jpg',
-          ),
-          const WorkoutLogItem(
-            id: '',
-            exerciseId: 'ex_2',
-            name: 'Incline Dumbbell Press',
-            muscleGroup: 'Chest',
-            sets: 3,
-            reps: 12,
-            weightKg: 24.0,
-            isCompleted: false,
-            imageUrl: 'assets/images/exercises/ex_2.jpg',
-          ),
-          const WorkoutLogItem(
-            id: '',
-            exerciseId: 'ex_6',
-            name: 'Lat Pulldown',
-            muscleGroup: 'Back',
-            sets: 4,
-            reps: 12,
-            weightKg: 55.0,
-            isCompleted: false,
-            imageUrl: 'assets/images/exercises/ex_6.jpg',
-          ),
-          const WorkoutLogItem(
-            id: '',
-            exerciseId: 'ex_13',
-            name: 'Overhead Dumbbell Press',
-            muscleGroup: 'Shoulders',
-            sets: 3,
-            reps: 10,
-            weightKg: 18.0,
-            isCompleted: true,
-            imageUrl: 'assets/images/exercises/ex_13.jpg',
-          ),
-        ];
-
-        final insertList = defaultSeedItems
-            .map((item) => item.toMap(userId: userId, workoutDate: todayStr))
-            .toList();
-
-        final insertedResponse = await _client
-            .from('workout_logs')
-            .insert(insertList)
-            .select();
-
-        final List<WorkoutLogItem> seededList = (insertedResponse as List)
-            .map((row) => WorkoutLogItem.fromMap(row))
-            .toList();
-
-        state = WorkoutState(logs: seededList, isLoading: false);
+        state = const WorkoutState(logs: [], isLoading: false);
       } else {
         final List<WorkoutLogItem> items =
             rows.map((row) => WorkoutLogItem.fromMap(row)).toList();

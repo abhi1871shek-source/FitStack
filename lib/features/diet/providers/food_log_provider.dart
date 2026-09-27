@@ -87,26 +87,7 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
       final List rows = response as List;
 
       if (rows.isEmpty) {
-        // Seed initial food logs for today
-        final egg = FoodDatabaseData.masterFoods.firstWhere((f) => f.id == 'f_a2');
-        final oat = FoodDatabaseData.masterFoods.firstWhere((f) => f.id == 'f_a3');
-        final biryani = FoodDatabaseData.masterFoods.firstWhere((f) => f.id == 'f_s5');
-
-        final initialSeed = [
-          LoggedFoodItem.fromFoodItem(id: '', food: egg, mealSection: 'Breakfast', quantityGrams: 100.0, loggedTime: '8:00 AM'),
-          LoggedFoodItem.fromFoodItem(id: '', food: oat, mealSection: 'Breakfast', quantityGrams: 200.0, loggedTime: '8:25 AM'),
-          LoggedFoodItem.fromFoodItem(id: '', food: biryani, mealSection: 'Lunch', quantityGrams: 300.0, loggedTime: '1:15 PM'),
-        ];
-
-        final insertList = initialSeed.map((item) => item.toMap(userId: userId, logDate: todayStr)).toList();
-
-        final insertedResponse = await _client.from('food_logs').insert(insertList).select();
-
-        final List<LoggedFoodItem> seededLogs = (insertedResponse as List)
-            .map((row) => LoggedFoodItem.fromMap(row))
-            .toList();
-
-        state = FoodLogState(logs: seededLogs, isLoading: false);
+        state = const FoodLogState(logs: [], isLoading: false);
       } else {
         final List<LoggedFoodItem> items = rows.map((row) => LoggedFoodItem.fromMap(row)).toList();
         state = FoodLogState(logs: items, isLoading: false);
