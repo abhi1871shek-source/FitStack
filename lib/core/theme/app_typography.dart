@@ -31,6 +31,10 @@ abstract class AppTypography {
         fontFeatures: [const FontFeature.tabularFigures()],
       );
 
+  static TextStyle get heading1 => h1;
+  static TextStyle get heading2 => h1;
+  static TextStyle get heading3 => h2;
+
   static TextStyle get labelUpper => GoogleFonts.inter(
         fontSize: 11,
         fontWeight: FontWeight.w600,
