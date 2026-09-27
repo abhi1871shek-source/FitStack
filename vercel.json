@@ -3,6 +3,17 @@
   "installCommand": "if [ ! -d \"flutter\" ]; then git clone https://github.com/flutter/flutter.git -b 3.22.2 --depth 1; fi && export PATH=\"$PATH:$(pwd)/flutter/bin\" && flutter pub get",
   "outputDirectory": "build/web",
   "framework": null,
+  "headers": [
+    {
+      "source": "/(favicon.png|manifest.json|icons/.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
