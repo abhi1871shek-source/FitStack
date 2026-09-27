@@ -1,11 +1,11 @@
 {
-    "name": "fitstack",
-    "short_name": "fitstack",
+    "name": "FitStack",
+    "short_name": "FitStack",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#047857",
+    "theme_color": "#047857",
+    "description": "FitStack - Personalized Fitness, Diet & Habit Tracker",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
