@@ -747,9 +747,7 @@ class _ProgressTodayScreenState extends ConsumerState<ProgressTodayScreen> {
                   const Icon(Icons.bolt, color: AppColors.primary, size: 20),
                   const SizedBox(width: 6),
                   Text(
-                    streakDays > 0
-                        ? '$streakDays Day Streak'
-                        : 'Session Streak Active',
+                    '$streakDays Day Streak',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

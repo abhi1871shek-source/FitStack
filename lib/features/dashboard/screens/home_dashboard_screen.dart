@@ -409,7 +409,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                               const Icon(Icons.bolt, color: Colors.orangeAccent, size: 16),
                               const SizedBox(width: 4),
                               AnimatedStreakCounter(
-                                count: currentStreak > 0 ? currentStreak : 14,
+                                count: currentStreak,
                                 suffix: 'd Streak',
                                 style: const TextStyle(
                                   fontSize: 12,
