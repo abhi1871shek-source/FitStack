@@ -5,7 +5,7 @@ class StepCountNotifier extends Notifier<int> {
   @override
   int build() {
     final telemetry = ref.watch(todayTelemetryProvider);
-    return telemetry?.stepCount ?? 6240;
+    return telemetry?.stepCount ?? 0;
   }
 
   void setSteps(int steps) {

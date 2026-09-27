@@ -79,7 +79,7 @@ class TelemetryNotifier extends Notifier<TelemetryState> {
         // Initialize today telemetry row if missing
         todayData = TelemetryData(
           logDate: todayStr,
-          stepCount: 6240, // default initial steps
+          stepCount: 0, // default initial steps
           habitsCompleted: 0,
           habitsTotal: 0,
           exercisesCompleted: 0,
