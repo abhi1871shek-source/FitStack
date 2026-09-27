@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/food_database_data.dart';
 import '../models/food_item.dart';
+import '../models/weekly_diet_plan.dart';
 
 class FoodLogState {
   final List<LoggedFoodItem> logs;
@@ -243,6 +244,49 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
         logs: [...state.logs, removedItem],
         errorMessage: 'Failed to delete food log',
       );
+    }
+  }
+
+  /// Import planned meals from user's personalized weekly diet plan into today's log
+  Future<void> importPlannedMeals(List<PlannedMeal> meals) async {
+    final userId = _currentUserId;
+    if (userId == null || meals.isEmpty) return;
+
+    final todayStr = DateTime.now().toIso8601String().split('T').first;
+    final nowTime = _formatCurrentTime();
+
+    await _ensureMasterFoodsExist();
+
+    final insertList = meals.map((m) {
+      return {
+        'user_id': userId,
+        'log_date': todayStr,
+        'food_id': m.foodId.isNotEmpty ? m.foodId : 'f_custom_${DateTime.now().millisecondsSinceEpoch}',
+        'name': m.name,
+        'cuisine': m.cuisine,
+        'meal_section': m.mealSection,
+        'quantity_grams': 100.0,
+        'unit': 'g',
+        'calories': m.calories,
+        'protein_grams': m.proteinGrams,
+        'carbs_grams': m.carbsGrams,
+        'fat_grams': m.fatGrams,
+        'fiber_grams': 5.0,
+        'logged_time': nowTime,
+      };
+    }).toList();
+
+    try {
+      final insertedResponse = await _client.from('food_logs').insert(insertList).select();
+
+      final List<LoggedFoodItem> insertedLogs = (insertedResponse as List)
+          .map((row) => LoggedFoodItem.fromMap(row))
+          .toList();
+
+      state = state.copyWith(logs: [...state.logs, ...insertedLogs]);
+    } catch (e) {
+      debugPrint('[FoodLogNotifier] Error importing planned meals: $e');
+      state = state.copyWith(errorMessage: 'Failed to import planned meals to database');
     }
   }
 

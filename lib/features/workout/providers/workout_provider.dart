@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/exercise_library.dart';
 import '../models/exercise.dart';
+import '../../onboarding/models/onboarding_state.dart';
+import '../../onboarding/providers/onboarding_provider.dart';
 
 class WorkoutState {
   final List<WorkoutLogItem> logs;
@@ -88,7 +90,23 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
       final List rows = response as List;
 
       if (rows.isEmpty) {
-        state = const WorkoutState(logs: [], isLoading: false);
+        final onboarding = ref.read(onboardingProvider);
+        final initialItems = _generatePersonalizedExercises(onboarding);
+
+        final insertList = initialItems
+            .map((item) => item.toMap(userId: userId, workoutDate: todayStr))
+            .toList();
+
+        final insertedResponse = await _client
+            .from('workout_logs')
+            .insert(insertList)
+            .select();
+
+        final List<WorkoutLogItem> seededList = (insertedResponse as List)
+            .map((row) => WorkoutLogItem.fromMap(row))
+            .toList();
+
+        state = WorkoutState(logs: seededList, isLoading: false);
       } else {
         final List<WorkoutLogItem> items =
             rows.map((row) => WorkoutLogItem.fromMap(row)).toList();
@@ -232,6 +250,135 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
         logs: [...state.logs, removedItem],
         errorMessage: 'Failed to delete exercise',
       );
+    }
+  }
+
+  List<WorkoutLogItem> _generatePersonalizedExercises(OnboardingState onboarding) {
+    final level = onboarding.experienceLevel ?? 'Beginner';
+    final goal = onboarding.primaryGoal ?? 'Build Muscle';
+
+    final isBeginner = level.toLowerCase() == 'beginner';
+    final isFatLoss = goal.toLowerCase().contains('loss') || goal.toLowerCase().contains('fat');
+
+    if (isBeginner) {
+      return const [
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_1',
+          name: 'Barbell Bench Press',
+          muscleGroup: 'Chest',
+          sets: 3,
+          reps: 10,
+          weightKg: 40.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_1.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_6',
+          name: 'Lat Pulldown',
+          muscleGroup: 'Back',
+          sets: 3,
+          reps: 10,
+          weightKg: 35.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_6.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_13',
+          name: 'Overhead Dumbbell Press',
+          muscleGroup: 'Shoulders',
+          sets: 3,
+          reps: 10,
+          weightKg: 12.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_13.jpg',
+        ),
+      ];
+    } else if (isFatLoss) {
+      return const [
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_2',
+          name: 'Incline Dumbbell Press',
+          muscleGroup: 'Chest',
+          sets: 3,
+          reps: 12,
+          weightKg: 20.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_2.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_6',
+          name: 'Lat Pulldown',
+          muscleGroup: 'Back',
+          sets: 4,
+          reps: 12,
+          weightKg: 45.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_6.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_13',
+          name: 'Overhead Dumbbell Press',
+          muscleGroup: 'Shoulders',
+          sets: 3,
+          reps: 12,
+          weightKg: 14.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_13.jpg',
+        ),
+      ];
+    } else {
+      return const [
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_1',
+          name: 'Barbell Bench Press',
+          muscleGroup: 'Chest',
+          sets: 4,
+          reps: 10,
+          weightKg: 70.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_1.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_2',
+          name: 'Incline Dumbbell Press',
+          muscleGroup: 'Chest',
+          sets: 3,
+          reps: 12,
+          weightKg: 24.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_2.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_6',
+          name: 'Lat Pulldown',
+          muscleGroup: 'Back',
+          sets: 4,
+          reps: 12,
+          weightKg: 55.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_6.jpg',
+        ),
+        WorkoutLogItem(
+          id: '',
+          exerciseId: 'ex_13',
+          name: 'Overhead Dumbbell Press',
+          muscleGroup: 'Shoulders',
+          sets: 3,
+          reps: 10,
+          weightKg: 18.0,
+          isCompleted: false,
+          imageUrl: 'assets/images/exercises/ex_13.jpg',
+        ),
+      ];
     }
   }
 }
