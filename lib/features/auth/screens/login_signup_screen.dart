@@ -48,6 +48,115 @@ class _LoginSignupScreenState extends ConsumerState<LoginSignupScreen> {
     super.dispose();
   }
 
+  void _showForgotPasswordDialog(BuildContext context) {
+    final resetEmailController = TextEditingController(text: _emailController.text);
+    final formKey = GlobalKey<FormState>();
+    bool isSending = false;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: AppColors.ofCardSurface(context),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: Text(
+                'Reset Password',
+                style: AppTypography.heading3.copyWith(color: AppColors.ofTextPrimary(context)),
+              ),
+              content: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Enter your email address and we will send you a link to reset your password.',
+                      style: TextStyle(fontSize: 13, color: AppColors.ofTextMuted(context)),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: resetEmailController,
+                      keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(color: AppColors.ofTextPrimary(context)),
+                      decoration: InputDecoration(
+                        hintText: 'user@example.com',
+                        prefixIcon: const Icon(Icons.email_outlined, size: 20),
+                        filled: true,
+                        fillColor: AppColors.ofSurfaceSubdued(context),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppColors.ofBorderSubdued(context)),
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.trim().isEmpty || !val.contains('@')) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSending ? null : () => Navigator.pop(dialogContext),
+                  child: Text('Cancel', style: TextStyle(color: AppColors.ofTextMuted(context))),
+                ),
+                ElevatedButton(
+                  onPressed: isSending
+                      ? null
+                      : () async {
+                          if (!formKey.currentState!.validate()) return;
+                          setDialogState(() => isSending = true);
+                          try {
+                            final email = resetEmailController.text.trim();
+                            await ref.read(authProvider.notifier).sendPasswordResetEmail(email);
+                            if (dialogContext.mounted) {
+                              Navigator.pop(dialogContext);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Password reset link sent to $email. Please check your inbox.'),
+                                  backgroundColor: AppColors.primary,
+                                  duration: const Duration(seconds: 5),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            setDialogState(() => isSending = false);
+                            if (dialogContext.mounted) {
+                              ScaffoldMessenger.of(dialogContext).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to send reset email: ${e.toString().replaceAll('Exception: ', '')}'),
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  child: isSending
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Text('Send Reset Link'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<void> _submitForm() async {
     if (_isLoading) return;
     setState(() => _errorMessage = null);
@@ -277,14 +386,7 @@ class _LoginSignupScreenState extends ConsumerState<LoginSignupScreen> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Password reset link sent (demo mode)'),
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                              },
+                              onPressed: () => _showForgotPasswordDialog(context),
                               child: Text(
                                 'Forgot password?',
                                 style: AppTypography.body.copyWith(

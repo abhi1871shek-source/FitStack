@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/auth/screens/login_signup_screen.dart';
+import 'features/auth/screens/reset_password_screen.dart';
 import 'features/onboarding/screens/onboarding_flow_screen.dart';
 import 'navigation/main_shell.dart';
 
@@ -36,9 +37,12 @@ class FitStackApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider);
+    final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
 
     Widget homeScreen;
-    if (user == null) {
+    if (isPasswordRecovery) {
+      homeScreen = const ResetPasswordScreen();
+    } else if (user == null) {
       homeScreen = const LoginSignupScreen();
     } else if (!user.isProfileComplete) {
       homeScreen = const OnboardingFlowScreen();

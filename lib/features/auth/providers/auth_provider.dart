@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/user_model.dart';
 
+final passwordRecoveryProvider = StateProvider<bool>((ref) => false);
+
 class AuthNotifier extends Notifier<UserModel?> {
   SupabaseClient get _client => Supabase.instance.client;
 
@@ -10,6 +12,9 @@ class AuthNotifier extends Notifier<UserModel?> {
   UserModel? build() {
     // Listen to real Supabase auth state changes
     _client.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.passwordRecovery) {
+        ref.read(passwordRecoveryProvider.notifier).state = true;
+      }
       final session = data.session;
       if (session == null) {
         state = null;
@@ -17,6 +22,15 @@ class AuthNotifier extends Notifier<UserModel?> {
         _loadUserProfile(session.user);
       }
     });
+
+    if (kIsWeb) {
+      final href = Uri.base.toString();
+      if (href.contains('type=recovery') || href.contains('reset-password')) {
+        Future.microtask(() {
+          ref.read(passwordRecoveryProvider.notifier).state = true;
+        });
+      }
+    }
 
     // Check existing session on initial load
     final currentSession = _client.auth.currentSession;
@@ -157,6 +171,28 @@ class AuthNotifier extends Notifier<UserModel?> {
       debugPrint('[AuthNotifier] Profile successfully saved to Supabase profiles table.');
     } catch (e) {
       debugPrint('[AuthNotifier] Error saving profile to Supabase: $e');
+    }
+  }
+
+  /// Send password reset email via Supabase Auth
+  Future<void> sendPasswordResetEmail(String email) async {
+    final origin = kIsWeb ? Uri.base.origin : 'https://fit-stack-two.vercel.app';
+    final cleanOrigin = origin.split('#').first.replaceAll(RegExp(r'/$'), '');
+    final redirectUrl = '$cleanOrigin/#/reset-password';
+
+    await _client.auth.resetPasswordForEmail(
+      email.trim(),
+      redirectTo: redirectUrl,
+    );
+  }
+
+  /// Update user password in Supabase Auth
+  Future<void> updatePassword(String newPassword) async {
+    final response = await _client.auth.updateUser(
+      UserAttributes(password: newPassword),
+    );
+    if (response.user != null) {
+      await _loadUserProfile(response.user!);
     }
   }
 
