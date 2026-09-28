@@ -120,6 +120,89 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
     }
   }
 
+  /// Load logged exercises for a specific date from Supabase
+  Future<List<WorkoutLogItem>> fetchLogsForDate(DateTime date) async {
+    final userId = _currentUserId;
+    if (userId == null) return [];
+
+    final dateStr = date.toIso8601String().split('T').first;
+    final now = DateTime.now();
+    final yesterdayStr = now.subtract(const Duration(days: 1)).toIso8601String().split('T').first;
+
+    final isDemoMode = userId == 'demo_user_123' || (kIsWeb && Uri.base.toString().contains('demo=true'));
+
+    try {
+      final response = await _client
+          .from('workout_logs')
+          .select()
+          .eq('user_id', userId)
+          .eq('workout_date', dateStr)
+          .order('created_at', ascending: true);
+
+      final List rows = response as List;
+      if (rows.isNotEmpty) {
+        return rows.map((row) => WorkoutLogItem.fromMap(row)).toList();
+      }
+    } catch (e) {
+      debugPrint('[WorkoutNotifier] Note fetching logs for date $dateStr: $e');
+    }
+
+    if (isDemoMode && dateStr == yesterdayStr) {
+      return const [
+        WorkoutLogItem(
+          id: 'demo_log_1',
+          exerciseId: 'ex_1',
+          name: 'Barbell Bench Press',
+          muscleGroup: 'Chest',
+          sets: 3,
+          reps: 10,
+          weightKg: 50.0,
+          setDetails: [
+            ExerciseSet(setNumber: 1, reps: 10, weightKg: 50.0),
+            ExerciseSet(setNumber: 2, reps: 8, weightKg: 55.0),
+            ExerciseSet(setNumber: 3, reps: 6, weightKg: 60.0),
+          ],
+          isCompleted: true,
+          imageUrl: 'assets/images/exercises/ex_1.jpg',
+        ),
+        WorkoutLogItem(
+          id: 'demo_log_2',
+          exerciseId: 'ex_6',
+          name: 'Lat Pulldown',
+          muscleGroup: 'Back',
+          sets: 3,
+          reps: 12,
+          weightKg: 40.0,
+          setDetails: [
+            ExerciseSet(setNumber: 1, reps: 12, weightKg: 40.0),
+            ExerciseSet(setNumber: 2, reps: 10, weightKg: 45.0),
+            ExerciseSet(setNumber: 3, reps: 8, weightKg: 50.0),
+          ],
+          isCompleted: true,
+          imageUrl: 'assets/images/exercises/ex_6.jpg',
+        ),
+        WorkoutLogItem(
+          id: 'demo_log_3',
+          exerciseId: 'ex_13',
+          name: 'Overhead Dumbbell Press',
+          muscleGroup: 'Shoulders',
+          sets: 3,
+          reps: 10,
+          weightKg: 14.0,
+          setDetails: [
+            ExerciseSet(setNumber: 1, reps: 10, weightKg: 14.0),
+            ExerciseSet(setNumber: 2, reps: 10, weightKg: 14.0),
+            ExerciseSet(setNumber: 3, reps: 8, weightKg: 16.0),
+          ],
+          isCompleted: true,
+          imageUrl: 'assets/images/exercises/ex_13.jpg',
+        ),
+      ];
+    }
+
+    return [];
+  }
+
   /// Update set/exercise completion on real workout_logs row
   Future<void> toggleComplete(String id, [bool? forceCompleted]) async {
     final userId = _currentUserId;

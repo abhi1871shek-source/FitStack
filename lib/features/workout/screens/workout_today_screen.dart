@@ -7,6 +7,7 @@ import '../../../core/widgets/image_preview_dialog.dart';
 import '../models/exercise.dart';
 import '../providers/workout_provider.dart';
 import 'workout_add_library_screen.dart';
+import 'workout_history_screen.dart';
 import 'workout_quick_edit_sheet.dart';
 import 'workout_weekly_plan_screen.dart';
 
@@ -92,6 +93,23 @@ class _WorkoutTodayScreenState extends ConsumerState<WorkoutTodayScreen> {
                       ),
                       Row(
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const WorkoutHistoryScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.history_outlined, size: 22, color: AppColors.primary),
+                            tooltip: 'Workout History',
+                            style: IconButton.styleFrom(
+                              backgroundColor: AppColors.accentSubtle,
+                              side: const BorderSide(color: AppColors.primary),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           IconButton(
                             onPressed: () {
                               Navigator.push(
