@@ -369,10 +369,11 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
           // Scrollable Sets List
           Flexible(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 12),
               child: Column(
                 children: [
                   ...List.generate(_setsList.length, (i) => _buildSetCard(i)),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
 
                   // Add Set Button
                   InkWell(
@@ -380,7 +381,7 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
                         color: AppColors.ofAccentSubtle(context),
                         borderRadius: BorderRadius.circular(10),
@@ -408,8 +409,9 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
               ),
             ),
           ),
+          const SizedBox(height: 12),
 
-          // Save Changes Button
+          // Fixed Save Changes Button
           SizedBox(
             width: double.infinity,
             height: 48,
