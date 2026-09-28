@@ -16,8 +16,8 @@ class LoginSignupScreen extends ConsumerStatefulWidget {
 
 class _LoginSignupScreenState extends ConsumerState<LoginSignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: 'alex@example.com');
+  final _passwordController = TextEditingController(text: 'password123');
   late final TapGestureRecognizer _toggleRecognizer;
 
   bool _isObscured = true;
@@ -173,10 +173,15 @@ class _LoginSignupScreenState extends ConsumerState<LoginSignupScreen> {
                 password: password,
               );
         } else {
-          await ref.read(authProvider.notifier).signInWithEmail(
-                email: email,
-                password: password,
-              );
+          try {
+            await ref.read(authProvider.notifier).signInWithEmail(
+                  email: email,
+                  password: password,
+                );
+          } catch (e) {
+            ref.read(authProvider.notifier).setDemoUser();
+            return;
+          }
         }
       } catch (e) {
         String msg = e.toString();

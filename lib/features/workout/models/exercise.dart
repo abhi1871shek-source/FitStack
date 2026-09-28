@@ -143,11 +143,14 @@ class WorkoutLogItem {
     final minWStr = minW == minW.roundToDouble() ? minW.round().toString() : minW.toStringAsFixed(1);
     final maxWStr = maxW == maxW.roundToDouble() ? maxW.round().toString() : maxW.toStringAsFixed(1);
 
-    if (minW == maxW) {
-      return '$total sets • $minWStr kg';
-    } else {
-      return '$total sets • $minWStr–$maxWStr kg';
-    }
+    final repsList = setDetails.map((s) => s.reps).toList();
+    final minR = repsList.reduce((a, b) => a < b ? a : b);
+    final maxR = repsList.reduce((a, b) => a > b ? a : b);
+
+    final repsStr = (minR == maxR) ? '$minR reps' : '$minR–$maxR reps';
+    final weightStr = (minW == maxW) ? '$minWStr kg' : '$minWStr–$maxWStr kg';
+
+    return '$total sets × $repsStr • $weightStr';
   }
 
   WorkoutLogItem copyWith({

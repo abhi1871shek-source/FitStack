@@ -1,8 +1,12 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/services/storage_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_image_widget.dart';
+import '../../../core/widgets/custom_image_picker_tile.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../data/exercise_library.dart';
@@ -50,6 +54,8 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
         ? _selectedBodyPart
         : 'Chest';
     bool isHomeExercise = false;
+    Uint8List? selectedImageBytes;
+    bool isSaving = false;
 
     final muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Cardio'];
 
@@ -102,6 +108,13 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                       ],
                     ),
                     const SizedBox(height: 16),
+                    CustomImagePickerTile(
+                      selectedImageBytes: selectedImageBytes,
+                      onImagePicked: (bytes) => setModalState(() => selectedImageBytes = bytes),
+                      label: 'Exercise Photo (Optional)',
+                      defaultIcon: Icons.fitness_center,
+                    ),
+                    const SizedBox(height: 14),
                     TextField(
                       controller: nameController,
                       autofocus: true,
@@ -175,65 +188,94 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           elevation: 0,
                         ),
-                        onPressed: () async {
-                          final name = nameController.text.trim();
-                          if (name.isEmpty) return;
+                        onPressed: isSaving
+                            ? null
+                            : () async {
+                                final name = nameController.text.trim();
+                                if (name.isEmpty) return;
 
-                          final sets = int.tryParse(setsController.text.trim()) ?? 3;
-                          final reps = int.tryParse(repsController.text.trim()) ?? 10;
-                          final weight = double.tryParse(weightController.text.trim()) ?? 0.0;
-                          final customId = 'ex_custom_${DateTime.now().millisecondsSinceEpoch}';
+                                setModalState(() => isSaving = true);
 
-                          final customEx = Exercise(
-                            id: customId,
-                            name: name,
-                            muscleGroup: selectedMuscleGroup,
-                            defaultSets: sets,
-                            defaultReps: reps,
-                            defaultWeightKg: weight,
-                            isHome: isHomeExercise,
-                          );
+                                final sets = int.tryParse(setsController.text.trim()) ?? 3;
+                                final reps = int.tryParse(repsController.text.trim()) ?? 10;
+                                final weight = double.tryParse(weightController.text.trim()) ?? 0.0;
+                                final customId = 'ex_custom_${DateTime.now().millisecondsSinceEpoch}';
 
-                          try {
-                            // 1. Save to Supabase exercises table
-                            final client = Supabase.instance.client;
-                            final userId = client.auth.currentUser?.id;
-                            if (userId != null) {
-                              final map = customEx.toMap();
-                              map['user_id'] = userId;
-                              await client.from('exercises').upsert(map, onConflict: 'id');
-                            }
+                                String? imageUrl;
+                                final client = Supabase.instance.client;
+                                final userId = client.auth.currentUser?.id;
 
-                            // 2. Add to exercise library in memory
-                            if (!ExerciseLibrary.masterExercises.any((e) => e.id == customId)) {
-                              ExerciseLibrary.masterExercises.insert(0, customEx);
-                            }
+                                if (selectedImageBytes != null && userId != null) {
+                                  final uploadedUrl = await StorageService.uploadImage(
+                                    imageBytes: selectedImageBytes!,
+                                    userId: userId,
+                                    subFolder: 'exercises',
+                                    itemId: customId,
+                                  );
+                                  if (uploadedUrl != null) {
+                                    imageUrl = uploadedUrl;
+                                  }
+                                }
 
-                            // 3. Log to today's workout
-                            ref.read(workoutProvider.notifier).addExercises([customEx]);
+                                final customEx = Exercise(
+                                  id: customId,
+                                  name: name,
+                                  muscleGroup: selectedMuscleGroup,
+                                  defaultSets: sets,
+                                  defaultReps: reps,
+                                  defaultWeightKg: weight,
+                                  isHome: isHomeExercise,
+                                  imageUrl: imageUrl,
+                                );
 
-                            if (mounted) {
-                              Navigator.pop(dialogCtx);
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Custom exercise "$name" saved to DB & added to Workout!'),
-                                  backgroundColor: AppColors.primary,
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            debugPrint('[WorkoutAddLibraryScreen] Error saving custom exercise: $e');
-                            ref.read(workoutProvider.notifier).addExercises([customEx]);
-                            if (mounted) {
-                              Navigator.pop(dialogCtx);
-                              Navigator.pop(context);
-                            }
-                          }
-                        },
-                        icon: const Icon(Icons.add, size: 20),
-                        label: const Text('Save Custom Exercise & Add to Workout',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                try {
+                                  // 1. Save to Supabase exercises table
+                                  if (userId != null) {
+                                    final map = customEx.toMap();
+                                    map['user_id'] = userId;
+                                    await client.from('exercises').upsert(map, onConflict: 'id');
+                                  }
+
+                                  // 2. Add to exercise library in memory
+                                  if (!ExerciseLibrary.masterExercises.any((e) => e.id == customId)) {
+                                    ExerciseLibrary.masterExercises.insert(0, customEx);
+                                  }
+
+                                  // 3. Log to today's workout
+                                  ref.read(workoutProvider.notifier).addExercises([customEx]);
+
+                                  if (mounted) {
+                                    Navigator.pop(dialogCtx);
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Custom exercise "$name" saved to DB & added to Workout!'),
+                                        backgroundColor: AppColors.primary,
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  debugPrint('[WorkoutAddLibraryScreen] Error saving custom exercise: $e');
+                                  ref.read(workoutProvider.notifier).addExercises([customEx]);
+                                  if (mounted) {
+                                    Navigator.pop(dialogCtx);
+                                    Navigator.pop(context);
+                                  }
+                                } finally {
+                                  setModalState(() => isSaving = false);
+                                }
+                              },
+                        icon: isSaving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              )
+                            : const Icon(Icons.add, size: 20),
+                        label: Text(
+                          isSaving ? 'Uploading Photo & Saving...' : 'Save Custom Exercise & Add to Workout',
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
@@ -447,21 +489,12 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                                 onTap: () => showImagePreviewDialog(context, imgPath, ex.name),
                                 onDoubleTap: () => showImagePreviewDialog(context, imgPath, ex.name),
                                 borderRadius: BorderRadius.circular(8),
-                                child: ClipRRect(
+                                child: AppImageWidget(
+                                  imagePath: imgPath,
+                                  width: 48,
+                                  height: 48,
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    imgPath,
-                                    width: 48,
-                                    height: 48,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => Container(
-                                      width: 48,
-                                      height: 48,
-                                      color: AppColors.surfaceSubdued,
-                                      child: const Icon(Icons.fitness_center,
-                                          size: 20, color: AppColors.textMuted),
-                                    ),
-                                  ),
+                                  fallbackIcon: Icons.fitness_center,
                                 ),
                               ),
                               const SizedBox(width: 12),

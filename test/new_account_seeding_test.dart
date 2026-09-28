@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fitstack/features/diet/providers/food_log_provider.dart';
-import 'package:fitstack/features/workout/providers/workout_provider.dart';
 import 'package:fitstack/features/habits/providers/habits_provider.dart';
 
 void main() {

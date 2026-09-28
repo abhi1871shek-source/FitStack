@@ -20,7 +20,7 @@ class _DietPreferenceScreenState extends ConsumerState<DietPreferenceScreen> {
   late TextEditingController _calorieController;
 
   static const List<String> _allCuisines = [
-    'Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese',
+    'Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese', 'Arabic',
   ];
 
   static const List<String> _dietaryTypes = [

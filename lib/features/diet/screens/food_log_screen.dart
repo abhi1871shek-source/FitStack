@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/animated_streak_counter.dart';
+import '../../../core/widgets/app_image_widget.dart';
 import '../../../core/widgets/emoji_progress_bar.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
 import '../models/food_item.dart';
@@ -521,20 +522,12 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
               showImagePreviewDialog(context, imgPath, item.name);
             },
             borderRadius: BorderRadius.circular(8),
-            child: ClipRRect(
+            child: AppImageWidget(
+              imagePath: item.imageAsset.isNotEmpty ? item.imageAsset : 'assets/images/food/${item.foodId}.jpg',
+              width: 40,
+              height: 40,
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                item.imageAsset.isNotEmpty ? item.imageAsset : 'assets/images/food/${item.foodId}.jpg',
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 40,
-                  height: 40,
-                  color: AppColors.ofSurfaceSubdued(context),
-                  child: Icon(Icons.restaurant, size: 18, color: AppColors.ofTextMuted(context)),
-                ),
-              ),
+              fallbackIcon: Icons.restaurant,
             ),
           ),
           const SizedBox(width: 10),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_image_widget.dart';
 import '../../../core/widgets/emoji_progress_bar.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
 import '../models/exercise.dart';
@@ -464,33 +465,12 @@ class _WorkoutTodayScreenState extends ConsumerState<WorkoutTodayScreen> {
                 onTap: () => showImagePreviewDialog(context, log.imageUrl!, log.name),
                 onDoubleTap: () => showImagePreviewDialog(context, log.imageUrl!, log.name),
                 borderRadius: BorderRadius.circular(8),
-                child: ClipRRect(
+                child: AppImageWidget(
+                  imagePath: log.imageUrl!,
+                  width: 44,
+                  height: 44,
                   borderRadius: BorderRadius.circular(8),
-                  child: log.imageUrl!.startsWith('http')
-                      ? Image.network(
-                          log.imageUrl!,
-                          width: 44,
-                          height: 44,
-                          fit: BoxFit.cover,
-                          errorBuilder: (ctx, err, stack) => Container(
-                            width: 44,
-                            height: 44,
-                            color: AppColors.surfaceSubdued,
-                            child: const Icon(Icons.fitness_center, size: 20, color: AppColors.textMuted),
-                          ),
-                        )
-                      : Image.asset(
-                          log.imageUrl!,
-                          width: 44,
-                          height: 44,
-                          fit: BoxFit.cover,
-                          errorBuilder: (ctx, err, stack) => Container(
-                            width: 44,
-                            height: 44,
-                            color: AppColors.surfaceSubdued,
-                            child: const Icon(Icons.fitness_center, size: 20, color: AppColors.textMuted),
-                          ),
-                        ),
+                  fallbackIcon: Icons.fitness_center,
                 ),
               ),
               const SizedBox(width: 10),

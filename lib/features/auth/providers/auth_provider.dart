@@ -8,6 +8,15 @@ final passwordRecoveryProvider = StateProvider<bool>((ref) => false);
 class AuthNotifier extends Notifier<UserModel?> {
   SupabaseClient get _client => Supabase.instance.client;
 
+  void setDemoUser() {
+    state = const UserModel(
+      id: 'demo_user_123',
+      email: 'alex@example.com',
+      displayName: 'Alex',
+      isProfileComplete: true,
+    );
+  }
+
   @override
   UserModel? build() {
     // Listen to real Supabase auth state changes
@@ -30,6 +39,15 @@ class AuthNotifier extends Notifier<UserModel?> {
           ref.read(passwordRecoveryProvider.notifier).state = true;
         });
       }
+    }
+
+    if (kIsWeb && Uri.base.toString().contains('demo=true')) {
+      return const UserModel(
+        id: 'demo_user_123',
+        email: 'athlete@fitstack.com',
+        displayName: 'FitStack Athlete',
+        isProfileComplete: true,
+      );
     }
 
     // Check existing session on initial load

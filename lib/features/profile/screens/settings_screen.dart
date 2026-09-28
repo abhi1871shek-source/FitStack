@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../diet/providers/diet_preference_provider.dart';
 
@@ -489,6 +490,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    'Made by Abhishek K',
+                    style: AppTypography.labelUpper.copyWith(
+                      color: AppColors.ofTextMuted(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
               ],
             ),
           ),

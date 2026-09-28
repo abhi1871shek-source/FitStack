@@ -1039,7 +1039,7 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '${exercise.sets} sets × ${exercise.reps} reps • ${exercise.weightKg.toStringAsFixed(0)} kg',
+                              exercise.repsAndWeightSummary,
                               style: TextStyle(fontSize: 10, color: textMutedColor),
                             ),
                           ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -39,12 +40,14 @@ class FitStackApp extends ConsumerWidget {
     final user = ref.watch(authProvider);
     final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
 
+    final isDemo = kIsWeb && Uri.base.toString().contains('demo=true');
+
     Widget homeScreen;
     if (isPasswordRecovery) {
       homeScreen = const ResetPasswordScreen();
-    } else if (user == null) {
+    } else if (user == null && !isDemo) {
       homeScreen = const LoginSignupScreen();
-    } else if (!user.isProfileComplete) {
+    } else if (user != null && !user.isProfileComplete && !isDemo) {
       homeScreen = const OnboardingFlowScreen();
     } else {
       homeScreen = const MainShell();

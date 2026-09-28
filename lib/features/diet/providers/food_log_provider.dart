@@ -54,7 +54,7 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
     if (userId == null) return;
     try {
       final masterMaps = FoodDatabaseData.masterFoods.map((f) {
-        final map = f.toMap(userId: userId);
+        final map = f.toMap(userId: null);
         return map;
       }).toList();
       await _client.from('food_items').upsert(masterMaps, onConflict: 'id');

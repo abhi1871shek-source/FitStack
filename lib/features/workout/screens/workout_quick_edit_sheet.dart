@@ -59,7 +59,19 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
     super.dispose();
   }
 
+  void _syncControllersToState() {
+    for (int i = 0; i < _setsList.length && i < _repsControllers.length; i++) {
+      final reps = int.tryParse(_repsControllers[i].text) ?? _setsList[i].reps;
+      final weight = double.tryParse(_weightControllers[i].text) ?? _setsList[i].weightKg;
+      _setsList[i] = _setsList[i].copyWith(
+        reps: reps > 0 ? reps : 1,
+        weightKg: weight >= 0 ? weight : 0.0,
+      );
+    }
+  }
+
   void _addSet() {
+    _syncControllersToState();
     setState(() {
       final lastSet = _setsList.isNotEmpty
           ? _setsList.last
@@ -81,6 +93,7 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
 
   void _removeSet(int index) {
     if (_setsList.length <= 1) return;
+    _syncControllersToState();
     setState(() {
       _repsControllers[index].dispose();
       _weightControllers[index].dispose();

@@ -8,7 +8,7 @@ class DietPreferenceState {
   final bool isCalorieManuallyOverridden;
 
   const DietPreferenceState({
-    this.selectedCuisines = const ['Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese'],
+    this.selectedCuisines = const ['Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese', 'Arabic'],
     this.dietaryType = 'non-vegetarian',
     this.mealsPerDay = 4,
     this.calorieTarget,
@@ -34,7 +34,7 @@ class DietPreferenceState {
   factory DietPreferenceState.fromMap(Map<String, dynamic> map) {
     return DietPreferenceState(
       selectedCuisines: (map['selected_cuisines'] as List?)?.map((e) => e.toString()).toList() ??
-          const ['Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese'],
+          const ['Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese', 'Arabic'],
       dietaryType: map['dietary_type'] as String? ?? 'non-vegetarian',
       mealsPerDay: map['meals_per_day'] as int? ?? 4,
       calorieTarget: map['calorie_target'] as int?,

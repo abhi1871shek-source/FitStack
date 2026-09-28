@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS public.food_items (
     id TEXT PRIMARY KEY, -- e.g. 'f_k1' or UUID string for custom foods
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE, -- NULL for public global foods, set for custom user foods
     name TEXT NOT NULL,
-    cuisine TEXT NOT NULL, -- 'Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese'
+    cuisine TEXT NOT NULL, -- 'Kerala', 'North Indian', 'South Indian', 'American', 'Mediterranean', 'Chinese', 'Arabic'
     base_serving TEXT NOT NULL, -- e.g. '100g', '1 piece (80g)'
     base_serving_grams NUMERIC(6,2) NOT NULL DEFAULT 100.0,
     calories NUMERIC(6,2) NOT NULL DEFAULT 0,
@@ -350,6 +350,52 @@ CREATE POLICY "daily_telemetry_all_own" ON public.daily_telemetry
     FOR ALL TO authenticated
     USING (auth.uid() = user_id)
     WITH CHECK (auth.uid() = user_id);
+
+-- ------------------------------------------------------------------------------
+-- 11. SUPABASE STORAGE BUCKET & RLS POLICIES FOR USER UPLOADS
+-- ------------------------------------------------------------------------------
+-- Public bucket for custom food & custom exercise images uploaded by users.
+-- Path structure: {user_id}/foods/{food_id}.jpg and {user_id}/exercises/{exercise_id}.jpg
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('user-uploads', 'user-uploads', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Public read access so photos display in app across sessions/users
+CREATE POLICY "User uploads public select"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id = 'user-uploads');
+
+-- Authenticated users can upload to their own user_id folder prefix
+CREATE POLICY "User uploads insert own"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'user-uploads' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+);
+
+-- Authenticated users can update/overwrite their own uploaded files
+CREATE POLICY "User uploads update own"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'user-uploads' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+)
+WITH CHECK (
+    bucket_id = 'user-uploads' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+);
+
+-- Authenticated users can delete their own uploaded files
+CREATE POLICY "User uploads delete own"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'user-uploads' AND
+    (storage.foldername(name))[1] = auth.uid()::text
+);
 
 -- ==============================================================================
 -- End of FitStack Schema

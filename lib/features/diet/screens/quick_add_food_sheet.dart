@@ -1,8 +1,12 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/services/storage_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_image_widget.dart';
+import '../../../core/widgets/custom_image_picker_tile.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
 import '../data/food_database_data.dart';
 import '../models/food_item.dart';
@@ -32,6 +36,8 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
 
   // Custom Food Entry Controllers & States
   late bool _isCustomMode;
+  Uint8List? _customImageBytes;
+  bool _isSaving = false;
   final TextEditingController _customNameController = TextEditingController();
   final TextEditingController _customServingDescController =
       TextEditingController(text: '1 serving (100g)');
@@ -59,6 +65,7 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
     'American',
     'Mediterranean',
     'Chinese',
+    'Arabic',
     'General',
   ];
   final List<String> _dietaryTypes = [
@@ -109,6 +116,8 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
       return;
     }
 
+    setState(() => _isSaving = true);
+
     final calories = double.tryParse(_customCaloriesController.text.trim()) ?? 250.0;
     final protein = double.tryParse(_customProteinController.text.trim()) ?? 15.0;
     final carbs = double.tryParse(_customCarbsController.text.trim()) ?? 30.0;
@@ -120,6 +129,23 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
         : _customServingDescController.text.trim();
 
     final customId = 'f_custom_${DateTime.now().millisecondsSinceEpoch}';
+
+    String imageAsset = '';
+
+    final client = Supabase.instance.client;
+    final userId = client.auth.currentUser?.id;
+
+    if (_customImageBytes != null && userId != null) {
+      final uploadedUrl = await StorageService.uploadImage(
+        imageBytes: _customImageBytes!,
+        userId: userId,
+        subFolder: 'foods',
+        itemId: customId,
+      );
+      if (uploadedUrl != null) {
+        imageAsset = uploadedUrl;
+      }
+    }
 
     final customFood = FoodItem(
       id: customId,
@@ -134,12 +160,11 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
       fiberGrams: fiber,
       category: 'Meals',
       dietaryType: _customDietaryType,
+      imageAsset: imageAsset,
     );
 
     try {
       // 1. Save to Supabase food_items table
-      final client = Supabase.instance.client;
-      final userId = client.auth.currentUser?.id;
       if (userId != null) {
         await client.from('food_items').upsert(customFood.toMap(userId: userId));
       }
@@ -175,6 +200,10 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
               quantityGrams: servingGrams,
             );
         Navigator.pop(context);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
       }
     }
   }
@@ -323,22 +352,14 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
                       showImagePreviewDialog(context, imgPath, _selectedFood.name);
                     },
                     borderRadius: BorderRadius.circular(10),
-                    child: ClipRRect(
+                    child: AppImageWidget(
+                      imagePath: _selectedFood.imageAsset.isNotEmpty
+                          ? _selectedFood.imageAsset
+                          : 'assets/images/food/${_selectedFood.id}.jpg',
+                      width: 48,
+                      height: 48,
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        _selectedFood.imageAsset.isNotEmpty
-                            ? _selectedFood.imageAsset
-                            : 'assets/images/food/${_selectedFood.id}.jpg',
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 48,
-                          height: 48,
-                          color: AppColors.surfaceSubdued,
-                          child: const Icon(Icons.restaurant, size: 24, color: AppColors.textMuted),
-                        ),
-                      ),
+                      fallbackIcon: Icons.restaurant,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -604,6 +625,14 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
               ),
             ] else ...[
               // TRUE CUSTOM FOOD CREATION PATH
+              CustomImagePickerTile(
+                selectedImageBytes: _customImageBytes,
+                onImagePicked: (bytes) => setState(() => _customImageBytes = bytes),
+                label: 'Food Photo (Optional)',
+                defaultIcon: Icons.restaurant,
+              ),
+              const SizedBox(height: 14),
+
               TextField(
                 controller: _customNameController,
                 autofocus: true,
@@ -778,10 +807,18 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  onPressed: _saveAndLogCustomFood,
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text('Save Custom Food & Log to Journal',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  onPressed: _isSaving ? null : _saveAndLogCustomFood,
+                  icon: _isSaving
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.add, size: 20),
+                  label: Text(
+                    _isSaving ? 'Uploading Photo & Saving...' : 'Save Custom Food & Log to Journal',
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],

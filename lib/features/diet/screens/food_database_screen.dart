@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_image_widget.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
 import '../data/food_database_data.dart';
 import '../models/food_item.dart';
@@ -28,6 +29,7 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
     'American',
     'Mediterranean',
     'Chinese',
+    'Arabic',
   ];
 
   @override
@@ -261,20 +263,12 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
                                   onTap: () => showImagePreviewDialog(context, food.imageAsset, food.name),
                                   onDoubleTap: () => showImagePreviewDialog(context, food.imageAsset, food.name),
                                   borderRadius: BorderRadius.circular(8),
-                                  child: ClipRRect(
+                                  child: AppImageWidget(
+                                    imagePath: food.imageAsset,
+                                    width: 44,
+                                    height: 44,
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.asset(
-                                      food.imageAsset,
-                                      width: 44,
-                                      height: 44,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => Container(
-                                        width: 44,
-                                        height: 44,
-                                        color: AppColors.surfaceSubdued,
-                                        child: const Icon(Icons.restaurant, size: 20, color: AppColors.textMuted),
-                                      ),
-                                    ),
+                                    fallbackIcon: Icons.restaurant,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
