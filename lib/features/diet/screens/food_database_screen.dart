@@ -21,16 +21,10 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<FoodItem> _selectedFoods = {};
 
-  final List<String> _cuisines = [
-    'All',
-    'Kerala',
-    'North Indian',
-    'South Indian',
-    'American',
-    'Mediterranean',
-    'Chinese',
-    'Arabic',
-  ];
+  List<String> get _cuisines {
+    final set = FoodDatabaseData.masterFoods.map((f) => f.cuisine).toSet().toList()..sort();
+    return ['All', ...set];
+  }
 
   @override
   void dispose() {
