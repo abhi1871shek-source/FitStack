@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/food_item.dart';
 
 abstract class FoodDatabaseData {
-  static const List<FoodItem> masterFoods = [
+  static List<FoodItem> masterFoods = [
     // ----------------------------------------------------
     // KERALA CUISINE
     // ----------------------------------------------------
@@ -1824,4 +1826,26 @@ abstract class FoodDatabaseData {
       dietaryType: 'non-vegetarian',
     ),
   ];
+
+  static Future<void> loadCustomFoods(String userId) async {
+    try {
+      final client = Supabase.instance.client;
+      final response = await client
+          .from('food_items')
+          .select()
+          .eq('user_id', userId);
+      final List rows = response as List;
+      for (final row in rows) {
+        final food = FoodItem.fromMap(row);
+        final existingIndex = masterFoods.indexWhere((f) => f.id == food.id);
+        if (existingIndex >= 0) {
+          masterFoods[existingIndex] = food;
+        } else {
+          masterFoods.insert(0, food);
+        }
+      }
+    } catch (e) {
+      debugPrint('[FoodDatabaseData] Error loading custom foods: $e');
+    }
+  }
 }

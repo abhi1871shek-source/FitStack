@@ -372,8 +372,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
                 // Thumbnail Image
                 GestureDetector(
                   onTap: () {
-                    if (log.imageUrl != null && log.imageUrl!.isNotEmpty) {
-                      showImagePreviewDialog(context, log.imageUrl!, log.name);
+                    if (log.effectiveImageUrl != null && log.effectiveImageUrl!.isNotEmpty) {
+                      showImagePreviewDialog(context, log.effectiveImageUrl!, log.name);
                     }
                   },
                   child: Container(
@@ -385,7 +385,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: AppImageWidget(
-                      imagePath: log.imageUrl,
+                      imagePath: log.effectiveImageUrl,
                       width: 48,
                       height: 48,
                       fit: BoxFit.cover,

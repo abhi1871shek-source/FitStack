@@ -118,11 +118,34 @@ class HabitsNotifier extends Notifier<HabitsState> {
         debugPrint('[HabitsNotifier] habit_logs lookup fallback: $e');
       }
 
-      final List<HabitItem> items = (habitsResponse as List).map((row) {
+      final targetYear = selectedDate.year;
+      final targetMonth = selectedDate.month;
+      final targetDay = selectedDate.day;
+
+      final List<HabitItem> items = [];
+      for (final row in (habitsResponse as List)) {
         final habitId = row['id'].toString();
         final isCompletedToday = completedHabitIds.contains(habitId);
-        return HabitItem.fromMap(row, isCompletedToday: isCompletedToday);
-      }).toList();
+        final item = HabitItem.fromMap(row, isCompletedToday: isCompletedToday);
+
+        // Filter based on is_recurring and creation date
+        if (item.createdAt != null) {
+          final created = item.createdAt!;
+          final isSameDay = (created.year == targetYear && created.month == targetMonth && created.day == targetDay);
+
+          if (!item.isRecurring) {
+            // One-time habit: ONLY show on the specific creation/scheduled day
+            if (!isSameDay) continue;
+          } else {
+            // Recurring habit: show on creation day and all days going forward
+            final createdDateOnly = DateTime(created.year, created.month, created.day);
+            final targetDateOnly = DateTime(targetYear, targetMonth, targetDay);
+            if (targetDateOnly.isBefore(createdDateOnly)) continue;
+          }
+        }
+
+        items.add(item);
+      }
 
       state = HabitsState(
         habits: items,
@@ -150,9 +173,14 @@ class HabitsNotifier extends Notifier<HabitsState> {
     int? reminderMinutesBefore,
     int? scheduledHour,
     int? scheduledMinute,
+    bool isRecurring = true,
   }) async {
     final userId = _currentUserId;
     if (userId == null) return;
+
+    final selected = state.selectedDate;
+    final now = DateTime.now();
+    final habitCreatedAt = DateTime(selected.year, selected.month, selected.day, now.hour, now.minute, now.second);
 
     final tempItem = HabitItem(
       id: '',
@@ -166,6 +194,8 @@ class HabitsNotifier extends Notifier<HabitsState> {
       reminderMinutesBefore: reminderMinutesBefore,
       scheduledHour: scheduledHour,
       scheduledMinute: scheduledMinute,
+      isRecurring: isRecurring,
+      createdAt: habitCreatedAt,
     );
 
     try {
@@ -274,6 +304,7 @@ class HabitsNotifier extends Notifier<HabitsState> {
     int? reminderMinutesBefore,
     int? scheduledHour,
     int? scheduledMinute,
+    bool isRecurring = true,
   }) async {
     final userId = _currentUserId;
     if (userId == null) return;
@@ -291,6 +322,7 @@ class HabitsNotifier extends Notifier<HabitsState> {
       reminderMinutesBefore: reminderMinutesBefore,
       scheduledHour: scheduledHour,
       scheduledMinute: scheduledMinute,
+      isRecurring: isRecurring,
     );
 
     final updatedList = List<HabitItem>.from(state.habits);
@@ -307,6 +339,7 @@ class HabitsNotifier extends Notifier<HabitsState> {
         'reminder_minutes_before': reminderMinutesBefore,
         'scheduled_hour': scheduledHour,
         'scheduled_minute': scheduledMinute,
+        'is_recurring': isRecurring,
       }).eq('id', id);
 
       if (reminderMinutesBefore != null && scheduledHour != null && scheduledMinute != null) {

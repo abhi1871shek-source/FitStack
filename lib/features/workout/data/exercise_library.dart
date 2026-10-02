@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/exercise.dart';
 
 /// Master Offline Exercise Library sourced from Free-Exercise-DB (yuhonas/free-exercise-db, MIT License)
 abstract class ExerciseLibrary {
-  static const List<Exercise> masterExercises = [
+  static List<Exercise> masterExercises = [
     Exercise(
       id: 'ex_1',
       name: 'Barbell Bench Press',
@@ -708,4 +710,34 @@ abstract class ExerciseLibrary {
       isHome: false,
     ),
   ];
+
+  static Exercise? getExerciseById(String id) {
+    try {
+      return masterExercises.firstWhere((e) => e.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<void> loadCustomExercises(String userId) async {
+    try {
+      final client = Supabase.instance.client;
+      final response = await client
+          .from('exercises')
+          .select()
+          .eq('user_id', userId);
+      final List rows = response as List;
+      for (final row in rows) {
+        final ex = Exercise.fromMap(row);
+        final existingIndex = masterExercises.indexWhere((e) => e.id == ex.id);
+        if (existingIndex >= 0) {
+          masterExercises[existingIndex] = ex;
+        } else {
+          masterExercises.insert(0, ex);
+        }
+      }
+    } catch (e) {
+      debugPrint('[ExerciseLibrary] Error loading custom exercises: $e');
+    }
+  }
 }

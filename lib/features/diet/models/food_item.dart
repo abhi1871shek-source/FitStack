@@ -15,6 +15,8 @@ class FoodItem {
   final String photoAuthor;
   final String photoLicense;
 
+  bool get isCustom => id.startsWith('f_custom_') || photoAuthor == 'User Upload';
+
   const FoodItem({
     required this.id,
     required this.name,

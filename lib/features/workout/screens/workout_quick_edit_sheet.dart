@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_image_widget.dart';
+import '../../../core/widgets/image_preview_dialog.dart';
 import '../models/exercise.dart';
 import '../providers/workout_provider.dart';
 
@@ -338,25 +340,39 @@ class _WorkoutQuickEditSheetState extends ConsumerState<WorkoutQuickEditSheet> {
         children: [
           // Header
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.item.name,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.ofTextPrimary(context),
+              if (widget.item.effectiveImageUrl != null && widget.item.effectiveImageUrl!.isNotEmpty) ...[
+                GestureDetector(
+                  onTap: () => showImagePreviewDialog(context, widget.item.effectiveImageUrl!, widget.item.name),
+                  child: AppImageWidget(
+                    imagePath: widget.item.effectiveImageUrl,
+                    width: 44,
+                    height: 44,
+                    borderRadius: BorderRadius.circular(8),
+                    fallbackIcon: Icons.fitness_center,
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.item.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.ofTextPrimary(context),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${widget.item.muscleGroup} Exercise • ${_setsList.length} ${_setsList.length == 1 ? 'Set' : 'Sets'}',
-                    style: TextStyle(fontSize: 12, color: AppColors.ofTextMuted(context)),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      '${widget.item.muscleGroup} Exercise • ${_setsList.length} ${_setsList.length == 1 ? 'Set' : 'Sets'}',
+                      style: TextStyle(fontSize: 12, color: AppColors.ofTextMuted(context)),
+                    ),
+                  ],
+                ),
               ),
               IconButton(
                 icon: Icon(Icons.close, size: 20, color: AppColors.ofTextMuted(context)),

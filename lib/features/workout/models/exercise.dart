@@ -1,3 +1,5 @@
+import '../data/exercise_library.dart';
+
 class Exercise {
   final String id;
   final String name;
@@ -8,6 +10,8 @@ class Exercise {
   final List<String> avoidIf; // e.g. ['back_pain'], ['knee_pain'], ['joint_issues']
   final String? imageUrl; // Demonstration illustration/image URL from Free-Exercise-DB
   final bool isHome; // Tagged for bodyweight / home workout filter
+
+  bool get isCustom => id.startsWith('ex_custom_');
 
   const Exercise({
     required this.id,
@@ -116,6 +120,11 @@ class WorkoutLogItem {
   });
 
   int get effectiveSets => setDetails.isNotEmpty ? setDetails.length : sets;
+
+  String? get effectiveImageUrl {
+    if (imageUrl != null && imageUrl!.isNotEmpty) return imageUrl;
+    return ExerciseLibrary.getExerciseById(exerciseId)?.imageUrl;
+  }
 
   String get repsAndWeightSummary {
     if (setDetails.isEmpty) {

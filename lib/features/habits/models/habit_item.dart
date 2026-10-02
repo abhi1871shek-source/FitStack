@@ -10,6 +10,8 @@ class HabitItem {
   final int? reminderMinutesBefore; // 5, 10, or null
   final int? scheduledHour; // 0..23
   final int? scheduledMinute; // 0..59
+  final bool isRecurring;
+  final DateTime? createdAt;
 
   const HabitItem({
     required this.id,
@@ -23,6 +25,8 @@ class HabitItem {
     this.reminderMinutesBefore,
     this.scheduledHour,
     this.scheduledMinute,
+    this.isRecurring = true,
+    this.createdAt,
   });
 
   HabitItem copyWith({
@@ -37,6 +41,8 @@ class HabitItem {
     int? reminderMinutesBefore,
     int? scheduledHour,
     int? scheduledMinute,
+    bool? isRecurring,
+    DateTime? createdAt,
   }) {
     return HabitItem(
       id: id ?? this.id,
@@ -50,10 +56,17 @@ class HabitItem {
       reminderMinutesBefore: reminderMinutesBefore ?? this.reminderMinutesBefore,
       scheduledHour: scheduledHour ?? this.scheduledHour,
       scheduledMinute: scheduledMinute ?? this.scheduledMinute,
+      isRecurring: isRecurring ?? this.isRecurring,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
   factory HabitItem.fromMap(Map<String, dynamic> map, {bool isCompletedToday = false}) {
+    DateTime? parsedCreatedAt;
+    if (map['created_at'] != null) {
+      parsedCreatedAt = DateTime.tryParse(map['created_at'].toString())?.toLocal();
+    }
+
     return HabitItem(
       id: map['id']?.toString() ?? '',
       title: map['title'] as String? ?? '',
@@ -66,6 +79,8 @@ class HabitItem {
       reminderMinutesBefore: map['reminder_minutes_before'] as int?,
       scheduledHour: map['scheduled_hour'] as int?,
       scheduledMinute: map['scheduled_minute'] as int?,
+      isRecurring: map['is_recurring'] as bool? ?? true,
+      createdAt: parsedCreatedAt,
     );
   }
 
@@ -82,11 +97,16 @@ class HabitItem {
       'reminder_minutes_before': reminderMinutesBefore,
       'scheduled_hour': scheduledHour,
       'scheduled_minute': scheduledMinute,
+      'is_recurring': isRecurring,
     };
+    if (createdAt != null) {
+      map['created_at'] = createdAt!.toUtc().toIso8601String();
+    }
     if (id.isNotEmpty && !id.startsWith('h_')) {
       map['id'] = id;
     }
     return map;
   }
 }
+
 

@@ -30,9 +30,9 @@ class _CustomImagePickerTileState extends State<CustomImagePickerTile> {
     try {
       final XFile? file = await _picker.pickImage(
         source: source,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
+        maxWidth: 600,
+        maxHeight: 600,
+        imageQuality: 75,
       );
       if (file != null) {
         final bytes = await file.readAsBytes();

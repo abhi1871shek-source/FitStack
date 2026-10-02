@@ -53,11 +53,13 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
     final userId = _currentUserId;
     if (userId == null) return;
     try {
-      final masterMaps = FoodDatabaseData.masterFoods.map((f) {
-        final map = f.toMap(userId: null);
-        return map;
-      }).toList();
-      await _client.from('food_items').upsert(masterMaps, onConflict: 'id');
+      final masterMaps = FoodDatabaseData.masterFoods
+          .where((f) => !f.id.startsWith('f_custom_'))
+          .map((f) => f.toMap(userId: null))
+          .toList();
+      if (masterMaps.isNotEmpty) {
+        await _client.from('food_items').upsert(masterMaps, onConflict: 'id');
+      }
     } catch (e) {
       debugPrint('[FoodLogNotifier] Master foods upsert note: $e');
     }
@@ -77,6 +79,7 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
 
     try {
       await _ensureMasterFoodsExist();
+      await FoodDatabaseData.loadCustomFoods(userId);
 
       final response = await _client
           .from('food_logs')

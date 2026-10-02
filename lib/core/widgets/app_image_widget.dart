@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 
@@ -24,7 +25,21 @@ class AppImageWidget extends StatelessWidget {
     final path = imagePath ?? '';
     Widget imageContent;
 
-    if (path.startsWith('http://') || path.startsWith('https://')) {
+    if (path.startsWith('data:image')) {
+      try {
+        final base64Str = path.split(',').last;
+        final bytes = base64Decode(base64Str);
+        imageContent = Image.memory(
+          bytes,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => _buildFallback(context),
+        );
+      } catch (_) {
+        imageContent = _buildFallback(context);
+      }
+    } else if (path.startsWith('http://') || path.startsWith('https://')) {
       imageContent = Image.network(
         path,
         width: width,

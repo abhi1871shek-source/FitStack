@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_image_widget.dart';
 import '../../../core/widgets/image_preview_dialog.dart';
@@ -21,9 +22,20 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<FoodItem> _selectedFoods = {};
 
+  @override
+  void initState() {
+    super.initState();
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId != null) {
+      FoodDatabaseData.loadCustomFoods(userId).then((_) {
+        if (mounted) setState(() {});
+      });
+    }
+  }
+
   List<String> get _cuisines {
     final set = FoodDatabaseData.masterFoods.map((f) => f.cuisine).toSet().toList()..sort();
-    return ['All', ...set];
+    return ['All', 'My Custom', ...set];
   }
 
   @override
@@ -44,7 +56,8 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredFoods = FoodDatabaseData.masterFoods.where((food) {
-      final matchesCuisine = _selectedCuisine == 'All' || food.cuisine == _selectedCuisine;
+      final matchesCuisine = _selectedCuisine == 'All' ||
+          (_selectedCuisine == 'My Custom' ? food.isCustom : food.cuisine == _selectedCuisine);
       final matchesSearch = _searchQuery.trim().isEmpty ||
           food.name.toLowerCase().contains(_searchQuery.trim().toLowerCase()) ||
           food.category.toLowerCase().contains(_searchQuery.trim().toLowerCase());

@@ -26,8 +26,20 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
   final TextEditingController _searchController = TextEditingController();
   final Set<Exercise> _selectedExercises = {};
 
+  @override
+  void initState() {
+    super.initState();
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId != null) {
+      ExerciseLibrary.loadCustomExercises(userId).then((_) {
+        if (mounted) setState(() {});
+      });
+    }
+  }
+
   final List<String> _bodyParts = [
     'All',
+    'My Custom',
     'Home',
     'Chest',
     'Back',
@@ -203,9 +215,9 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
 
                                 String? imageUrl;
                                 final client = Supabase.instance.client;
-                                final userId = client.auth.currentUser?.id;
+                                final userId = client.auth.currentUser?.id ?? 'demo_user_123';
 
-                                if (selectedImageBytes != null && userId != null) {
+                                if (selectedImageBytes != null) {
                                   final uploadedUrl = await StorageService.uploadImage(
                                     imageBytes: selectedImageBytes!,
                                     userId: userId,
@@ -230,11 +242,9 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
 
                                 try {
                                   // 1. Save to Supabase exercises table
-                                  if (userId != null) {
-                                    final map = customEx.toMap();
-                                    map['user_id'] = userId;
-                                    await client.from('exercises').upsert(map, onConflict: 'id');
-                                  }
+                                  final map = customEx.toMap();
+                                  map['user_id'] = userId;
+                                  await client.from('exercises').upsert(map, onConflict: 'id');
 
                                   // 2. Add to exercise library in memory
                                   if (!ExerciseLibrary.masterExercises.any((e) => e.id == customId)) {
@@ -306,9 +316,11 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
     final filteredExercises = ExerciseLibrary.masterExercises.where((ex) {
       final matchesFilter = _selectedBodyPart == 'All'
           ? true
-          : (_selectedBodyPart == 'Home'
-              ? ex.isHome
-              : ex.muscleGroup.toLowerCase() == _selectedBodyPart.toLowerCase());
+          : (_selectedBodyPart == 'My Custom'
+              ? ex.isCustom
+              : (_selectedBodyPart == 'Home'
+                  ? ex.isHome
+                  : ex.muscleGroup.toLowerCase() == _selectedBodyPart.toLowerCase()));
       final matchesSearch = _searchQuery.trim().isEmpty ||
           ex.name.toLowerCase().contains(_searchQuery.trim().toLowerCase());
       return matchesFilter && matchesSearch;

@@ -54,12 +54,16 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
     final userId = _currentUserId;
     if (userId == null) return;
     try {
-      final masterMaps = ExerciseLibrary.masterExercises.map((e) {
-        final map = e.toMap();
-        map['user_id'] = userId;
-        return map;
-      }).toList();
-      await _client.from('exercises').upsert(masterMaps, onConflict: 'id');
+      final masterMaps = ExerciseLibrary.masterExercises
+          .where((e) => !e.id.startsWith('ex_custom_'))
+          .map((e) {
+            final map = e.toMap();
+            map['user_id'] = userId;
+            return map;
+          }).toList();
+      if (masterMaps.isNotEmpty) {
+        await _client.from('exercises').upsert(masterMaps, onConflict: 'id');
+      }
     } catch (e) {
       debugPrint('[WorkoutNotifier] Master exercises upsert note: $e');
     }
@@ -78,6 +82,7 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
     final todayStr = DateTime.now().toIso8601String().split('T').first;
 
     try {
+      await ExerciseLibrary.loadCustomExercises(userId);
       await _ensureMasterExercisesExist();
 
       final response = await _client

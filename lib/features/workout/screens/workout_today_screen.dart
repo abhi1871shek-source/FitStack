@@ -478,21 +478,29 @@ class _WorkoutTodayScreenState extends ConsumerState<WorkoutTodayScreen> {
             ),
 
             // Exercise Thumbnail Image
-            if (log.imageUrl != null && log.imageUrl!.isNotEmpty) ...[
-              InkWell(
-                onTap: () => showImagePreviewDialog(context, log.imageUrl!, log.name),
-                onDoubleTap: () => showImagePreviewDialog(context, log.imageUrl!, log.name),
+            InkWell(
+              onTap: () {
+                final img = log.effectiveImageUrl ?? '';
+                if (img.isNotEmpty) {
+                  showImagePreviewDialog(context, img, log.name);
+                }
+              },
+              onDoubleTap: () {
+                final img = log.effectiveImageUrl ?? '';
+                if (img.isNotEmpty) {
+                  showImagePreviewDialog(context, img, log.name);
+                }
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: AppImageWidget(
+                imagePath: log.effectiveImageUrl,
+                width: 44,
+                height: 44,
                 borderRadius: BorderRadius.circular(8),
-                child: AppImageWidget(
-                  imagePath: log.imageUrl!,
-                  width: 44,
-                  height: 44,
-                  borderRadius: BorderRadius.circular(8),
-                  fallbackIcon: Icons.fitness_center,
-                ),
+                fallbackIcon: Icons.fitness_center,
               ),
-              const SizedBox(width: 10),
-            ],
+            ),
+            const SizedBox(width: 10),
 
             // Exercise Details Column
             Expanded(

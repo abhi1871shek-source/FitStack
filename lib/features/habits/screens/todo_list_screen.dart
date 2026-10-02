@@ -686,6 +686,39 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                           ),
                         ),
                       ],
+                      if (!habit.isRecurring) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: Colors.purple.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.purple.withOpacity(0.3),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.event_note,
+                                size: 10,
+                                color: Colors.purple,
+                              ),
+                              SizedBox(width: 3),
+                              Text(
+                                '1-Time Task',
+                                style: TextStyle(
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.purple,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
@@ -787,6 +820,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
     String category = 'Routine';
     TimeOfDay? selectedTime = _defaultTimeForSection('Morning');
     int? reminderMinutes = 10; // Default 10 minutes before
+    bool isRecurring = true;
 
     showDialog(
       context: context,
@@ -841,6 +875,21 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                         if (val != null) setDialogState(() => category = val);
                       },
                       decoration: const InputDecoration(labelText: 'Type Tag'),
+                    ),
+                    const SizedBox(height: 12),
+                    // Repeat Daily Toggle (Recurring vs One-Time)
+                    SwitchListTile(
+                      title: const Text('Repeat Daily', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        isRecurring
+                            ? 'Habit will repeat & track every day going forward'
+                            : 'One-time task for this day only (won\'t carry over)',
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      ),
+                      value: isRecurring,
+                      activeColor: AppColors.primary,
+                      contentPadding: EdgeInsets.zero,
+                      onChanged: (val) => setDialogState(() => isRecurring = val),
                     ),
                     const SizedBox(height: 12),
                     // Interactive Time Picker Tile
@@ -977,6 +1026,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                             reminderMinutesBefore: reminderMinutes,
                             scheduledHour: selectedTime?.hour,
                             scheduledMinute: selectedTime?.minute,
+                            isRecurring: isRecurring,
                           );
                       Navigator.pop(ctx);
                     }
@@ -1001,6 +1051,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
         ? TimeOfDay(hour: habit.scheduledHour!, minute: habit.scheduledMinute!)
         : _defaultTimeForSection(habit.timeOfDay);
     int? reminderMinutes = habit.reminderMinutesBefore;
+    bool isRecurring = habit.isRecurring;
 
     showDialog(
       context: context,
@@ -1050,6 +1101,21 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                         if (val != null) setDialogState(() => category = val);
                       },
                       decoration: const InputDecoration(labelText: 'Type Tag'),
+                    ),
+                    const SizedBox(height: 12),
+                    // Repeat Daily Toggle (Recurring vs One-Time)
+                    SwitchListTile(
+                      title: const Text('Repeat Daily', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        isRecurring
+                            ? 'Habit will repeat & track every day going forward'
+                            : 'One-time task for this day only (won\'t carry over)',
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      ),
+                      value: isRecurring,
+                      activeColor: AppColors.primary,
+                      contentPadding: EdgeInsets.zero,
+                      onChanged: (val) => setDialogState(() => isRecurring = val),
                     ),
                     const SizedBox(height: 12),
                     // Interactive Time Picker Tile
@@ -1184,6 +1250,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                             reminderMinutesBefore: reminderMinutes,
                             scheduledHour: selectedTime?.hour,
                             scheduledMinute: selectedTime?.minute,
+                            isRecurring: isRecurring,
                           );
                       Navigator.pop(ctx);
                     }

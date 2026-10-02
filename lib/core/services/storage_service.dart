@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,7 +21,7 @@ class StorageService {
   }
 
   /// Uploads raw image bytes to Supabase Storage bucket under `{userId}/{subFolder}/{itemId}.jpg`
-  /// Returns the public URL of the uploaded image on success.
+  /// Returns the public URL of the uploaded image on success, or base64 data URL fallback.
   static Future<String?> uploadImage({
     required Uint8List imageBytes,
     required String userId,
@@ -48,8 +49,9 @@ class StorageService {
       debugPrint('[StorageService] Image uploaded successfully. Public URL: $publicUrl');
       return publicUrl;
     } catch (e, st) {
-      debugPrint('[StorageService] Error uploading image to Supabase Storage: $e\n$st');
-      return null;
+      debugPrint('[StorageService] Note: Storage upload failed ($e). Using self-contained base64 image URL.');
+      final base64Str = base64Encode(imageBytes);
+      return 'data:image/jpeg;base64,$base64Str';
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 void showImagePreviewDialog(BuildContext context, String imageUrl, String title) {
@@ -56,26 +57,32 @@ void showImagePreviewDialog(BuildContext context, String imageUrl, String title)
                       panEnabled: true,
                       minScale: 0.8,
                       maxScale: 3.0,
-                      child: imageUrl.startsWith('http')
-                          ? Image.network(
-                              imageUrl,
+                      child: imageUrl.startsWith('data:image')
+                          ? Image.memory(
+                              base64Decode(imageUrl.split(',').last),
                               fit: BoxFit.contain,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(32.0),
-                                    child: CircularProgressIndicator(color: Colors.white),
-                                  ),
-                                );
-                              },
                               errorBuilder: (context, error, stackTrace) => const _ImageErrorWidget(),
                             )
-                          : Image.asset(
-                              imageUrl,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => const _ImageErrorWidget(),
-                            ),
+                          : imageUrl.startsWith('http')
+                              ? Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.contain,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(32.0),
+                                        child: CircularProgressIndicator(color: Colors.white),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) => const _ImageErrorWidget(),
+                                )
+                              : Image.asset(
+                                  imageUrl,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) => const _ImageErrorWidget(),
+                                ),
                     ),
                   ),
                 ),
