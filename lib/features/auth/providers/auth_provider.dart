@@ -194,7 +194,7 @@ class AuthNotifier extends Notifier<UserModel?> {
 
   /// Send password reset email via Supabase Auth
   Future<void> sendPasswordResetEmail(String email) async {
-    final origin = kIsWeb ? Uri.base.origin : 'https://fit-stack-two.vercel.app';
+    final origin = kIsWeb ? Uri.base.origin : 'https://fit-stack-flax.vercel.app';
     final cleanOrigin = origin.split('#').first.replaceAll(RegExp(r'/$'), '');
     final redirectUrl = '$cleanOrigin/#/reset-password';
 
