@@ -200,11 +200,22 @@ class HabitsNotifier extends Notifier<HabitsState> {
 
     try {
       final insertMap = tempItem.toMap(userId: userId);
-      final response = await _client
-          .from('habits')
-          .insert(insertMap)
-          .select()
-          .single();
+      Map<String, dynamic> response;
+      try {
+        response = await _client
+            .from('habits')
+            .insert(insertMap)
+            .select()
+            .single();
+      } catch (err) {
+        debugPrint('[HabitsNotifier] Primary habit insert failed ($err). Retrying fallback without is_recurring...');
+        final fallbackMap = Map<String, dynamic>.from(insertMap)..remove('is_recurring');
+        response = await _client
+            .from('habits')
+            .insert(fallbackMap)
+            .select()
+            .single();
+      }
 
       final newItem = HabitItem.fromMap(response);
 
@@ -215,7 +226,8 @@ class HabitsNotifier extends Notifier<HabitsState> {
       }
     } catch (e) {
       debugPrint('[HabitsNotifier] Error adding habit: $e');
-      state = state.copyWith(errorMessage: 'Failed to add habit to Supabase');
+      state = state.copyWith(errorMessage: 'Failed to add habit to Supabase: $e');
+      rethrow;
     }
   }
 
@@ -330,7 +342,7 @@ class HabitsNotifier extends Notifier<HabitsState> {
     state = state.copyWith(habits: updatedList);
 
     try {
-      await _client.from('habits').update({
+      final updateData = <String, dynamic>{
         'title': title,
         'time_of_day': timeOfDay,
         'category': category,
@@ -340,7 +352,15 @@ class HabitsNotifier extends Notifier<HabitsState> {
         'scheduled_hour': scheduledHour,
         'scheduled_minute': scheduledMinute,
         'is_recurring': isRecurring,
-      }).eq('id', id);
+      };
+
+      try {
+        await _client.from('habits').update(updateData).eq('id', id);
+      } catch (err) {
+        debugPrint('[HabitsNotifier] Primary habit update failed ($err). Retrying fallback without is_recurring...');
+        final fallbackData = Map<String, dynamic>.from(updateData)..remove('is_recurring');
+        await _client.from('habits').update(fallbackData).eq('id', id);
+      }
 
       if (reminderMinutesBefore != null && scheduledHour != null && scheduledMinute != null) {
         NotificationService.instance.scheduleHabitReminder(updatedItem);
@@ -350,6 +370,7 @@ class HabitsNotifier extends Notifier<HabitsState> {
     } catch (e) {
       debugPrint('[HabitsNotifier] Error editing habit: $e');
       state = state.copyWith(errorMessage: 'Failed to edit habit');
+      rethrow;
     }
   }
 
