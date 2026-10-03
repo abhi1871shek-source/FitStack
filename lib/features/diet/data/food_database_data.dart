@@ -1848,4 +1848,15 @@ abstract class FoodDatabaseData {
       debugPrint('[FoodDatabaseData] Error loading custom foods: $e');
     }
   }
+
+  static Future<void> deleteCustomFood(String foodId, String userId) async {
+    try {
+      final client = Supabase.instance.client;
+      await client.from('food_items').delete().eq('id', foodId).eq('user_id', userId);
+      masterFoods.removeWhere((f) => f.id == foodId);
+    } catch (e) {
+      debugPrint('[FoodDatabaseData] Error deleting custom food: $e');
+      rethrow;
+    }
+  }
 }

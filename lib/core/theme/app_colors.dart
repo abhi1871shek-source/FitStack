@@ -16,6 +16,7 @@ abstract class AppColors {
   static const Color borderSubdued = Color(0xFFE5E7EB); // Dividers & perimeters
   static const Color surfaceSubdued = Color(0xFFF3F4F6); // Trackers & disabled state
   static const Color accentSubtle = Color(0xFFECFDF5); // Selected state background fill
+  static const Color error = Color(0xFFEF4444); // Danger & Destructive actions
 
   // Dark Mode Neutrals
   static const Color darkBackground = Color(0xFF0F172A); // Slate 900

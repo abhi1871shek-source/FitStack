@@ -53,6 +53,90 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
     );
   }
 
+  void _openEditCustomFoodModal(BuildContext context, FoodItem food) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => QuickAddFoodSheet(
+        initialFood: food,
+        openInCustomMode: true,
+      ),
+    ).then((_) => setState(() {}));
+  }
+
+  void _confirmDeleteCustomFood(BuildContext context, FoodItem food) {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: AppColors.ofCardSurface(context),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              const Icon(Icons.delete_outline, color: Color(0xFFEF4444)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Delete Custom Food',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.ofTextPrimary(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Are you sure you want to delete "${food.name}" from your custom food library?',
+            style: TextStyle(fontSize: 13, color: AppColors.ofTextSecondary(context)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFEF4444),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                Navigator.pop(ctx);
+                try {
+                  await FoodDatabaseData.deleteCustomFood(food.id, userId);
+                  setState(() {
+                    _selectedFoods.remove(food);
+                  });
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Custom food "${food.name}" deleted.'),
+                        backgroundColor: AppColors.primary,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to delete custom food.')),
+                    );
+                  }
+                }
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredFoods = FoodDatabaseData.masterFoods.where((food) {
@@ -311,11 +395,28 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
                                   ),
                                 ),
 
-                                // Quick Add Icon Button for custom quantity path
-                                IconButton(
-                                  icon: const Icon(Icons.tune, size: 18, color: AppColors.primary),
-                                  onPressed: () => _openQuickAddModal(context, food),
-                                  tooltip: 'Custom Quantity Quick Add',
+                                // Action Buttons (Edit & Delete for Custom Foods, plus Quick Add)
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (food.isCustom) ...[
+                                      IconButton(
+                                        icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.textMuted),
+                                        onPressed: () => _openEditCustomFoodModal(context, food),
+                                        tooltip: 'Edit Custom Food',
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete_outline, size: 18, color: Color(0xFFEF4444)),
+                                        onPressed: () => _confirmDeleteCustomFood(context, food),
+                                        tooltip: 'Delete Custom Food',
+                                      ),
+                                    ],
+                                    IconButton(
+                                      icon: const Icon(Icons.tune, size: 18, color: AppColors.primary),
+                                      onPressed: () => _openQuickAddModal(context, food),
+                                      tooltip: 'Custom Quantity Quick Add',
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

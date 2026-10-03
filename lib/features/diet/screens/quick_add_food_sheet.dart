@@ -84,6 +84,20 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
     _quantityGrams = _selectedFood.baseServingGrams;
     _quantityController.text = _quantityGrams.toStringAsFixed(0);
 
+    if (widget.initialFood != null && widget.initialFood!.isCustom) {
+      final f = widget.initialFood!;
+      _customNameController.text = f.name;
+      _customServingDescController.text = f.baseServing;
+      _customServingGramsController.text = f.baseServingGrams.toStringAsFixed(0);
+      _customCaloriesController.text = f.calories.toStringAsFixed(0);
+      _customProteinController.text = f.proteinGrams.toStringAsFixed(1);
+      _customCarbsController.text = f.carbsGrams.toStringAsFixed(1);
+      _customFatController.text = f.fatGrams.toStringAsFixed(1);
+      _customFiberController.text = f.fiberGrams.toStringAsFixed(1);
+      if (_cuisines.contains(f.cuisine)) _customCuisine = f.cuisine;
+      if (_dietaryTypes.contains(f.dietaryType)) _customDietaryType = f.dietaryType;
+    }
+
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId != null) {
       FoodDatabaseData.loadCustomFoods(userId).then((_) {
@@ -135,9 +149,12 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
         ? '1 serving (${servingGrams.toStringAsFixed(0)}g)'
         : _customServingDescController.text.trim();
 
-    final customId = 'f_custom_${DateTime.now().millisecondsSinceEpoch}';
+    final isEditing = widget.initialFood != null && widget.initialFood!.isCustom;
+    final customId = isEditing
+        ? widget.initialFood!.id
+        : 'f_custom_${DateTime.now().millisecondsSinceEpoch}';
 
-    String imageAsset = '';
+    String imageAsset = isEditing ? widget.initialFood!.imageAsset : '';
 
     final client = Supabase.instance.client;
     final userId = client.auth.currentUser?.id;
@@ -176,8 +193,11 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
         await client.from('food_items').upsert(customFood.toMap(userId: userId));
       }
 
-      // 2. Add to master list in memory
-      if (!FoodDatabaseData.masterFoods.any((f) => f.id == customId)) {
+      // 2. Add or update master list in memory
+      final existingIndex = FoodDatabaseData.masterFoods.indexWhere((f) => f.id == customId);
+      if (existingIndex >= 0) {
+        FoodDatabaseData.masterFoods[existingIndex] = customFood;
+      } else {
         FoodDatabaseData.masterFoods.insert(0, customFood);
       }
 

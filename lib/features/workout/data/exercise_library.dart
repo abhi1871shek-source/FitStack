@@ -740,4 +740,15 @@ abstract class ExerciseLibrary {
       debugPrint('[ExerciseLibrary] Error loading custom exercises: $e');
     }
   }
+
+  static Future<void> deleteCustomExercise(String exerciseId, String userId) async {
+    try {
+      final client = Supabase.instance.client;
+      await client.from('exercises').delete().eq('id', exerciseId).eq('user_id', userId);
+      masterExercises.removeWhere((e) => e.id == exerciseId);
+    } catch (e) {
+      debugPrint('[ExerciseLibrary] Error deleting custom exercise: $e');
+      rethrow;
+    }
+  }
 }

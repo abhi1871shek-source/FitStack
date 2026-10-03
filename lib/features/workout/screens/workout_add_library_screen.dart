@@ -56,17 +56,27 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
     super.dispose();
   }
 
-  void _showAddCustomExerciseModal(BuildContext context) {
-    final nameController = TextEditingController();
-    final setsController = TextEditingController(text: '3');
-    final repsController = TextEditingController(text: '10');
-    final weightController = TextEditingController(text: '0.0');
+  void _showAddCustomExerciseModal(BuildContext context, {Exercise? initialExercise}) {
+    final isEditing = initialExercise != null && initialExercise.isCustom;
+    final nameController = TextEditingController(text: isEditing ? initialExercise.name : '');
+    final setsController = TextEditingController(text: isEditing ? initialExercise.defaultSets.toString() : '3');
+    final repsController = TextEditingController(text: isEditing ? initialExercise.defaultReps.toString() : '10');
+    final weightController = TextEditingController(
+      text: isEditing
+          ? (initialExercise.defaultWeightKg == initialExercise.defaultWeightKg.roundToDouble()
+              ? initialExercise.defaultWeightKg.round().toString()
+              : initialExercise.defaultWeightKg.toStringAsFixed(1))
+          : '0.0',
+    );
 
-    String selectedMuscleGroup = _selectedBodyPart != 'All' && _selectedBodyPart != 'Home'
-        ? _selectedBodyPart
-        : 'Chest';
-    bool isHomeExercise = false;
+    String selectedMuscleGroup = isEditing
+        ? initialExercise.muscleGroup
+        : (_selectedBodyPart != 'All' && _selectedBodyPart != 'Home' && _selectedBodyPart != 'My Custom'
+            ? _selectedBodyPart
+            : 'Chest');
+    bool isHomeExercise = isEditing ? initialExercise.isHome : false;
     Uint8List? selectedImageBytes;
+    String? existingImageUrl = isEditing ? initialExercise.imageUrl : null;
     bool isSaving = false;
 
     final muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Cardio'];
@@ -105,13 +115,13 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                       ),
                     ),
                     const SizedBox(height: 14),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.fitness_center, color: AppColors.primary),
-                        SizedBox(width: 8),
+                        const Icon(Icons.fitness_center, color: AppColors.primary),
+                        const SizedBox(width: 8),
                         Text(
-                          'Create Custom Exercise',
-                          style: TextStyle(
+                          isEditing ? 'Edit Custom Exercise' : 'Create Custom Exercise',
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -122,14 +132,18 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                     const SizedBox(height: 16),
                     CustomImagePickerTile(
                       selectedImageBytes: selectedImageBytes,
-                      onImagePicked: (bytes) => setModalState(() => selectedImageBytes = bytes),
+                      existingImageUrl: existingImageUrl,
+                      onImagePicked: (bytes) => setModalState(() {
+                        selectedImageBytes = bytes;
+                        if (bytes == null) existingImageUrl = null;
+                      }),
                       label: 'Exercise Photo (Optional)',
                       defaultIcon: Icons.fitness_center,
                     ),
                     const SizedBox(height: 14),
                     TextField(
                       controller: nameController,
-                      autofocus: true,
+                      autofocus: !isEditing,
                       decoration: const InputDecoration(
                         labelText: 'Exercise Name',
                         hintText: 'e.g. Weighted Pull-Up',
@@ -211,9 +225,11 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                                 final sets = int.tryParse(setsController.text.trim()) ?? 3;
                                 final reps = int.tryParse(repsController.text.trim()) ?? 10;
                                 final weight = double.tryParse(weightController.text.trim()) ?? 0.0;
-                                final customId = 'ex_custom_${DateTime.now().millisecondsSinceEpoch}';
+                                final customId = isEditing
+                                    ? initialExercise.id
+                                    : 'ex_custom_${DateTime.now().millisecondsSinceEpoch}';
 
-                                String? imageUrl;
+                                String? imageUrl = existingImageUrl;
                                 final client = Supabase.instance.client;
                                 final userId = client.auth.currentUser?.id ?? 'demo_user_123';
 
@@ -246,8 +262,11 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                                   map['user_id'] = userId;
                                   await client.from('exercises').upsert(map, onConflict: 'id');
 
-                                  // 2. Add to exercise library in memory
-                                  if (!ExerciseLibrary.masterExercises.any((e) => e.id == customId)) {
+                                  // 2. Add or update exercise library in memory
+                                  final existingIndex = ExerciseLibrary.masterExercises.indexWhere((e) => e.id == customId);
+                                  if (existingIndex >= 0) {
+                                    ExerciseLibrary.masterExercises[existingIndex] = customEx;
+                                  } else {
                                     ExerciseLibrary.masterExercises.insert(0, customEx);
                                   }
 
@@ -256,7 +275,7 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
 
                                   if (mounted) {
                                     Navigator.pop(dialogCtx);
-                                    Navigator.pop(context);
+                                    if (!isEditing) Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text('Custom exercise "$name" saved to DB & added to Workout!'),
@@ -269,7 +288,7 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                                   ref.read(workoutProvider.notifier).addExercises([customEx]);
                                   if (mounted) {
                                     Navigator.pop(dialogCtx);
-                                    Navigator.pop(context);
+                                    if (!isEditing) Navigator.pop(context);
                                   }
                                 } finally {
                                   setModalState(() => isSaving = false);
@@ -283,7 +302,7 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                               )
                             : const Icon(Icons.add, size: 20),
                         label: Text(
-                          isSaving ? 'Uploading Photo & Saving...' : 'Save Custom Exercise & Add to Workout',
+                          isSaving ? 'Uploading Photo & Saving...' : (isEditing ? 'Save Changes' : 'Save Custom Exercise & Add to Workout'),
                           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -295,6 +314,45 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
           },
         );
       },
+    );
+  }
+
+  void _confirmDeleteCustomExercise(Exercise ex) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.cardSurface,
+        title: const Text('Delete Custom Exercise', style: TextStyle(color: AppColors.textPrimary)),
+        content: Text('Are you sure you want to delete "${ex.name}" from your custom exercises?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final userId = Supabase.instance.client.auth.currentUser?.id;
+              if (userId != null) {
+                await ExerciseLibrary.deleteCustomExercise(ex.id, userId);
+                if (mounted) {
+                  setState(() {
+                    _selectedExercises.remove(ex);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Deleted "${ex.name}"')),
+                  );
+                }
+              }
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -588,6 +646,23 @@ class _WorkoutAddLibraryScreenState extends ConsumerState<WorkoutAddLibraryScree
                                   ],
                                 ),
                               ),
+
+                              if (ex.isCustom) ...[
+                                IconButton(
+                                  icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.primary),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                  tooltip: 'Edit Exercise',
+                                  onPressed: () => _showAddCustomExerciseModal(context, initialExercise: ex),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                  tooltip: 'Delete Exercise',
+                                  onPressed: () => _confirmDeleteCustomExercise(ex),
+                                ),
+                              ],
 
                               Checkbox(
                                 value: isSelected,
