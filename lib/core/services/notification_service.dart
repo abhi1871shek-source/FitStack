@@ -5,6 +5,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/habits/models/habit_item.dart';
+import 'web_notification_helper.dart' as web_helper;
 
 class NotificationService {
   NotificationService._internal();
@@ -22,11 +23,8 @@ class NotificationService {
     if (_isInitialized) return;
 
     if (kIsWeb) {
-      debugPrint(
-        '[NotificationService] Scheduled notifications are not supported on Flutter Web. '
-        'Running in web preview mode.',
-      );
       _isInitialized = true;
+      debugPrint('[NotificationService] Initialized for Flutter Web PWA.');
       return;
     }
 
@@ -65,21 +63,25 @@ class NotificationService {
     }
   }
 
-  /// Explicitly requests notification permission from the user on first use.
+  /// Explicitly requests notification permission from the user.
   Future<bool> requestPermission(BuildContext context) async {
-    if (kIsWeb) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Scheduled alarms require the mobile (Android/iOS) or desktop app.',
-          ),
-          duration: Duration(seconds: 3),
-        ),
-      );
-      return false;
-    }
-
     _hasPromptedPermission = true;
+
+    if (kIsWeb) {
+      final granted = await web_helper.requestWebPermission();
+      if (!granted && context.mounted) {
+        final permState = web_helper.getWebPermissionState();
+        if (permState == 'denied') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Notifications are blocked by your browser settings.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+      return granted;
+    }
 
     try {
       final androidPlugin = _notificationsPlugin
@@ -109,16 +111,8 @@ class NotificationService {
     return false;
   }
 
-  /// Schedules a recurring daily local notification at (habit time - offset).
+  /// Schedules a recurring daily notification at (habit time - offset).
   Future<void> scheduleHabitReminder(HabitItem habit) async {
-    if (kIsWeb) {
-      debugPrint(
-        '[NotificationService Web] Skipped native scheduling for: ${habit.title}',
-      );
-      return;
-    }
-
-    // Cancel existing reminder first to prevent duplicates
     await cancelHabitReminder(habit.id);
 
     final offset = habit.reminderMinutesBefore;
@@ -129,19 +123,42 @@ class NotificationService {
       return;
     }
 
-    try {
-      // 1. Calculate exact reminder time: habit time minus offset
-      final int totalHabitMinutes = (hour * 60) + minute;
-      int totalReminderMinutes = totalHabitMinutes - offset;
+    // 1. Calculate exact reminder time: habit time minus offset
+    final int totalHabitMinutes = (hour * 60) + minute;
+    int totalReminderMinutes = totalHabitMinutes - offset;
 
-      // Handle midnight wrap-around (e.g. 12:02 AM - 5 min -> 11:57 PM previous day)
-      if (totalReminderMinutes < 0) {
-        totalReminderMinutes += 24 * 60;
+    // Handle midnight wrap-around (e.g. 12:02 AM - 5 min -> 11:57 PM previous day)
+    if (totalReminderMinutes < 0) {
+      totalReminderMinutes += 24 * 60;
+    }
+
+    final int reminderHour = (totalReminderMinutes ~/ 60) % 24;
+    final int reminderMinute = totalReminderMinutes % 60;
+
+    if (kIsWeb) {
+      final now = DateTime.now();
+      var scheduledDate = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        reminderHour,
+        reminderMinute,
+      );
+
+      if (scheduledDate.isBefore(now)) {
+        scheduledDate = scheduledDate.add(const Duration(days: 1));
       }
 
-      final int reminderHour = (totalReminderMinutes ~/ 60) % 24;
-      final int reminderMinute = totalReminderMinutes % 60;
+      web_helper.scheduleWebReminder(habit, scheduledDate.millisecondsSinceEpoch);
+      debugPrint(
+        '[NotificationService Web] Scheduled reminder for "${habit.title}" '
+        'at $reminderHour:${reminderMinute.toString().padLeft(2, '0')} '
+        '(${scheduledDate.difference(now).inSeconds}s from now)',
+      );
+      return;
+    }
 
+    try {
       // 2. Resolve local timezone DateTime
       final now = tz.TZDateTime.now(tz.local);
       var scheduledDate = tz.TZDateTime(
@@ -204,7 +221,10 @@ class NotificationService {
 
   /// Cancels an existing habit reminder.
   Future<void> cancelHabitReminder(String habitId) async {
-    if (kIsWeb) return;
+    if (kIsWeb) {
+      web_helper.cancelWebReminder(habitId);
+      return;
+    }
 
     try {
       await _notificationsPlugin.cancel(_notificationId(habitId));

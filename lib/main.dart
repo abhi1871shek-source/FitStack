@@ -7,6 +7,7 @@ import 'core/config/supabase_config.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
+import 'core/widgets/fitstack_splash_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/auth/screens/login_signup_screen.dart';
 import 'features/auth/screens/reset_password_screen.dart';
@@ -37,13 +38,16 @@ class FitStackApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isInitializing = ref.watch(authInitializingProvider);
     final user = ref.watch(authProvider);
     final isPasswordRecovery = ref.watch(passwordRecoveryProvider);
 
     final isDemo = kIsWeb && Uri.base.toString().contains('demo=true');
 
     Widget homeScreen;
-    if (isPasswordRecovery) {
+    if (isInitializing) {
+      homeScreen = const FitStackSplashScreen();
+    } else if (isPasswordRecovery) {
       homeScreen = const ResetPasswordScreen();
     } else if (user == null && !isDemo) {
       homeScreen = const LoginSignupScreen();

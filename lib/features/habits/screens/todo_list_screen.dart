@@ -1013,9 +1013,12 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     final title = titleController.text.trim();
                     if (title.isNotEmpty) {
+                      if (reminderMinutes != null) {
+                        await NotificationService.instance.requestPermission(context);
+                      }
                       final formattedTime = selectedTime?.format(context);
                       ref.read(habitsProvider.notifier).addHabit(
                             title: title,
@@ -1028,7 +1031,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                             scheduledMinute: selectedTime?.minute,
                             isRecurring: isRecurring,
                           );
-                      Navigator.pop(ctx);
+                      if (ctx.mounted) Navigator.pop(ctx);
                     }
                   },
                   child: const Text('Add Task'),
@@ -1236,9 +1239,12 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     final title = titleController.text.trim();
                     if (title.isNotEmpty) {
+                      if (reminderMinutes != null) {
+                        await NotificationService.instance.requestPermission(context);
+                      }
                       final formattedTime = selectedTime?.format(context);
                       ref.read(habitsProvider.notifier).editHabit(
                             habit.id,
@@ -1252,7 +1258,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
                             scheduledMinute: selectedTime?.minute,
                             isRecurring: isRecurring,
                           );
-                      Navigator.pop(ctx);
+                      if (ctx.mounted) Navigator.pop(ctx);
                     }
                   },
                   child: const Text('Save Changes'),

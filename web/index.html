@@ -36,6 +36,93 @@
   <link rel="manifest" href="manifest.json?v=3">
 </head>
 <body>
+  <script>
+    window.fitStackNotifications = {
+      requestPermission: async function() {
+        if (!('Notification' in window)) {
+          console.warn('[FitStack Notification] Web Notification API not supported.');
+          return 'unsupported';
+        }
+        try {
+          const perm = await Notification.requestPermission();
+          console.log('[FitStack Notification] Permission result:', perm);
+          return perm;
+        } catch (e) {
+          console.error('[FitStack Notification] Error requesting permission:', e);
+          return 'denied';
+        }
+      },
+
+      getPermissionState: function() {
+        if (!('Notification' in window)) return 'unsupported';
+        return Notification.permission;
+      },
+
+      showNotification: async function(title, body, tag, iconUrl) {
+        if (!('Notification' in window)) return false;
+        if (Notification.permission !== 'granted') return false;
+
+        try {
+          if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.ready;
+            if (registration && registration.showNotification) {
+              await registration.showNotification(title, {
+                body: body || 'Habit Reminder',
+                icon: iconUrl || 'icons/Icon-192.png?v=3',
+                badge: 'icons/Icon-192.png?v=3',
+                tag: tag || 'fitstack_habit',
+                vibrate: [200, 100, 200],
+                requireInteraction: false
+              });
+              return true;
+            }
+          }
+          new Notification(title, {
+            body: body || 'Habit Reminder',
+            icon: iconUrl || 'icons/Icon-192.png?v=3',
+            tag: tag || 'fitstack_habit'
+          });
+          return true;
+        } catch (e) {
+          console.error('[FitStack Notification] Error showing notification:', e);
+          return false;
+        }
+      },
+
+      scheduledTimers: {},
+
+      scheduleReminder: function(habitId, title, body, triggerTimestampMs) {
+        if (this.scheduledTimers[habitId]) {
+          clearTimeout(this.scheduledTimers[habitId]);
+          delete this.scheduledTimers[habitId];
+        }
+
+        const now = Date.now();
+        const delay = triggerTimestampMs - now;
+
+        if (delay <= 0) {
+          console.log('[FitStack Notification] Target time passed for habit:', habitId);
+          return;
+        }
+
+        console.log('[FitStack Notification] Scheduled notification for "' + title + '" in ' + Math.round(delay / 1000) + 's');
+
+        const self = this;
+        this.scheduledTimers[habitId] = setTimeout(function() {
+          self.showNotification('Habit Reminder: ' + title, body, habitId);
+          delete self.scheduledTimers[habitId];
+        }, delay);
+      },
+
+      cancelReminder: function(habitId) {
+        if (this.scheduledTimers[habitId]) {
+          clearTimeout(this.scheduledTimers[habitId]);
+          delete this.scheduledTimers[habitId];
+          console.log('[FitStack Notification] Cancelled timer for habit:', habitId);
+        }
+      }
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

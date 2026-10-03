@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/user_model.dart';
 
 final passwordRecoveryProvider = StateProvider<bool>((ref) => false);
+final authInitializingProvider = StateProvider<bool>((ref) => true);
 
 class AuthNotifier extends Notifier<UserModel?> {
   SupabaseClient get _client => Supabase.instance.client;
@@ -27,6 +28,7 @@ class AuthNotifier extends Notifier<UserModel?> {
       final session = data.session;
       if (session == null) {
         state = null;
+        ref.read(authInitializingProvider.notifier).state = false;
       } else {
         _loadUserProfile(session.user);
       }
@@ -42,6 +44,9 @@ class AuthNotifier extends Notifier<UserModel?> {
     }
 
     if (kIsWeb && Uri.base.toString().contains('demo=true')) {
+      Future.microtask(() {
+        ref.read(authInitializingProvider.notifier).state = false;
+      });
       return const UserModel(
         id: 'demo_user_123',
         email: 'athlete@fitstack.com',
@@ -53,8 +58,26 @@ class AuthNotifier extends Notifier<UserModel?> {
     // Check existing session on initial load
     final currentSession = _client.auth.currentSession;
     if (currentSession != null) {
-      // Async profile load
-      Future.microtask(() => _loadUserProfile(currentSession.user));
+      final supaUser = currentSession.user;
+      final provisionalUser = UserModel(
+        id: supaUser.id,
+        email: supaUser.email ?? '',
+        displayName: supaUser.userMetadata?['full_name'] as String? ??
+            supaUser.email?.split('@').first ??
+            'FitStack Athlete',
+        isProfileComplete: true,
+      );
+
+      Future.microtask(() {
+        _loadUserProfile(supaUser);
+        ref.read(authInitializingProvider.notifier).state = false;
+      });
+
+      return provisionalUser;
+    } else {
+      Future.microtask(() {
+        ref.read(authInitializingProvider.notifier).state = false;
+      });
     }
 
     return null;
