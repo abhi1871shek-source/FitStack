@@ -514,16 +514,20 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
           // Food Dish Image Thumbnail
           InkWell(
             onTap: () {
-              final imgPath = item.imageAsset.isNotEmpty ? item.imageAsset : 'assets/images/food/${item.foodId}.jpg';
-              showImagePreviewDialog(context, imgPath, item.name);
+              final imgPath = item.effectiveImageAsset;
+              if (imgPath.isNotEmpty) {
+                showImagePreviewDialog(context, imgPath, item.name);
+              }
             },
             onDoubleTap: () {
-              final imgPath = item.imageAsset.isNotEmpty ? item.imageAsset : 'assets/images/food/${item.foodId}.jpg';
-              showImagePreviewDialog(context, imgPath, item.name);
+              final imgPath = item.effectiveImageAsset;
+              if (imgPath.isNotEmpty) {
+                showImagePreviewDialog(context, imgPath, item.name);
+              }
             },
             borderRadius: BorderRadius.circular(8),
             child: AppImageWidget(
-              imagePath: item.imageAsset.isNotEmpty ? item.imageAsset : 'assets/images/food/${item.foodId}.jpg',
+              imagePath: item.effectiveImageAsset,
               width: 40,
               height: 40,
               borderRadius: BorderRadius.circular(8),

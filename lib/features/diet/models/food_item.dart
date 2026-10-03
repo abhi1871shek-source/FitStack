@@ -140,10 +140,16 @@ class LoggedFoodItem {
       fatGrams: (food.fatGrams * scaleFactor),
       fiberGrams: (food.fiberGrams * scaleFactor),
       loggedTime: loggedTime,
-      imageAsset: food.imageAsset.isNotEmpty ? food.imageAsset : 'assets/images/food/${food.id}.jpg',
+      imageAsset: food.imageAsset,
       photoAuthor: food.photoAuthor,
       photoLicense: food.photoLicense,
     );
+  }
+
+  String get effectiveImageAsset {
+    if (imageAsset.isNotEmpty) return imageAsset;
+    if (foodId.startsWith('f_custom_')) return '';
+    return 'assets/images/food/$foodId.jpg';
   }
 
   factory LoggedFoodItem.fromMap(Map<String, dynamic> map) {

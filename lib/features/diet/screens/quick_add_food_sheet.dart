@@ -83,6 +83,13 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
     _mealSection = widget.initialMealSection ?? 'Breakfast';
     _quantityGrams = _selectedFood.baseServingGrams;
     _quantityController.text = _quantityGrams.toStringAsFixed(0);
+
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId != null) {
+      FoodDatabaseData.loadCustomFoods(userId).then((_) {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   @override

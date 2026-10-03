@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS public.habits (
     scheduled_hour INT CHECK (scheduled_hour >= 0 AND scheduled_hour <= 23),
     scheduled_minute INT CHECK (scheduled_minute >= 0 AND scheduled_minute <= 59),
     reminder_minutes_before INT CHECK (reminder_minutes_before IN (5, 10)),
+    is_recurring BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

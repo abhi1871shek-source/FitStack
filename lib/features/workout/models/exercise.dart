@@ -123,7 +123,12 @@ class WorkoutLogItem {
 
   String? get effectiveImageUrl {
     if (imageUrl != null && imageUrl!.isNotEmpty) return imageUrl;
-    return ExerciseLibrary.getExerciseById(exerciseId)?.imageUrl;
+    final masterEx = ExerciseLibrary.getExerciseById(exerciseId);
+    if (masterEx != null && masterEx.imageUrl != null && masterEx.imageUrl!.isNotEmpty) {
+      return masterEx.imageUrl;
+    }
+    if (exerciseId.startsWith('ex_custom_')) return null;
+    return 'assets/images/exercises/$exerciseId.jpg';
   }
 
   String get repsAndWeightSummary {
