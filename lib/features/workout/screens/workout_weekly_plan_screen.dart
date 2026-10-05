@@ -142,6 +142,7 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
           tooltip: 'Back to Today\'s Workout',
         ),
         title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -149,7 +150,7 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
                 const Text(
                   'Weekly Plan',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
                   ),
@@ -174,49 +175,67 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
                 ],
               ],
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 1),
             Text(
               dateRangeStr,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textMuted,
               ),
             ),
           ],
         ),
-        centerTitle: true,
+        centerTitle: false,
         actions: [
-          // Loop Switch Toggle in Top Right Header
-          Row(
-            children: [
-              const Icon(Icons.repeat, size: 16, color: AppColors.primary),
-              const SizedBox(width: 4),
-              const Text(
-                'Loop',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+          // Top-Right Loop Switch Badge Container
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: state.isLoopEnabled ? AppColors.accentSubtle : AppColors.surfaceSubdued,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: state.isLoopEnabled ? AppColors.primary : AppColors.borderSubdued,
                 ),
               ),
-              Transform.scale(
-                scale: 0.75,
-                child: Switch(
-                  value: state.isLoopEnabled,
-                  activeColor: AppColors.primary,
-                  onChanged: (val) {
-                    if (val) {
-                      _showLoopSetupDialog(context, ref);
-                    } else {
-                      notifier.toggleLoop(false);
-                    }
-                  },
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.repeat,
+                    size: 16,
+                    color: state.isLoopEnabled ? AppColors.primary : AppColors.textMuted,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    state.isLoopEnabled ? 'Loop ON' : 'Loop OFF',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: state.isLoopEnabled ? AppColors.primary : AppColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  SizedBox(
+                    height: 24,
+                    child: Switch(
+                      value: state.isLoopEnabled,
+                      activeColor: AppColors.primary,
+                      onChanged: (val) {
+                        if (val) {
+                          _showLoopSetupDialog(context, ref);
+                        } else {
+                          notifier.toggleLoop(false);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          const SizedBox(width: 6),
         ],
       ),
       body: SafeArea(
@@ -225,55 +244,115 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                 children: [
-                  // Loop Status & Cycle Switcher Bar (when Loop is ON)
-                  if (state.isLoopEnabled) ...[
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.cardSurface,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary.withOpacity(0.4)),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x0F047857),
-                            blurRadius: 6,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                  // Prominent Top Loop Feature Control Card
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: state.isLoopEnabled
+                          ? AppColors.primary.withOpacity(0.08)
+                          : AppColors.cardSurface,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: state.isLoopEnabled
+                            ? AppColors.primary.withOpacity(0.4)
+                            : AppColors.borderSubdued,
+                        width: state.isLoopEnabled ? 1.5 : 1.0,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.repeat, color: AppColors.primary, size: 20),
+                                const SizedBox(width: 8),
+                                Text(
+                                  state.isLoopEnabled
+                                      ? 'WORKOUT LOOP ACTIVE (${state.totalCycles} CYCLES)'
+                                      : 'WORKOUT LOOP FEATURE',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primary,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  state.isLoopEnabled ? 'ON' : 'OFF',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: state.isLoopEnabled ? AppColors.primary : AppColors.textMuted,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Switch(
+                                  value: state.isLoopEnabled,
+                                  activeColor: AppColors.primary,
+                                  onChanged: (val) {
+                                    if (val) {
+                                      _showLoopSetupDialog(context, ref);
+                                    } else {
+                                      notifier.toggleLoop(false);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        if (!state.isLoopEnabled) ...[
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Turn ON Loop to build multi-week workout cycle templates (e.g., 2, 3, 4 cycles) that repeat indefinitely on real calendar weeks.',
+                            style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _showLoopSetupDialog(context, ref),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              icon: const Icon(Icons.sync, size: 16),
+                              label: const Text(
+                                'Enable Workout Loop',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                            ),
+                          ),
+                        ] else ...[
+                          const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.sync_rounded, color: AppColors.primary, size: 18),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'LOOP ACTIVE (${state.totalCycles} CYCLES)',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primary,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                ],
+                              const Text(
+                                'Select Cycle Template to View / Edit:',
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textMuted),
                               ),
                               TextButton.icon(
                                 onPressed: () => _showLoopSetupDialog(context, ref),
-                                icon: const Icon(Icons.settings, size: 14, color: AppColors.textMuted),
+                                icon: const Icon(Icons.settings, size: 13, color: AppColors.primary),
                                 label: const Text(
                                   'Change Cycles',
-                                  style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                  style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          // Cycle Tabs
+                          const SizedBox(height: 6),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -292,11 +371,18 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
                                         if (isActiveWeek) ...[
                                           const SizedBox(width: 4),
                                           Container(
-                                            width: 6,
-                                            height: 6,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              shape: BoxShape.circle,
+                                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                            decoration: BoxDecoration(
+                                              color: isSelected ? Colors.white : AppColors.primary,
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              'ACTIVE THIS WEEK',
+                                              style: TextStyle(
+                                                fontSize: 8,
+                                                fontWeight: FontWeight.bold,
+                                                color: isSelected ? AppColors.primary : Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -319,10 +405,9 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
                             ),
                           ),
                         ],
-                      ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                  ],
+                  ),
 
                   // Weekly Summary / Adherence Telemetry Card
                   Container(
