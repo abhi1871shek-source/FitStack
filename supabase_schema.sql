@@ -398,6 +398,59 @@ USING (
     (storage.foldername(name))[1] = auth.uid()::text
 );
 
+-- ------------------------------------------------------------------------------
+-- 12. WORKOUT LOOP TABLES (Multi-Week Cycle Plans)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.workout_loop_config (
+    user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    is_enabled BOOLEAN NOT NULL DEFAULT false,
+    total_cycles INT NOT NULL DEFAULT 2,
+    start_week_monday DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.workout_cycles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    cycle_number INT NOT NULL,
+    day_index INT NOT NULL,
+    focus_title TEXT NOT NULL,
+    subtitle TEXT NOT NULL DEFAULT '',
+    is_rest_day BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    UNIQUE(user_id, cycle_number, day_index)
+);
+
+CREATE TABLE IF NOT EXISTS public.workout_cycle_exercises (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cycle_id UUID NOT NULL REFERENCES public.workout_cycles(id) ON DELETE CASCADE,
+    exercise_id TEXT NOT NULL,
+    exercise_name TEXT NOT NULL,
+    muscle_group TEXT NOT NULL,
+    target_sets INT NOT NULL DEFAULT 3,
+    target_reps INT NOT NULL DEFAULT 10,
+    target_weight_kg NUMERIC NOT NULL DEFAULT 0.0,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.workout_loop_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.workout_cycles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.workout_cycle_exercises ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "workout_loop_config_all_own" ON public.workout_loop_config
+    FOR ALL TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "workout_cycles_all_own" ON public.workout_cycles
+    FOR ALL TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "workout_cycle_exercises_all_own" ON public.workout_cycle_exercises
+    FOR ALL TO authenticated
+    USING (EXISTS (SELECT 1 FROM public.workout_cycles WHERE public.workout_cycles.id = public.workout_cycle_exercises.cycle_id AND public.workout_cycles.user_id = auth.uid()))
+    WITH CHECK (EXISTS (SELECT 1 FROM public.workout_cycles WHERE public.workout_cycles.id = public.workout_cycle_exercises.cycle_id AND public.workout_cycles.user_id = auth.uid()));
+
 -- ==============================================================================
 -- End of FitStack Schema
 -- ==============================================================================
+

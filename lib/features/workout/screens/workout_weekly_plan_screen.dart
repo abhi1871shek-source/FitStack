@@ -3,15 +3,118 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../models/weekly_plan_day.dart';
+import '../models/workout_cycle_exercise.dart';
 import '../providers/workout_weekly_plan_provider.dart';
+import '../widgets/cycle_exercise_picker_modal.dart';
 import '../widgets/edit_day_focus_dialog.dart';
 
 class WorkoutWeeklyPlanScreen extends ConsumerWidget {
   const WorkoutWeeklyPlanScreen({super.key});
 
+  void _showLoopSetupDialog(BuildContext context, WidgetRef ref) {
+    int selectedCycles = ref.read(workoutWeeklyPlanProvider).totalCycles;
+    if (selectedCycles < 2) selectedCycles = 2;
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (dialogCtx, setModalState) {
+            return AlertDialog(
+              backgroundColor: AppColors.cardSurface,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              title: const Row(
+                children: [
+                  Icon(Icons.repeat, color: AppColors.primary),
+                  SizedBox(width: 8),
+                  Text(
+                    'Configure Workout Loop',
+                    style: TextStyle(fontSize: 18, color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Select how many weekly workout cycles you want to repeat indefinitely.',
+                    style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline, size: 28, color: AppColors.primary),
+                        onPressed: selectedCycles > 2
+                            ? () => setModalState(() => selectedCycles--)
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceSubdued,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.borderSubdued),
+                        ),
+                        child: Text(
+                          '$selectedCycles Cycles',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline, size: 28, color: AppColors.primary),
+                        onPressed: selectedCycles < 6
+                            ? () => setModalState(() => selectedCycles++)
+                            : null,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Example: Cycle 1 → Cycle 2 → ... → Cycle $selectedCycles → Cycle 1',
+                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () async {
+                    Navigator.pop(ctx);
+                    final notifier = ref.read(workoutWeeklyPlanProvider.notifier);
+                    await notifier.setTotalCycles(selectedCycles);
+                    await notifier.toggleLoop(true);
+                  },
+                  child: const Text('Enable Loop', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weeklyPlan = ref.watch(workoutWeeklyPlanListProvider);
+    final state = ref.watch(workoutWeeklyPlanProvider);
+    final weeklyPlan = state.days;
     final notifier = ref.read(workoutWeeklyPlanProvider.notifier);
 
     // Calculate telemetry stats
@@ -22,7 +125,6 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
         ? ((completedDays / activeTrainingDays) * 100).round()
         : 100;
 
-    // Date range header strings
     final firstDay = weeklyPlan.isNotEmpty ? weeklyPlan.first : null;
     final lastDay = weeklyPlan.isNotEmpty ? weeklyPlan.last : null;
     final dateRangeStr = (firstDay != null && lastDay != null)
@@ -41,13 +143,36 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
         ),
         title: Column(
           children: [
-            const Text(
-              'Weekly Plan',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Weekly Plan',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                if (state.isLoopEnabled) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'CYCLE ${state.viewingCycleNumber}',
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
             const SizedBox(height: 2),
             Text(
@@ -62,401 +187,340 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.calendar_month_outlined, size: 22, color: AppColors.textPrimary),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Weekly plan schedule auto-generated based on Onboarding profile.'),
-                  duration: Duration(seconds: 2),
+          // Loop Switch Toggle in Top Right Header
+          Row(
+            children: [
+              const Icon(Icons.repeat, size: 16, color: AppColors.primary),
+              const SizedBox(width: 4),
+              const Text(
+                'Loop',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
                 ),
-              );
-            },
-            tooltip: 'Plan Settings',
+              ),
+              Transform.scale(
+                scale: 0.75,
+                child: Switch(
+                  value: state.isLoopEnabled,
+                  activeColor: AppColors.primary,
+                  onChanged: (val) {
+                    if (val) {
+                      _showLoopSetupDialog(context, ref);
+                    } else {
+                      notifier.toggleLoop(false);
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
+          const SizedBox(width: 6),
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          children: [
-            // Weekly Summary / Adherence Telemetry Card
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: AppColors.cardSurface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderSubdued),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x0A000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: state.isLoading
+            ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+            : ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primary,
-                              shape: BoxShape.circle,
-                            ),
+                  // Loop Status & Cycle Switcher Bar (when Loop is ON)
+                  if (state.isLoopEnabled) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardSurface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.primary.withOpacity(0.4)),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x0F047857),
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
                           ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'ADHERENCE TELEMETRY',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textMuted,
-                              letterSpacing: 0.8,
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.sync_rounded, color: AppColors.primary, size: 18),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'LOOP ACTIVE (${state.totalCycles} CYCLES)',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton.icon(
+                                onPressed: () => _showLoopSetupDialog(context, ref),
+                                icon: const Icon(Icons.settings, size: 14, color: AppColors.textMuted),
+                                label: const Text(
+                                  'Change Cycles',
+                                  style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Cycle Tabs
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(state.totalCycles, (idx) {
+                                final cycleNum = idx + 1;
+                                final isSelected = state.viewingCycleNumber == cycleNum;
+                                final isActiveWeek = state.activeCycleNumber == cycleNum;
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: ChoiceChip(
+                                    label: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('Cycle $cycleNum'),
+                                        if (isActiveWeek) ...[
+                                          const SizedBox(width: 4),
+                                          Container(
+                                            width: 6,
+                                            height: 6,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                    selected: isSelected,
+                                    selectedColor: AppColors.primary,
+                                    backgroundColor: AppColors.surfaceSubdued,
+                                    labelStyle: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: isSelected ? Colors.white : AppColors.textSecondary,
+                                    ),
+                                    onSelected: (_) {
+                                      notifier.selectViewingCycle(cycleNum);
+                                    },
+                                  ),
+                                );
+                              }),
                             ),
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Weekly Summary / Adherence Telemetry Card
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardSurface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.borderSubdued),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x0A000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'ADHERENCE TELEMETRY',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textMuted,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '$completedDays / $activeTrainingDays Complete',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  '$adherencePercent%',
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'Weekly Adherence',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'Target: $activeTrainingDays Days',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const Text(
+                                  'Active Training',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        // Progress bar
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: activeTrainingDays > 0 ? (completedDays / activeTrainingDays).clamp(0.0, 1.0) : 1.0,
+                            minHeight: 8,
+                            backgroundColor: AppColors.surfaceSubdued,
+                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Section Header
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        '$completedDays / $activeTrainingDays Complete',
+                        state.isLoopEnabled
+                            ? 'CYCLE ${state.viewingCycleNumber} TEMPLATE'
+                            : 'CYCLE PROGRESSION',
                         style: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: AppColors.textMuted,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      Text(
+                        state.isLoopEnabled
+                            ? 'Looping Schedule'
+                            : 'Standard Schedule',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '$adherencePercent%',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          const Text(
-                            'Weekly Adherence',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.textMuted,
-                            ),
-                          ),
-                        ],
+                  const SizedBox(height: 10),
+
+                  // Vertical 7-Day Stack
+                  ...weeklyPlan.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final day = entry.value;
+
+                    final cycleKey = '${state.viewingCycleNumber}_$index';
+                    final cycleExList = state.cycleExercisesMap[cycleKey] ?? [];
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: _buildDayCard(
+                        context: context,
+                        day: day,
+                        index: index,
+                        state: state,
+                        notifier: notifier,
+                        cycleExercises: cycleExList,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Target: $activeTrainingDays Days',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          const Text(
-                            'Active Training',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  // Progress bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: activeTrainingDays > 0 ? (completedDays / activeTrainingDays).clamp(0.0, 1.0) : 1.0,
-                      minHeight: 8,
-                      backgroundColor: AppColors.surfaceSubdued,
-                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                    ),
-                  ),
+                    );
+                  }),
+
+                  const SizedBox(height: 24),
                 ],
               ),
-            ),
-            const SizedBox(height: 20),
-
-            // Section Header
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'CYCLE PROGRESSION',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textMuted,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-                Text(
-                  'Week 42',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Vertical 7-Day Stack
-            ...weeklyPlan.asMap().entries.map((entry) {
-              final index = entry.key;
-              final day = entry.value;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: _buildDayCard(context, day, index, notifier),
-              );
-            }),
-
-            const SizedBox(height: 24),
-          ],
-        ),
       ),
     );
   }
 
-  Widget _buildDayCard(
-    BuildContext context,
-    WeeklyPlanDay day,
-    int index,
-    WorkoutWeeklyPlanNotifier notifier,
-  ) {
-    if (day.isToday) {
-      // Highlighted TODAY Card
-      return Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: AppColors.cardSurface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primary, width: 2.0),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x1F047857),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Green Date Box
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    day.shortName.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.0,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${day.dateNum}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
+  Widget _buildDayCard({
+    required BuildContext context,
+    required WeeklyPlanDay day,
+    required int index,
+    required WorkoutWeeklyPlanState state,
+    required WorkoutWeeklyPlanNotifier notifier,
+    required List<WorkoutCycleExercise> cycleExercises,
+  }) {
+    final isLoop = state.isLoopEnabled;
+    final cycleNum = state.viewingCycleNumber;
 
-            // Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          day.focusTitle,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'TODAY',
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    day.subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Edit button
-            IconButton(
-              icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.textMuted),
-              onPressed: () => _openEditDialog(context, day, index, notifier),
-              tooltip: 'Edit Day Focus',
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (day.isRestDay) {
-      // Rest Day Card (Muted Grey)
-      return Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSubdued.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.borderSubdued.withOpacity(0.6)),
-        ),
-        child: Row(
-          children: [
-            // Muted Date Box
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSubdued,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    day.shortName.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textMuted,
-                      height: 1.0,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${day.dateNum}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textSecondary,
-                      height: 1.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.bedtime_outlined, size: 16, color: AppColors.textMuted),
-                      const SizedBox(width: 6),
-                      Text(
-                        day.focusTitle,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    day.subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Edit button
-            IconButton(
-              icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.textMuted),
-              onPressed: () => _openEditDialog(context, day, index, notifier),
-              tooltip: 'Edit Day Focus',
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Regular Training Day Card (Completed or Scheduled)
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: AppColors.cardSurface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderSubdued),
+        border: Border.all(
+          color: day.isToday && isLoop ? AppColors.primary : AppColors.borderSubdued,
+          width: day.isToday && isLoop ? 2.0 : 1.0,
+        ),
         boxShadow: const [
           BoxShadow(
             color: Color(0x06000000),
@@ -465,114 +529,213 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Neutral Date Box
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.surfaceSubdued.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          Row(
+            children: [
+              // Date / Day Box
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: day.isToday ? AppColors.primary : AppColors.surfaceSubdued,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      day.shortName.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: day.isToday ? Colors.white : AppColors.textMuted,
+                        height: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${day.dateNum}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: day.isToday ? Colors.white : AppColors.textPrimary,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              // Day Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            day.focusTitle,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: day.isRestDay ? AppColors.textSecondary : AppColors.textPrimary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        if (day.isToday)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              'TODAY',
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      day.subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Edit Day Focus Dialog
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.textMuted),
+                onPressed: () {
+                  if (isLoop) {
+                    _openEditCycleDayFocusDialog(context, day, index, cycleNum, notifier);
+                  } else {
+                    _openEditDialog(context, day, index, notifier);
+                  }
+                },
+                tooltip: 'Edit Day Focus',
+              ),
+            ],
+          ),
+
+          // Cycle Exercises List (When Loop is ON)
+          if (isLoop) ...[
+            const SizedBox(height: 10),
+            const Divider(height: 1, color: AppColors.borderSubdued),
+            const SizedBox(height: 8),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  day.shortName.toUpperCase(),
+                  cycleExercises.isNotEmpty
+                      ? '${cycleExercises.length} EXERCISES CONFIGURED'
+                      : (day.isRestDay ? 'REST DAY PROTOCOL' : 'NO EXERCISES SET YET'),
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textMuted,
-                    height: 1.0,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  '${day.dateNum}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    height: 1.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        day.focusTitle,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => CycleExercisePickerModal(
+                        cycleNumber: cycleNum,
+                        dayIndex: index,
+                        dayName: day.dayName,
+                        currentExercises: cycleExercises,
                       ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentSubtle,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.primary),
                     ),
-                    const SizedBox(width: 6),
-                    if (day.isCompleted)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.accentSubtle,
-                          borderRadius: BorderRadius.circular(4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, size: 12, color: AppColors.primary),
+                        const SizedBox(width: 3),
+                        Text(
+                          cycleExercises.isEmpty ? 'Select Exercises' : 'Edit Exercises',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check_circle, size: 12, color: AppColors.primary),
-                            SizedBox(width: 3),
-                            Text(
-                              'Completed',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    else
-                      const Text(
-                        'Scheduled',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textMuted,
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  day.subtitle,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textMuted,
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
 
-          // Edit button
-          IconButton(
-            icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.textMuted),
-            onPressed: () => _openEditDialog(context, day, index, notifier),
-            tooltip: 'Edit Day Focus',
-          ),
+            if (cycleExercises.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: cycleExercises.map((ex) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceSubdued,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.borderSubdued),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.fitness_center, size: 12, color: AppColors.primary),
+                        const SizedBox(width: 4),
+                        Text(
+                          ex.exerciseName,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${ex.targetSets}x${ex.targetReps}',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ],
         ],
       ),
     );
@@ -591,6 +754,29 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
         onSave: (newTitle, isRestDay) {
           notifier.updateDayFocus(
             index: index,
+            newTitle: newTitle,
+            isRestDay: isRestDay,
+          );
+        },
+      ),
+    );
+  }
+
+  void _openEditCycleDayFocusDialog(
+    BuildContext context,
+    WeeklyPlanDay day,
+    int dayIndex,
+    int cycleNumber,
+    WorkoutWeeklyPlanNotifier notifier,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => EditDayFocusDialog(
+        day: day,
+        onSave: (newTitle, isRestDay) {
+          notifier.updateCycleDayFocus(
+            cycleNumber: cycleNumber,
+            dayIndex: dayIndex,
             newTitle: newTitle,
             isRestDay: isRestDay,
           );

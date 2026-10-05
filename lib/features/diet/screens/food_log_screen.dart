@@ -274,61 +274,6 @@ class _FoodLogScreenState extends ConsumerState<FoodLogScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 children: [
-                  if (loggedFoods.isEmpty)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary.withOpacity(0.25)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.restaurant_menu, color: AppColors.primary, size: 20),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Daily Diet Plan Ready',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: textPrimaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Import your personalized meal plan generated from your onboarding goals.',
-                            style: TextStyle(fontSize: 12, color: AppColors.textMuted),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: () => _importPlannedMeals(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              icon: const Icon(Icons.download_rounded, size: 18),
-                              label: const Text(
-                                'Import Today\'s Planned Meals',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ...mealSections.map((sectionName) {
                     final items = groupedItems[sectionName] ?? [];
                     final sectionCalories = items.fold(0.0, (sum, i) => sum + i.calories);

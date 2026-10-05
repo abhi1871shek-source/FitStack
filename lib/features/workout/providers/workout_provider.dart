@@ -6,6 +6,8 @@ import '../models/exercise.dart';
 import '../../onboarding/models/onboarding_state.dart';
 import '../../onboarding/providers/onboarding_provider.dart';
 
+import '../models/workout_loop_config.dart';
+
 class WorkoutState {
   final List<WorkoutLogItem> logs;
   final bool isLoading;
@@ -79,7 +81,8 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
 
     state = state.copyWith(isLoading: true, errorMessage: null);
 
-    final todayStr = DateTime.now().toIso8601String().split('T').first;
+    final now = DateTime.now();
+    final todayStr = now.toIso8601String().split('T').first;
 
     try {
       await ExerciseLibrary.loadCustomExercises(userId);
@@ -95,8 +98,85 @@ class WorkoutNotifier extends Notifier<WorkoutState> {
       final List rows = response as List;
 
       if (rows.isEmpty) {
-        final onboarding = ref.read(onboardingProvider);
-        final initialItems = _generatePersonalizedExercises(onboarding);
+        List<WorkoutLogItem> initialItems = [];
+
+        // Check if Loop is ON
+        try {
+          final configResp = await _client
+              .from('workout_loop_config')
+              .select()
+              .eq('user_id', userId)
+              .maybeSingle();
+
+          if (configResp != null && (configResp['is_enabled'] as bool? ?? false)) {
+            final config = WorkoutLoopConfig.fromMap(configResp as Map<String, dynamic>);
+            final activeCycleNum = config.calculateCycleForDate(now);
+            final todayIndex = now.weekday - 1; // 0=Mon..6=Sun
+
+            // Fetch exercises for today's active cycle
+            final cycleExResp = await _client
+                .from('workout_cycle_exercises')
+                .select('*, workout_cycles!inner(user_id, cycle_number, day_index)')
+                .eq('workout_cycles.user_id', userId)
+                .eq('workout_cycles.cycle_number', activeCycleNum)
+                .eq('workout_cycles.day_index', todayIndex)
+                .order('sort_order', ascending: true);
+
+            final List cycleExRows = cycleExResp as List;
+
+            if (cycleExRows.isNotEmpty) {
+              initialItems = cycleExRows.map((r) {
+                final exId = (r['exercise_id'] as String?) ?? 'ex_1';
+                final name = (r['exercise_name'] as String?) ?? 'Exercise';
+                final muscle = (r['muscle_group'] as String?) ?? 'Chest';
+                final setsCount = (r['target_sets'] as int?) ?? 3;
+                final repsCount = (r['target_reps'] as int?) ?? 10;
+                final weightKg = (r['target_weight_kg'] as num?)?.toDouble() ?? 0.0;
+
+                final masterMatch = ExerciseLibrary.masterExercises.firstWhere(
+                  (e) => e.id == exId,
+                  orElse: () => Exercise(
+                    id: exId,
+                    name: name,
+                    muscleGroup: muscle,
+                    defaultSets: setsCount,
+                    defaultReps: repsCount,
+                    defaultWeightKg: weightKg,
+                  ),
+                );
+
+                final defaultSetsList = List.generate(
+                  setsCount > 0 ? setsCount : 3,
+                  (i) => ExerciseSet(setNumber: i + 1, reps: repsCount, weightKg: weightKg),
+                );
+
+                final imgUrl = masterMatch.imageUrl != null && masterMatch.imageUrl!.isNotEmpty
+                    ? masterMatch.imageUrl!
+                    : 'assets/images/exercises/$exId.jpg';
+
+                return WorkoutLogItem(
+                  id: '',
+                  exerciseId: exId,
+                  name: name,
+                  muscleGroup: muscle,
+                  sets: setsCount,
+                  reps: repsCount,
+                  weightKg: weightKg,
+                  setDetails: defaultSetsList,
+                  isCompleted: false,
+                  imageUrl: imgUrl,
+                );
+              }).toList();
+            }
+          }
+        } catch (e) {
+          debugPrint('[WorkoutNotifier] Error checking loop exercises: $e');
+        }
+
+        if (initialItems.isEmpty) {
+          final onboarding = ref.read(onboardingProvider);
+          initialItems = _generatePersonalizedExercises(onboarding);
+        }
 
         final insertList = initialItems
             .map((item) => item.toMap(userId: userId, workoutDate: todayStr))
