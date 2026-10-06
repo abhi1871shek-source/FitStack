@@ -299,7 +299,7 @@ class WorkoutWeeklyPlanNotifier extends Notifier<WorkoutWeeklyPlanState> {
   }
 
   /// Toggle Loop ON/OFF
-  Future<void> toggleLoop(bool enable) async {
+  Future<void> toggleLoop(bool enable, {int? totalCycles}) async {
     final userId = _currentUserId;
     if (userId == null) return;
 
@@ -307,25 +307,28 @@ class WorkoutWeeklyPlanNotifier extends Notifier<WorkoutWeeklyPlanState> {
     final monday = now.subtract(Duration(days: now.weekday - 1));
 
     if (enable) {
+      final count = totalCycles ?? (state.totalCycles > 0 ? state.totalCycles : 2);
       // 1. Create or update loop config
       final newConfig = WorkoutLoopConfig(
         userId: userId,
         isEnabled: true,
-        totalCycles: state.totalCycles > 0 ? state.totalCycles : 2,
+        totalCycles: count,
         startWeekMonday: monday,
       );
 
       try {
         await _client.from('workout_loop_config').upsert(newConfig.toMap(), onConflict: 'user_id');
+        // 2. Ensure default cycles exist in workout_cycles if missing
+        await _seedDefaultCyclesIfMissing(userId, newConfig.totalCycles);
+        // Re-fetch
+        await fetchWeeklyPlan();
       } catch (e) {
         debugPrint('[WorkoutWeeklyPlanNotifier] Error updating loop config: $e');
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to enable Workout Loop: $e',
+        );
       }
-
-      // 2. Ensure default 2 cycles exist in workout_cycles if missing
-      await _seedDefaultCyclesIfMissing(userId, newConfig.totalCycles);
-
-      // Re-fetch
-      await fetchWeeklyPlan();
     } else {
       // Turning Loop OFF:
       // 1. Copy active cycle's schedule into weekly_workout_plans so user retains continuity!
@@ -361,11 +364,14 @@ class WorkoutWeeklyPlanNotifier extends Notifier<WorkoutWeeklyPlanState> {
           'start_week_monday': monday.toIso8601String().split('T').first,
           'updated_at': DateTime.now().toIso8601String(),
         }, onConflict: 'user_id');
+        await fetchWeeklyPlan();
       } catch (e) {
         debugPrint('[WorkoutWeeklyPlanNotifier] Error disabling loop: $e');
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to disable Workout Loop: $e',
+        );
       }
-
-      await fetchWeeklyPlan();
     }
   }
 

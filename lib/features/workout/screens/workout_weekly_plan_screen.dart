@@ -98,8 +98,7 @@ class WorkoutWeeklyPlanScreen extends ConsumerWidget {
                   onPressed: () async {
                     Navigator.pop(ctx);
                     final notifier = ref.read(workoutWeeklyPlanProvider.notifier);
-                    await notifier.setTotalCycles(selectedCycles);
-                    await notifier.toggleLoop(true);
+                    await notifier.toggleLoop(true, totalCycles: selectedCycles);
                   },
                   child: const Text('Enable Loop', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
