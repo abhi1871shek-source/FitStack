@@ -110,29 +110,23 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
     }
   }
 
-  /// Add multiple selected food items to today's log in Supabase
+  /// Add multiple selected food items to today's log in Supabase with instant (0ms) optimistic update
   Future<void> addLoggedFoods(
     List<FoodItem> foods, {
     String mealSection = 'Lunch',
     double? customQuantityGrams,
     String? loggedTime,
   }) async {
-    final userId = _currentUserId;
     if (foods.isEmpty) return;
 
     final todayStr = DateTime.now().toIso8601String().split('T').first;
     final nowTime = loggedTime ?? _formatCurrentTime();
 
-    try {
-      await _ensureMasterFoodsExist();
-    } catch (e) {
-      debugPrint('[FoodLogNotifier] Ignored master food check error: $e');
-    }
-
+    // 1. Create temporary logged items with unique IDs
     final newItems = foods.map((food) {
       final qty = customQuantityGrams ?? food.baseServingGrams;
       return LoggedFoodItem.fromFoodItem(
-        id: 'fl_temp_${DateTime.now().microsecondsSinceEpoch}',
+        id: 'fl_temp_${DateTime.now().microsecondsSinceEpoch}_${food.id}',
         food: food,
         mealSection: mealSection,
         quantityGrams: qty,
@@ -141,24 +135,43 @@ class FoodLogNotifier extends Notifier<FoodLogState> {
       );
     }).toList();
 
-    if (userId == null) {
-      state = state.copyWith(logs: [...state.logs, ...newItems]);
-      return;
-    }
+    // 2. INSTANT OPTIMISTIC UPDATE: Update Riverpod state IMMEDIATELY (0ms delay)!
+    state = state.copyWith(
+      logs: [...state.logs, ...newItems],
+      errorMessage: null,
+    );
 
-    final insertList = newItems.map((item) => item.toMap(userId: userId, logDate: todayStr)).toList();
+    final userId = _currentUserId;
+    if (userId == null) return;
 
+    // 3. Background Sync: Ensure master foods exist and insert into Supabase
     try {
+      try {
+        await _ensureMasterFoodsExist();
+      } catch (e) {
+        debugPrint('[FoodLogNotifier] Ignored master food check error: $e');
+      }
+
+      final insertList = newItems.map((item) => item.toMap(userId: userId, logDate: todayStr)).toList();
       final insertedResponse = await _client.from('food_logs').insert(insertList).select();
 
       final List<LoggedFoodItem> insertedLogs = (insertedResponse as List)
           .map((row) => LoggedFoodItem.fromMap(row))
           .toList();
 
-      state = state.copyWith(logs: [...state.logs, ...insertedLogs]);
+      // Replace temporary items in state with confirmed server rows containing DB UUIDs
+      final updatedLogs = List<LoggedFoodItem>.from(state.logs);
+      for (int i = 0; i < newItems.length; i++) {
+        final tempItem = newItems[i];
+        final tempIdx = updatedLogs.indexWhere((it) => it.id == tempItem.id);
+        if (tempIdx != -1 && i < insertedLogs.length) {
+          updatedLogs[tempIdx] = insertedLogs[i];
+        }
+      }
+      state = state.copyWith(logs: updatedLogs);
     } catch (e) {
-      debugPrint('[FoodLogNotifier] Error adding food log: $e');
-      state = state.copyWith(logs: [...state.logs, ...newItems]);
+      debugPrint('[FoodLogNotifier] Error syncing food log to Supabase: $e');
+      // Keep optimistic items in local state so the user's logged meal is never lost!
     }
   }
 
