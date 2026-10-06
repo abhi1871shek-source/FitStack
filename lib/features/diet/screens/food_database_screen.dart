@@ -453,11 +453,18 @@ class _FoodDatabaseScreenState extends ConsumerState<FoodDatabaseScreen> {
                     elevation: 0,
                   ),
                   onPressed: () {
+                    final count = _selectedFoods.length;
                     ref.read(foodLogProvider.notifier).addLoggedFoods(
                           _selectedFoods.toList(),
                           mealSection: 'Lunch',
                         );
                     Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Added $count ${count == 1 ? "food" : "foods"} to Today\'s Diet Journal!'),
+                        backgroundColor: AppColors.primary,
+                      ),
+                    );
                   },
                   child: Text(
                     '${_selectedFoods.length} ${_selectedFoods.length == 1 ? "item" : "items"} selected — Add to Log',

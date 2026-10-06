@@ -106,8 +106,12 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
     }
   }
 
+  final TextEditingController _librarySearchController = TextEditingController();
+  String _librarySearchQuery = '';
+
   @override
   void dispose() {
+    _librarySearchController.dispose();
     _quantityController.dispose();
     _customNameController.dispose();
     _customServingDescController.dispose();
@@ -368,7 +372,141 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
             const SizedBox(height: 14),
 
             if (!_isCustomMode) ...[
-              // Standard Library Selector Path
+              // Live Search Bar for Food Selection
+              TextField(
+                controller: _librarySearchController,
+                onChanged: (val) {
+                  setState(() {
+                    _librarySearchQuery = val;
+                  });
+                },
+                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Search food by name (e.g. Oats, Parotta, Chicken)...',
+                  hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                  prefixIcon: const Icon(Icons.search, color: AppColors.primary, size: 20),
+                  suffixIcon: _librarySearchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: AppColors.textMuted, size: 18),
+                          onPressed: () {
+                            _librarySearchController.clear();
+                            setState(() {
+                              _librarySearchQuery = '';
+                            });
+                          },
+                        )
+                      : null,
+                  fillColor: AppColors.surfaceSubdued,
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: AppColors.borderSubdued),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Filtered Search Results List (if search active)
+              if (_librarySearchQuery.trim().isNotEmpty) ...[
+                Builder(
+                  builder: (context) {
+                    final searchMatches = FoodDatabaseData.masterFoods.where((f) {
+                      final q = _librarySearchQuery.trim().toLowerCase();
+                      return f.name.toLowerCase().contains(q) ||
+                          f.cuisine.toLowerCase().contains(q) ||
+                          f.category.toLowerCase().contains(q);
+                    }).toList();
+
+                    if (searchMatches.isEmpty) {
+                      return Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceSubdued,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.search_off, size: 18, color: AppColors.textMuted),
+                            SizedBox(width: 8),
+                            Text(
+                              'No matching food items found',
+                              style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return Container(
+                      constraints: const BoxConstraints(maxHeight: 180),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardSurface,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.primary.withOpacity(0.4)),
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                        ],
+                      ),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: searchMatches.length,
+                        separatorBuilder: (ctx, i) => const Divider(height: 1, color: AppColors.borderSubdued),
+                        itemBuilder: (ctx, idx) {
+                          final food = searchMatches[idx];
+                          final isSelected = food.id == _selectedFood.id;
+
+                          return ListTile(
+                            dense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            leading: AppImageWidget(
+                              imagePath: food.imageAsset.isNotEmpty
+                                  ? food.imageAsset
+                                  : 'assets/images/food/${food.id}.jpg',
+                              width: 32,
+                              height: 32,
+                              borderRadius: BorderRadius.circular(6),
+                              fallbackIcon: Icons.restaurant,
+                            ),
+                            title: Text(
+                              food.name,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${food.cuisine} • ${food.baseServing} • ${food.calories.toStringAsFixed(0)} kcal',
+                              style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                            ),
+                            trailing: isSelected
+                                ? const Icon(Icons.check_circle, size: 18, color: AppColors.primary)
+                                : const Icon(Icons.add_circle_outline, size: 18, color: AppColors.textMuted),
+                            onTap: () {
+                              setState(() {
+                                _selectedFood = food;
+                                _quantityGrams = food.baseServingGrams;
+                                _quantityController.text = _quantityGrams.toStringAsFixed(0);
+                                _librarySearchQuery = '';
+                                _librarySearchController.clear();
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+
+              // Currently Selected Food Item Summary
               Row(
                 children: [
                   InkWell(
@@ -395,8 +533,8 @@ class _QuickAddFoodSheetState extends ConsumerState<QuickAddFoodSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Select Food Item',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMuted),
+                          'Selected Food Item',
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textMuted),
                         ),
                         Text(
                           '${_selectedFood.name} (${_selectedFood.cuisine})',
