@@ -116,6 +116,7 @@ lib/
 ├── features/
 │   ├── auth/            # AuthProvider, UserModel, LoginSignupScreen
 │   ├── dashboard/       # HomeDashboardScreen
+│   ├── day_counter/     # DayCountersScreen, DayCountersCard, DayCountersProvider, DayCounterModel
 │   ├── diet/            # FoodLogScreen, FoodDatabaseScreen, QuickAddFoodSheet, WeeklyDietPlan
 │   ├── habits/          # TodoListScreen, HabitsProvider, HabitItem
 │   ├── onboarding/      # OnboardingFlowScreen, OnboardingProfileStep, OnboardingReviewStep

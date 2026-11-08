@@ -14,6 +14,8 @@ import '../../diet/providers/food_log_provider.dart';
 import '../../diet/screens/quick_add_food_sheet.dart';
 import '../../habits/models/habit_item.dart';
 import '../../habits/providers/habits_provider.dart';
+import '../../day_counter/widgets/day_counters_card.dart';
+import '../../day_counter/screens/day_counters_screen.dart';
 import '../../profile/screens/settings_screen.dart';
 import '../../progress/providers/step_count_provider.dart';
 import '../../workout/models/exercise.dart';
@@ -439,7 +441,12 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         color: cardColor,
                         onSelected: (val) {
-                          if (val == 'settings') {
+                          if (val == 'day_counters') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DayCountersScreen()),
+                            );
+                          } else if (val == 'settings') {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -477,6 +484,22 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                               ),
                             ),
                             const PopupMenuDivider(),
+                            const PopupMenuItem<String>(
+                              value: 'day_counters',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.timer_outlined, size: 18, color: AppColors.primary),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Day Counters',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             const PopupMenuItem<String>(
                               value: 'settings',
                               child: Row(
@@ -540,6 +563,11 @@ class _HomeDashboardScreenState extends ConsumerState<HomeDashboardScreen> {
                   ),
                 ],
               ),
+
+              const SizedBox(height: 16),
+
+              // Day Counters Card (Near Streak Badge)
+              const DayCountersCard(),
 
               const SizedBox(height: 16),
 

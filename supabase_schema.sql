@@ -450,6 +450,32 @@ CREATE POLICY "workout_cycle_exercises_all_own" ON public.workout_cycle_exercise
     USING (EXISTS (SELECT 1 FROM public.workout_cycles WHERE public.workout_cycles.id = public.workout_cycle_exercises.cycle_id AND public.workout_cycles.user_id = auth.uid()))
     WITH CHECK (EXISTS (SELECT 1 FROM public.workout_cycles WHERE public.workout_cycles.id = public.workout_cycle_exercises.cycle_id AND public.workout_cycles.user_id = auth.uid()));
 
+-- ------------------------------------------------------------------------------
+-- 13. DAY COUNTERS TABLE (Count Up & Count Down Milestones)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.day_counters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    mode TEXT NOT NULL CHECK (mode IN ('countdown', 'countup')),
+    start_date DATE NOT NULL,
+    target_days INT,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_day_counters_user ON public.day_counters(user_id);
+
+ALTER TABLE public.day_counters ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "day_counters_user_all" ON public.day_counters;
+
+CREATE POLICY "day_counters_user_all" ON public.day_counters
+    FOR ALL TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+GRANT ALL ON TABLE public.day_counters TO anon, authenticated, service_role;
+
 -- ==============================================================================
 -- End of FitStack Schema
 -- ==============================================================================

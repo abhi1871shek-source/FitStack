@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../day_counter/screens/day_counters_screen.dart';
 import '../../diet/providers/diet_preference_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -176,6 +177,50 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Day Counters Section
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.ofCardSurface(context),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.ofBorderSubdued(context)),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    leading: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.timer_outlined, color: AppColors.primary, size: 20),
+                    ),
+                    title: Text(
+                      'Day Counters',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: AppColors.ofTextPrimary(context),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Track days elapsed or countdown to milestones',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.ofTextMuted(context),
+                      ),
+                    ),
+                    trailing: const Icon(Icons.chevron_right, size: 20, color: AppColors.primary),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const DayCountersScreen()),
+                      );
+                    },
+                  ),
+                ),
+
                 const Text(
                   'Profile Information',
                   style: TextStyle(
